@@ -12,6 +12,8 @@ INC_FILES	=	Stack.hpp \
 				Vector.hpp \
 				IteratorsTraits.hpp \
 				ReverseIterator.hpp \
+				Iterator.hpp \
+				RandomAccessIterator.hpp \
 
 OBJS		=	$(addprefix $(OBJS_DIR)/, $(SRC_FILES:.cpp=.o))
 

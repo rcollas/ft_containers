@@ -13,7 +13,8 @@ namespace ft {
 			typedef typename Container::reference reference;
 			typedef typename Container::const_reference const_reference;
 
-			explicit stack(const Container& _cont = Container()) {(void) _cont;};
+			explicit stack(const Container& cont = Container()) { this->c = cont; };
+			stack( const stack& other ) { this->c(other); };
 			~stack() {};
 
 			stack& operator=( const stack& other ) { this->c = other.c; };

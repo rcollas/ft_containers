@@ -15,7 +15,7 @@ namespace ft {
 			typedef typename ft::iterator_traits<Iter>::reference reference;
 
 			reverse_iterator() : Iter() {};
-			explicit reverse_iterator(iterator_type x) : Iter(x) {};
+			explicit reverse_iterator(iterator_type x) : current(Iter(x)) {};
 
 			template<class U>
 			reverse_iterator(const reverse_iterator<U> &other) : Iter(other) {};
@@ -23,9 +23,9 @@ namespace ft {
 			template<class U>
 			reverse_iterator &operator=(const reverse_iterator<U> &other) { this->current = other.current; };
 
-			iterator_type base() const { return current.base(); };
+			iterator_type base() const { return ++(Iter(current)); };
 
-			reference operator*() const { Iter tmp = this->current; return *--tmp; };
+			reference operator*() const { Iter tmp = current; return *(--tmp); };
 			pointer operator->() const { return std::__addressof(operator*()); };
 
 			/*unspecified*/reverse_iterator &operator[](difference_type n) const { base()[-n-1]; };

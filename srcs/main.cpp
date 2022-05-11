@@ -6,6 +6,9 @@
 #include <iterator>
 #include <vector>
 #include "ReverseIterator.hpp"
+#include "IteratorsTraits.hpp"
+#include "Iterator.hpp"
+#include "Vector.hpp"
 
 int main() {
 
@@ -35,6 +38,23 @@ int main() {
 	std::cout << (foo >= bar) << std::endl;
 	std::cout << (foo < bar) << std::endl;
 	std::cout << (foo <= bar) << std::endl;
+
+
+	ft::iterator_traits<int *>::value_type I;
+	I = 10;
+	std::cout << I << std::endl;
+
+	ft::vector<int> buzz(10);
+	ft::vector<int>::iterator start(buzz.begin());
+	ft::vector<int>::iterator end(buzz.end());
+	std::cout << "in main buzz begin = " << *buzz.begin() << std::endl;
+	std::cout << "test = " << *start << std::endl;
+	ft::vector<int>::reverse_iterator bazz(buzz.rend());
+	std::cout << *bazz << std::endl;
+	for (;*start != *end;) {
+		std::cout << "address = " << *start << std::endl;
+		++start;
+	}
 
 
 	return 0;
