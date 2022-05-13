@@ -9,6 +9,9 @@
 #include "IteratorsTraits.hpp"
 #include "Iterator.hpp"
 #include "Vector.hpp"
+#include <ctime>
+#include <cstdlib>
+#include <memory>
 
 int main() {
 
@@ -51,11 +54,41 @@ int main() {
 	std::cout << "test = " << *start << std::endl;
 	ft::vector<int>::reverse_iterator bazz(buzz.rend());
 	std::cout << *bazz << std::endl;
-	for (;*start != *end;) {
-		std::cout << "address = " << *start << std::endl;
+	for (;start != end;) {
+		std::cout << "value = " << *start << std::endl;
+		std::cout << "address = " << &*start << std::endl;
 		++start;
 	}
 
+
+	for (int i = 0; i < 10; i++) {
+		buzz[i] = 10;
+		std::cout << buzz[i] << std::endl;
+	}
+
+
+	for (int i = 0; i < 10; i++) {
+		buzz.at(i) = 20;
+		std::cout << buzz.at(i) << std::endl;
+	}
+
+	ft::vector<int> fuzz(3);
+	srand(time(0));
+	for (int i = 0; i < 100; i++) {
+		fuzz.push_back(i);
+	}
+
+	std::vector<int> fozz(3);
+	for (int i = 0; i < 100; i++) {
+		fozz.push_back(i);
+	}
+	for (size_t i = 0; i < fozz.capacity(); i++) {
+		if (fuzz[i] != fozz[i]) {
+			std::cout << "Error" << std::endl;
+		}
+	}
+	fozz.push_back(10);
+	std::cout << fozz[0] << std::endl;
 
 	return 0;
 }
