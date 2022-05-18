@@ -6,7 +6,7 @@
 
 namespace ft {
 	template <class T>
-	class random_access_iterator/* : iterator<random_access_iterator_tag, T>*/ {
+	class random_access_iterator {
 
 		public:
 			typedef typename iterator_traits<T>::pointer pointer;
@@ -14,21 +14,36 @@ namespace ft {
 			typedef typename iterator_traits<T>::difference_type difference_type;
 			typedef typename iterator_traits<T>::reference reference;
 			typedef typename iterator_traits<T>::iterator_category iterator_category;
+			typedef random_access_iterator iterator;
 
 			explicit random_access_iterator(pointer const &src) { this->_ptr = src; }
-			random_access_iterator &operator=(random_access_iterator const &rhs) { this->_ptr = rhs._ptr; return *this; }
+			random_access_iterator(iterator const &src) {
+				*this = src;
+			}
+			iterator &operator=(iterator const &rhs) { this->_ptr = rhs._ptr; return *this; }
 
 			value_type &operator*() const { return *this->_ptr; };
 			pointer &operator->() const { return (pointer*)0; };
-			pointer &operator--() { this->_ptr--; return this->_ptr; }
-			pointer &operator--(int) { pointer tmp = this->_ptr; this->_ptr--; return tmp; }
-			pointer &operator++() { this->_ptr++; return this->_ptr; }
-			pointer &operator++(int) { pointer tmp = this->_ptr; this->_ptr++; return tmp; }
-			bool operator!=(random_access_iterator const &rhs) { return this->_ptr != rhs._ptr; }
+
+			iterator &operator--() { this->_ptr--; return *this; }
+			iterator operator--(int) { iterator tmp(*this) ; operator--(); return tmp; }
+			iterator &operator++() { this->_ptr++; return *this; }
+			iterator operator++(int) { iterator tmp(*this) ; operator++(); return tmp; }
+
+			bool operator!=(iterator const &rhs) { return this->_ptr != rhs._ptr; }
 
 		private:
 			pointer _ptr;
 	};
+	template <class T>
+	size_t range(random_access_iterator<T> start, random_access_iterator<T> end) {
+		size_t i = 0;
+		while (start != end) {
+			i++;
+			start++;
+		}
+		return i;
+	}
 }
 
 #endif

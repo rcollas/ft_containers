@@ -52,12 +52,12 @@ int main() {
 	ft::vector<int>::iterator end(buzz.end());
 	std::cout << "in main buzz begin = " << *buzz.begin() << std::endl;
 	std::cout << "test = " << *start << std::endl;
-	ft::vector<int>::reverse_iterator bazz(buzz.rend());
+	ft::vector<int>::reverse_iterator bazz(buzz.begin());
 	std::cout << *bazz << std::endl;
 	for (;start != end;) {
 		std::cout << "value = " << *start << std::endl;
 		std::cout << "address = " << &*start << std::endl;
-		++start;
+		start++;
 	}
 
 
@@ -82,13 +82,50 @@ int main() {
 	for (int i = 0; i < 100; i++) {
 		fozz.push_back(i);
 	}
-	for (size_t i = 0; i < fozz.capacity(); i++) {
+	std::cout << "fuzz size = " << fuzz.size() << " fozz size = " << fozz.size() << std::endl;
+	for (size_t i = 0; i < fozz.size(); i++) {
 		if (fuzz[i] != fozz[i]) {
-			std::cout << "Error" << std::endl;
+			std::cout << "fuzz = " << fuzz[i]  << " fozz = " << fozz[i] << std::endl;
 		}
 	}
 	fozz.push_back(10);
 	std::cout << fozz[0] << std::endl;
+
+	ft::vector<int>::iterator it(fuzz.begin());
+	ft::vector<int>::iterator ite(fuzz.end());
+	ft::vector<int> fazz(it, ite);
+
+	std::cout << "fuzz[10] = " << fuzz[10] << " fazz[10] = " << fazz[10] << std::endl;
+
+	ft::vector<int> copy(fuzz);
+	std::cout << "fuzz[20] = " << fuzz[20] << " copy[20] = " << copy[20] << std::endl;
+
+	ft::vector<int> copyOverload = ft::vector<int>(it, ite);
+	std::cout << "fuzz[10] = " << fuzz[10] << " copyOverload[10] = " << copyOverload[10] << std::endl;
+
+	ft::vector<std::string> fooStr(10);
+	fooStr[0] = "hello";
+	fooStr[1] = "bonjour";
+	fooStr[2] = "ciao";
+	fooStr[3] = "hola";
+	//for (int i = 0; i < 20; i++) {
+	//	fooStr.push_back("PUSH_BACK");
+	//}
+
+	std::vector<std::string> compare(10);
+	compare[0] = "hello";
+	compare[1] = "bonjour";
+	compare[2] = "ciao";
+	compare[3] = "hola";
+	for (int i = 0; i < 20; i++) {
+		compare.push_back("PUSH_BACK");
+	}
+
+	for (int i = 0; i < 20; i++) {
+		if (fooStr[i] != compare[i]) {
+			std::cout << "ERROR" << std::endl;
+		}
+	}
 
 	return 0;
 }

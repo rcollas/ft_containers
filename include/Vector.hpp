@@ -45,17 +45,75 @@ namespace ft {
 				this->_end = 0;
 				this->_size = 0;
 			};
+			explicit vector( const Allocator& alloc ) {
+				this->_alloc = alloc;
+				this->_capacity = 0;
+				this->_start = 0;
+				this->_end = 0;
+				this->_size = 0;
+			};
 			explicit vector(size_type count,
 							 const T& value = T(),
 							 const Allocator& alloc = Allocator()) {
-				this->_alloc = Allocator(alloc);
+				this->_alloc = alloc;
 				this->_capacity = count * 2;
 				this->_start = this->_alloc.allocate(count * 2);
-				this->_end = this->_start + this->_size;
 				this->_size = count;
-				for (size_type i = 0; i < count; i++) {
+				this->_end = this->_start + this->_size;
+				for (size_type i = 0; i < this->_capacity; i++) {
 					this->_alloc.construct((_start + i), value);
 				}
+			};
+
+			template <class InputIt>
+			vector(InputIt first, InputIt last,
+					const Allocator& alloc = Allocator()) {
+				this->_alloc = alloc;
+				this->_size = range(first, last);
+				this->_capacity = this->_size * 2;
+				this->_start = this->_alloc.allocate(this->_capacity);
+				this->_end = this->_start + this->_size;
+				size_type i = 0;
+				while (first != last) {
+					this->_alloc.construct(this->_start + i, *first);
+					first++;
+					i++;
+				}
+			};
+
+			vector( const vector& other )
+				:
+					_alloc(Allocator()),
+					_start(0),
+					_size(0),
+					_capacity(0),
+					_end(0) {
+				*this = other;
+			};
+
+			~vector() {
+				for (size_type i = 0; i < this->_size; i++) {
+					this->_alloc.destroy(this->_start + i);
+				}
+				this->_alloc.deallocate(this->_start, this->_capacity);
+			}
+
+			vector& operator=( const vector& other ) {
+				if (this->_start) {
+					for (size_type i = 0; i < this->_size; i++) {
+						this->_alloc.destroy(this->_start + i);
+					}
+					this->_alloc.deallocate(this->_start, this->_capacity);
+				}
+				this->_alloc = other._alloc;
+				this->_size = other._size;
+				this->_capacity = other._capacity;
+				this->_start = this->_alloc.allocate(this->_capacity);
+				this->_end = this->_start + this->_size;
+				for (size_type i = 0; i < this->_capacity; i++) {
+					this->_alloc.construct(this->_start + i, other[i]);
+				}
+				return *this;
 			};
 
 			reference at( size_type pos ) {
@@ -84,23 +142,23 @@ namespace ft {
 				if (this->_size != this->_capacity) {
 					this->_alloc.construct(this->_start + this->_size, value);
 					this->_size++;
-					this->_end += this->_size;
-					std::cout << "pos = " << _size << std::endl;
+					this->_end += 1;
 				} else {
-					std::cout << "new alloc" << std::endl;
-					vector<T> ret((this->_size + 1) * 2);
+					vector<T> realloc((this->_capacity + 1) * 2);
 
 					for (size_type i = 0; i < this->_size; i++) {
-						ret[i] = (*this)[i];
+						realloc[i] = (*this)[i];
 					}
-					ret[this->_size] = value;
+					realloc[this->_size] = value;
+					if (this->_capacity) {
+						for (size_type i = 0; i < this->_size; i++) {
+							this->_alloc.destroy(this->_start + i);
+						}
+						//this->_alloc.deallocate(this->_start, this->_capacity);
+					}
 					this->_size++;
-					ret._size = this->_size;
-					for (size_type i = 0; i < this->_size; i++) {
-						this->_alloc.destroy(this->_start + i);
-					}
-					this->_alloc.deallocate(this->_start, this->_size);
-					*this = ret;
+					realloc._size = this->_size;
+					*this = realloc;
 				}
 			};
 
@@ -123,7 +181,6 @@ namespace ft {
 			pointer _start;
 			size_type _size;
 			size_type _capacity;
-//			size_type _maxSize;
 			pointer _end;
 
 	};
