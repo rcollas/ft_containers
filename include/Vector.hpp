@@ -6,6 +6,8 @@
 #include "Iterator.hpp"
 #include "RandomAccessIterator.hpp"
 #include <stdexcept>
+#include <cstdio>
+#include <cstdlib>
 
 
 namespace ft {
@@ -144,21 +146,10 @@ namespace ft {
 					this->_size++;
 					this->_end += 1;
 				} else {
-					vector<T> realloc((this->_capacity + 1) * 2);
-
-					for (size_type i = 0; i < this->_size; i++) {
-						realloc[i] = (*this)[i];
-					}
-					realloc[this->_size] = value;
-					if (this->_capacity) {
-						for (size_type i = 0; i < this->_size; i++) {
-							this->_alloc.destroy(this->_start + i);
-						}
-						//this->_alloc.deallocate(this->_start, this->_capacity);
-					}
+					this->_capacity == 0 ? reserve(1) : reserve(this->_capacity * 2);
+					this->_alloc.construct(this->_start + this->_size, value);
 					this->_size++;
-					realloc._size = this->_size;
-					*this = realloc;
+					this->_end++;
 				}
 			};
 
@@ -170,6 +161,19 @@ namespace ft {
 			}
 			reverse_iterator rend() {
 				return reverse_iterator(this->begin());
+			}
+
+			void reserve(size_type new_cap) {
+				if (new_cap > this->_alloc.max_size()) {
+					throw std::length_error("Your allocation capacity exceed the maximum available size");
+				}
+				pointer prev_start = this->_start;
+				this->_start = this->_alloc.allocate(new_cap);
+				this->_capacity = new_cap;
+				for (size_type i = 0; i < this->_size; i++) {
+					this->_alloc.construct(this->_start + i, *(prev_start + i));
+					this->_alloc.destroy(prev_start + i);
+				}
 			}
 
 			size_type size() { return this->_size; }
