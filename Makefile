@@ -1,3 +1,9 @@
+################################################################################
+################################################################################
+############################/? MAIN FILES ?/####################################
+################################################################################
+################################################################################
+
 NAME		=	ft_containers
 
 SRC_FILES 	=	main.cpp
@@ -57,6 +63,48 @@ fclean:	clean
 
 re:		fclean all
 
-.DELETE_ON_ERROR:
+################################################################################
+################################################################################
+############################/? TEST FILES ?/####################################
+################################################################################
+################################################################################
 
-.PHONY:	all clean fclean re
+TEST_NAME		=	ft_containers_test
+
+TEST_SRC_FILES	=	main_test.cpp
+
+TEST_OBJS_DIR	=	test/objs
+
+TEST_SRC_DIR	=	test/srcs
+
+TEST_INC_DIR	=	test/include
+
+TEST_INC_FILES	=	vector_assign.h
+
+TEST_OBJS		=	$(addprefix $(TEST_OBJS_DIR)/, $(TEST_SRC_FILES:.cpp=.o))
+
+TEST_INC		=	$(addprefix $(TEST_INC_DIR)/, $(TEST_INC_FILES))
+
+GTEST_INCLUDE	=	./test/googletest/googletest/include/
+
+CC				=	c++
+
+GTEST_FLAGS		=	./test/googletest/lib/libgtest.a -lpthread
+
+$(TEST_OBJS_DIR)/%.o: $(TEST_SRC_DIR)/%.cpp $(TEST_INC)
+				@mkdir -p $(@D)
+				@$(CC) -I$(GTEST_INCLUDE) -Igtest -c $< -o $@
+				@echo "$(CUT)$(BLUE)clang $(RESET)$(notdir $@)"
+				@printf "$(UP)"
+
+test:	$(TEST_NAME)
+
+$(TEST_NAME):		$(TEST_OBJS)
+					@$(CC) -pthread -I$(GTEST_INCLUDE) $^ -o $@ $(GTEST_FLAGS)
+					@echo "$(CUT)$(GREEN)✔ $(TEST_NAME) created$(RESET)"
+					@./$@
+					@$(RM) $(TEST_OBJS) $(TEST_OBJS_DIR) $(TEST_NAME)
+
+
+.PHONY:	all clean fclean re test
+

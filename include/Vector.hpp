@@ -66,7 +66,6 @@ namespace ft {
 					this->_alloc.construct((_start + i), value);
 				}
 			};
-
 			template <class InputIt>
 			vector(InputIt first, InputIt last,
 					const Allocator& alloc = Allocator()) {
@@ -82,7 +81,6 @@ namespace ft {
 					i++;
 				}
 			};
-
 			vector( const vector& other )
 				:
 					_alloc(Allocator()),
