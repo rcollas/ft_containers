@@ -126,29 +126,45 @@ int main() {
 //			std::cout << "ERROR" << std::endl;
 //		}
 //	}
+//	ft::vector<int> foo;
+//	std::cout << foo.capacity() << std::endl;
+//	foo.push_back(10);
+//	for (int i = 0; i < 10; i++) {
+//		foo.push_back(5);
+//	}
+//	std::cout << *foo.begin() << std::endl;
+//	std::cout << foo.capacity() << std::endl;
+//	for (size_t i = 0; i < foo.size(); i++) {
+//		std::cout << foo[i] << std::endl;
+//	}
+//
+//	std::vector<int> bar;
+//	std::cout << bar.capacity() << std::endl;
+//	bar.push_back(10);
+//	for (int i = 0; i < 10; i++) {
+//		bar.push_back(5);
+//	}
+//	std::cout << *bar.begin() << std::endl;
+//	std::cout << bar.capacity() << std::endl;
+//	for (size_t i = 0; i < bar.size(); i++) {
+//		std::cout << bar[i] << std::endl;
+//	}
 	ft::vector<int> foo;
-	std::cout << foo.capacity() << std::endl;
-	foo.push_back(10);
-	for (int i = 0; i < 10; i++) {
-		foo.push_back(5);
-	}
-	std::cout << *foo.begin() << std::endl;
-	std::cout << foo.capacity() << std::endl;
+	std::vector<int> bar;
+
+	foo.assign(10, 0);
+	bar.assign(10, 0);
+//	foo.reserve(10);
+//	bar.reserve(10);
 	for (size_t i = 0; i < foo.size(); i++) {
 		std::cout << foo[i] << std::endl;
 	}
-
-	std::vector<int> bar;
-	std::cout << bar.capacity() << std::endl;
-	bar.push_back(10);
-	for (int i = 0; i < 10; i++) {
-		bar.push_back(5);
-	}
-	std::cout << *bar.begin() << std::endl;
-	std::cout << bar.capacity() << std::endl;
 	for (size_t i = 0; i < bar.size(); i++) {
 		std::cout << bar[i] << std::endl;
 	}
+	ft::vector<int>::iterator it = foo.begin();
+	ft::vector<int>::iterator ite = foo.end();
+//	std::cout << it - ite << std::endl;
 
 	return 0;
 }

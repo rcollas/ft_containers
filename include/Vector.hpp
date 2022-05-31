@@ -116,6 +116,33 @@ namespace ft {
 				return *this;
 			};
 
+			void assign(size_type count, const T& value) {
+				if (count > this->_capacity) {
+					this->_capacity == 0 ? reserve(count) : reserve(this->_capacity * 2);
+				}
+				for (size_type i = 0; i < this->_size; i++) {
+					this->_alloc.destroy(this->_start + i);
+				}
+				this->_size = count;
+				for (size_type i = 0; i < count; i++) {
+					this->_alloc.construct(this->_start + i, value);
+				}
+			}
+
+//			template< class InputIt >
+//			void assign( InputIt first, InputIt last ) {
+//				if (count > this->_capacity) {
+//					this->_capacity == 0 ? reserve(count) : reserve(this->_capacity * 2);
+//				}
+//				for (size_type i = 0; i < this->_size; i++) {
+//					this->_alloc.destroy(this->_start + i);
+//				}
+//				this->_size = count;
+//				for (size_type i = 0; i < count; i++) {
+//					this->_alloc.construct(this->_start + i, value);
+//				}
+//			}
+
 			reference at( size_type pos ) {
 				if (pos >= capacity()) {
 					throw std::out_of_range("Index out of range");
