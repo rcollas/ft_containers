@@ -197,6 +197,7 @@ int main() {
 
 	ft::vector<base> fuu(20);
 	ft::vector<base> fizz;
+	std::cout << "fizz is empty = " << fizz.empty() << std::endl;
 	std::cout << "fizz data = " << fizz.data() << std::endl;
 	fizz.assign(fuu.begin(), fuu.end());
 	std::cout << "fizz data after assign = " << fizz.data() << std::endl;
@@ -210,7 +211,7 @@ int main() {
 	std::cout << bazz[0].getFloat() << std::endl;
 //	std::vector<base> bizz(buu.rbegin(), buu.rend());
 //	std::cout << bizz[0].getFloat() << std::endl;
-
+	ft::vector<int>::iterator test;
 
 	return 0;
 }

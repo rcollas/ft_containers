@@ -129,7 +129,7 @@ namespace ft {
 					this->_alloc.destroy(this->_start + i);
 				}
 				this->_size = count;
-				this->_end = this->_start + count - 1;
+				this->_end = this->_start + count;
 				for (size_type i = 0; i < count; i++) {
 					this->_alloc.construct(this->_start + i, value);
 				}
@@ -151,6 +151,7 @@ namespace ft {
 				for (size_type i = 0; i < count; i++) {
 					this->_alloc.construct(this->_start + i, *tmp);
 				}
+				this->_end = this->_start + this->_size;
 			}
 
 			allocator_type get_allocator() const { return this->_alloc; }
@@ -197,7 +198,25 @@ namespace ft {
 				return reverse_iterator(this->end()--);
 			}
 
-			/*************** CAPACITY ********************/
+			const_iterator begin() const {
+				return const_iterator(this->_start);
+			}
+			const_iterator end() const {
+				return const_iterator(this->_end);
+			}
+			const_reverse_iterator rend() const {
+				return const_reverse_iterator(this->begin()--);
+			}
+			const_reverse_iterator rbegin() const {
+				return const_reverse_iterator(this->end()--);
+			}
+
+				/*************** CAPACITY ********************/
+
+			bool empty() const { return this->begin() == this->end(); }
+
+			size_type size() { return this->_size; }
+			size_type capacity() { return this->_capacity; }
 
 			void reserve(size_type new_cap) {
 				if (new_cap > this->_alloc.max_size()) {
@@ -211,9 +230,6 @@ namespace ft {
 					this->_alloc.destroy(prev_start + i);
 				}
 			}
-
-			size_type size() { return this->_size; }
-			size_type capacity() { return this->_capacity; }
 
 			void push_back(const T& value) {
 				if (this->_size != this->_capacity) {

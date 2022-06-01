@@ -16,6 +16,8 @@ namespace ft {
 			typedef typename iterator_traits<T>::iterator_category iterator_category;
 			typedef random_access_iterator iterator;
 
+
+			explicit random_access_iterator() { this->_ptr = 0; }
 			explicit random_access_iterator(pointer const &src) { this->_ptr = src; }
 			random_access_iterator(iterator const &src) {
 				*this = src;
@@ -38,6 +40,10 @@ namespace ft {
 			iterator &operator++() { this->_ptr++; return *this; }
 			iterator operator++(int) { iterator tmp(*this) ; operator++(); return tmp; }
 
+			iterator operator+(int n) const { return iterator(this->_ptr + n) ;}
+			iterator operator-(int n) const { return iterator(this->_ptr - n) ;}
+
+			bool operator==(iterator const &rhs) { return this->_ptr == rhs._ptr; }
 			bool operator!=(iterator const &rhs) { return this->_ptr != rhs._ptr; }
 
 		private:
