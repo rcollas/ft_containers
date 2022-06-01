@@ -12,6 +12,18 @@
 #include <ctime>
 #include <cstdlib>
 #include <memory>
+#include "is_same.hpp"
+
+class base {
+	public:
+		base() : i(0), b(10.1f) {};
+		int getInt() const { return i; }
+		float getFloat() const { return b; }
+	private:
+		int i;
+		float b;
+};
+
 
 int main() {
 
@@ -156,15 +168,49 @@ int main() {
 	bar.assign(10, 0);
 //	foo.reserve(10);
 //	bar.reserve(10);
-	for (size_t i = 0; i < foo.size(); i++) {
-		std::cout << foo[i] << std::endl;
-	}
-	for (size_t i = 0; i < bar.size(); i++) {
-		std::cout << bar[i] << std::endl;
-	}
+//	for (size_t i = 0; i < foo.size(); i++) {
+//		std::cout << foo[i] << std::endl;
+//	}
+//	for (size_t i = 0; i < bar.size(); i++) {
+//		std::cout << bar[i] << std::endl;
+//	}
 	ft::vector<int>::iterator it = foo.begin();
 	ft::vector<int>::iterator ite = foo.end();
-//	std::cout << it - ite << std::endl;
+	std::cout << it - ite << std::endl;
+	std::cout << ite - it << std::endl;
+	std::cout << ite - ite << std::endl;
+//	while (it != ite) {
+//		std::cout << *it << std::endl;
+//		it++;
+//	}
+	std::vector<int>::iterator b = bar.begin();
+	std::vector<int>::iterator e = bar.end();
+	std::cout << b - e << std::endl;
+	std::cout << e - b << std::endl;
+	std::cout << e - e << std::endl;
+//	while (b != e) {
+//		std::cout << *b << std::endl;
+//		b++;
+//	}
+
+	std::cout << ft::is_same<int, int16_t>::value << std::endl;
+
+	ft::vector<base> fuu(20);
+	ft::vector<base> fizz;
+	std::cout << "fizz data = " << fizz.data() << std::endl;
+	fizz.assign(fuu.begin(), fuu.end());
+	std::cout << "fizz data after assign = " << fizz.data() << std::endl;
+	std::cout << fuu.end() - fuu.begin() << std::endl;
+	std::vector<base> buu(20);
+	std::vector<base> buzz;
+	buzz.assign(buu.begin(), buu.end());
+	std::cout << buu.end() - buu.begin() << std::endl;
+
+	ft::vector<base> bazz(fuu.rbegin(), fuu.rend());
+	std::cout << bazz[0].getFloat() << std::endl;
+//	std::vector<base> bizz(buu.rbegin(), buu.rend());
+//	std::cout << bizz[0].getFloat() << std::endl;
+
 
 	return 0;
 }

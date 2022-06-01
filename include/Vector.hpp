@@ -5,10 +5,11 @@
 #include "ReverseIterator.hpp"
 #include "Iterator.hpp"
 #include "RandomAccessIterator.hpp"
+#include "enable_if.hpp"
+#include "is_same.hpp"
 #include <stdexcept>
 #include <cstdio>
 #include <cstdlib>
-
 
 namespace ft {
 
@@ -26,6 +27,8 @@ namespace ft {
 	class vector {
 //			friend class iterator<T, vector>;
 		public:
+
+			/********* MEMBER TYPES ***********/
 			typedef T value_type;
 			typedef Allocator allocator_type;
 			typedef std::size_t size_type;
@@ -39,6 +42,7 @@ namespace ft {
 			typedef typename ft::reverse_iterator<iterator> reverse_iterator;
 			typedef typename ft::reverse_iterator<const_iterator> const_reverse_iterator;
 
+			/********** CONSTRUCTOR ********/
 			vector() {
 
 				this->_alloc = Allocator();
@@ -68,20 +72,17 @@ namespace ft {
 			};
 			template <class InputIt>
 			vector(InputIt first, InputIt last,
-					const Allocator& alloc = Allocator()) {
+					const Allocator& alloc = Allocator(),
+					typename ft::enable_if<!ft::is_same<InputIt, int>::value>::type* = 0) {
 				this->_alloc = alloc;
-				this->_size = range(first, last);
-				this->_capacity = this->_size * 2;
-				this->_start = this->_alloc.allocate(this->_capacity);
-				this->_end = this->_start + this->_size;
-				size_type i = 0;
-				while (first != last) {
-					this->_alloc.construct(this->_start + i, *first);
-					first++;
-					i++;
-				}
+//				this->_size = last - first;
+//				this->_capacity = this->_size * 2;
+//				this->_start = this->_alloc.allocate(this->_capacity);
+//				this->_end = this->_start + this->_size;
+				assign(first, last);
 			};
-			vector( const vector& other )
+
+			vector(const vector& other)
 				:
 					_alloc(Allocator()),
 					_start(0),
@@ -91,6 +92,8 @@ namespace ft {
 				*this = other;
 			};
 
+			/********** DESTRUCTOR **********/
+
 			~vector() {
 				for (size_type i = 0; i < this->_size; i++) {
 					this->_alloc.destroy(this->_start + i);
@@ -98,7 +101,9 @@ namespace ft {
 				this->_alloc.deallocate(this->_start, this->_capacity);
 			}
 
-			vector& operator=( const vector& other ) {
+			/************* ASSIGNMENT OPERATOR *********/
+
+			vector& operator=(const vector& other) {
 				if (this->_start) {
 					for (size_type i = 0; i < this->_size; i++) {
 						this->_alloc.destroy(this->_start + i);
@@ -124,24 +129,33 @@ namespace ft {
 					this->_alloc.destroy(this->_start + i);
 				}
 				this->_size = count;
+				this->_end = this->_start + count - 1;
 				for (size_type i = 0; i < count; i++) {
 					this->_alloc.construct(this->_start + i, value);
 				}
 			}
 
-//			template< class InputIt >
-//			void assign( InputIt first, InputIt last ) {
-//				if (count > this->_capacity) {
-//					this->_capacity == 0 ? reserve(count) : reserve(this->_capacity * 2);
-//				}
-//				for (size_type i = 0; i < this->_size; i++) {
-//					this->_alloc.destroy(this->_start + i);
-//				}
-//				this->_size = count;
-//				for (size_type i = 0; i < count; i++) {
-//					this->_alloc.construct(this->_start + i, value);
-//				}
-//			}
+			template< class InputIt >
+			void assign(InputIt first, InputIt last,
+						typename ft::enable_if<!ft::is_same<InputIt, int>::value>::type* = 0) {
+				size_type count = last - first;
+				InputIt tmp = first;
+
+				if (count > this->_capacity) {
+					this->_capacity == 0 ? reserve(count) : reserve(this->_capacity * 2);
+				}
+				for (size_type i = 0; i < this->_size; i++) {
+					this->_alloc.destroy(this->_start + i);
+				}
+				this->_size = count;
+				for (size_type i = 0; i < count; i++) {
+					this->_alloc.construct(this->_start + i, *tmp);
+				}
+			}
+
+			allocator_type get_allocator() const { return this->_alloc; }
+
+			/************* ELEMENT ACCESS ***********/
 
 			reference at( size_type pos ) {
 				if (pos >= capacity()) {
@@ -165,18 +179,10 @@ namespace ft {
 			reference back() { return *(this->_end); }
 			const_reference back() const { return *(this->_end); }
 
-			void push_back(const T& value) {
-				if (this->_size != this->_capacity) {
-					this->_alloc.construct(this->_start + this->_size, value);
-					this->_size++;
-					this->_end += 1;
-				} else {
-					this->_capacity == 0 ? reserve(1) : reserve(this->_capacity * 2);
-					this->_alloc.construct(this->_start + this->_size, value);
-					this->_size++;
-					this->_end++;
-				}
-			};
+			T* data(){ return this->_start; }
+			const T* data() const { return this->_start; }
+
+			/************ ITERATORS *************/
 
 			iterator begin() {
 				return iterator(this->_start);
@@ -185,8 +191,13 @@ namespace ft {
 				return iterator(this->_end + 1);
 			}
 			reverse_iterator rend() {
-				return reverse_iterator(this->begin());
+				return reverse_iterator(this->begin()--);
 			}
+			reverse_iterator rbegin() {
+				return reverse_iterator(this->end()--);
+			}
+
+			/*************** CAPACITY ********************/
 
 			void reserve(size_type new_cap) {
 				if (new_cap > this->_alloc.max_size()) {
@@ -204,6 +215,18 @@ namespace ft {
 			size_type size() { return this->_size; }
 			size_type capacity() { return this->_capacity; }
 
+			void push_back(const T& value) {
+				if (this->_size != this->_capacity) {
+					this->_alloc.construct(this->_start + this->_size, value);
+					this->_size++;
+					this->_end += 1;
+				} else {
+					this->_capacity == 0 ? reserve(1) : reserve(this->_capacity * 2);
+					this->_alloc.construct(this->_start + this->_size, value);
+					this->_size++;
+					this->_end++;
+				}
+			};
 
 		private:
 			Allocator _alloc;

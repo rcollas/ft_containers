@@ -32,8 +32,8 @@ namespace ft {
 
 			reverse_iterator& operator++() { --base(); return *this; };
 			reverse_iterator& operator--() { ++base(); return *this; };
-			reverse_iterator& operator++(int) {Iter tmp = *this; base()++; return tmp; };
-			reverse_iterator& operator--(int) {Iter tmp = *this; base()--; return tmp; };
+			reverse_iterator operator++(int) const {reverse_iterator tmp = *this; base()++; return tmp; };
+			reverse_iterator operator--(int) const {reverse_iterator tmp = *this; base()--; return tmp; };
 			reverse_iterator& operator+(difference_type n) const { return reverse_iterator(base() - n); };
 			reverse_iterator& operator-(difference_type n) const { return reverse_iterator(base() + n); };
 			reverse_iterator& operator+=(difference_type n) { base() -= n; return *this; };

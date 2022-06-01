@@ -22,6 +22,14 @@ namespace ft {
 			}
 			iterator &operator=(iterator const &rhs) { this->_ptr = rhs._ptr; return *this; }
 
+			long operator-(iterator const &rhs) {
+				long i = 0;
+				iterator tmp = *this;
+				if (tmp._ptr < rhs._ptr) while (tmp != rhs) {tmp++; i--;}
+				else if (tmp._ptr > rhs._ptr) while (tmp != rhs) {tmp--; i++;};
+				return i - 1;
+			}
+
 			value_type &operator*() const { return *this->_ptr; };
 			pointer &operator->() const { return (pointer*)0; };
 
