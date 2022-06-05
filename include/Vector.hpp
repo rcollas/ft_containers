@@ -91,7 +91,7 @@ namespace ft {
 				this->_capacity = count * 2;
 				this->_start = this->_alloc.allocate(count * 2);
 				this->_size = count;
-				this->_end = this->_start + this->_size;
+				this->_end = this->_start + this->_size + 1;
 				for (size_type i = 0; i < this->_capacity; i++) {
 					this->_alloc.construct((_start + i), value);
 				}
@@ -267,12 +267,12 @@ namespace ft {
 				if (this->_size != this->_capacity) {
 					this->_alloc.construct(this->_start + this->_size, value);
 					this->_size++;
-					this->_end += 1;
+					this->_end++;
 				} else {
 					this->_capacity == 0 ? reserve(1) : reserve(this->_capacity * 2);
 					this->_alloc.construct(this->_start + this->_size, value);
 					this->_size++;
-					this->_end++;
+					this->_end = this->_start + this->_size;
 				}
 			};
 

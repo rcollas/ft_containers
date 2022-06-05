@@ -217,15 +217,19 @@ int main() {
 	std::cout << std::endl;
 
 	ft::vector<Base> foo;
+	ft::vector<Base> bar(10);
 //	std::vector<Base> bar;
 
-	srand(time(0));
-	for (size_t i = 0; i < 20; i++) {
-//		Base value = rand();
-		foo.push_back(Base());
-//		bar.push_back(Base());
-	}
-	foo.pop_back();
+//	srand(time(0));
+//	for (size_t i = 0; i < 20; i++) {
+////		Base value = rand();
+//		foo.push_back(Base());
+////		bar.push_back(Base());
+//	}
+//	foo.pop_back();
+	foo.assign(bar.begin(), bar.end());
+	std::cout << foo.size() << std::endl;
+	std::cout << bar.end() - bar.begin() << std::endl;
 
 //	for (size_t i = 0; i < bar.size(); i++) {
 //		std::cout << "foo = " << foo[i] << " bar = " << bar[i] << std::endl;
