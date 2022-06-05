@@ -92,7 +92,7 @@ namespace ft {
 				this->_start = this->_alloc.allocate(count * 2);
 				this->_size = count;
 				this->_end = this->_start + this->_size + 1;
-				for (size_type i = 0; i < this->_capacity; i++) {
+				for (size_type i = 0; i < count; i++) {
 					this->_alloc.construct((_start + i), value);
 				}
 			};
@@ -101,10 +101,6 @@ namespace ft {
 					const Allocator& alloc = Allocator(),
 					typename ft::enable_if<!ft::is_same<InputIt, int>::value>::type* = 0) {
 				this->_alloc = alloc;
-//				this->_size = last - first;
-//				this->_capacity = this->_size * 2;
-//				this->_start = this->_alloc.allocate(this->_capacity);
-//				this->_end = this->_start + this->_size;
 				assign(first, last);
 			};
 
@@ -277,33 +273,33 @@ namespace ft {
 			};
 
 			iterator erase(iterator pos) {
-				iterator *ret = pos == this->end() ? 0 : &pos;
-				while (pos + 1 != this->end()) {
+				iterator ret = pos == this->end() ? this->end() : pos;
+				while (pos + 2 != this->end()) {
 					*pos = *(pos + 1);
 					pos++;
 				}
 				this->pop_back();
-				return ret == 0 ? this->end() : *ret;
+				return ret;
 			}
 
 			iterator erase(iterator first, iterator last) {
 				size_type count = last - first;
 				iterator *ret = last == this->end() ? 0 : &last;
-				while (first + count != last) {
+				while (first + count + 1 != last) {
 					this->_alloc.destroy(&*first);
-					*first = *(first + count);
+					*first = *(first + count + 1);
 					first++;
 				}
 				while (count) {
 					this->pop_back();
 					count--;
 				}
-				return ret == 0 ? this->end() : *ret;
+				return ret == 0 ? (this->end()) : *ret;
 			}
 
 			void pop_back() {
 				if (this->_size) {
-					this->_alloc.destroy(this->_end - 1);
+					this->_alloc.destroy(this->_end - 2);
 					this->_end--;
 					this->_size--;
 				}

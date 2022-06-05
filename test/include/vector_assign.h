@@ -7,49 +7,6 @@
 #include <ctime>
 #include <cstdlib>
 #include <iostream>
-//
-//class Base {
-//	public:
-//		Base() : _value(0) {
-//			this->_str = new std::string[20];
-//			for (int i = 0; i < 20; i ++) {
-//				this->_str[i] = "hello";
-//			}
-//		}
-//		explicit Base(int value) : _value(value) {
-//			this->_str = new std::string[20];
-//			for (int i = 0; i < 20; i ++) {
-//				this->_str[i] = "hello";
-//			}
-//		}
-//		~Base() { delete [] this->_str; }
-//		Base(Base const &src) : Base(src.getValue()) { *this = src; }
-//		Base &operator=(const Base &rhs) {
-//			if (this != &rhs) {
-//				this->_value = rhs._value;
-////				if (this->_str) {
-////					this->_str[0] = rhs._str[0];
-////				}
-//			}
-//			return *this;
-//		}
-//
-//		int &operator[](size_t pos) { return this->_value; }
-//		bool operator==(Base const &rhs) {
-//			return (this->_value == rhs._value)
-//					&& (this->_str[0] == rhs._str[0]);
-//		}
-//		int getValue() const { return this->_value; }
-//		std::string getStr() const { return this->_str[0]; }
-//
-//	private:
-//		int _value;
-//		std::string *_str;
-//};
-//
-//bool operator==(Base const &lhs, Base const &rhs) {
-//	return (lhs.getValue() == rhs.getValue()) && (lhs.getStr() == rhs.getStr());
-//}
 
 class AssignVectorTest : public ::testing::Test {
 	protected:
