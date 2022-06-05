@@ -102,7 +102,7 @@ test:	$(TEST_NAME)
 $(TEST_NAME):		$(TEST_OBJS)
 					@$(CC) -pthread -I$(GTEST_INCLUDE) $^ -o $@ $(GTEST_FLAGS)
 					@echo "$(CUT)$(GREEN)✔ $(TEST_NAME) created$(RESET)"
-					@./$@
+					@valgrind ./$@
 					@$(RM) $(TEST_OBJS) $(TEST_OBJS_DIR) $(TEST_NAME)
 
 .DELETE_ON_ERROR:

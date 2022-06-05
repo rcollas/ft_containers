@@ -161,57 +161,85 @@ int main() {
 //	for (size_t i = 0; i < bar.size(); i++) {
 //		std::cout << bar[i] << std::endl;
 //	}
-	ft::vector<int> foo;
-	std::vector<int> bar;
+//	ft::vector<int> foo;
+//	std::vector<int> bar;
+//
+//	foo.assign(10, 0);
+//	bar.assign(10, 0);
+////	foo.reserve(10);
+////	bar.reserve(10);
+////	for (size_t i = 0; i < foo.size(); i++) {
+////		std::cout << foo[i] << std::endl;
+////	}
+////	for (size_t i = 0; i < bar.size(); i++) {
+////		std::cout << bar[i] << std::endl;
+////	}
+//	ft::vector<int>::iterator it = foo.begin();
+//	ft::vector<int>::iterator ite = foo.end();
+//	std::cout << it - ite << std::endl;
+//	std::cout << ite - it << std::endl;
+//	std::cout << ite - ite << std::endl;
+////	while (it != ite) {
+////		std::cout << *it << std::endl;
+////		it++;
+////	}
+//	std::vector<int>::iterator b = bar.begin();
+//	std::vector<int>::iterator e = bar.end();
+//	std::cout << b - e << std::endl;
+//	std::cout << e - b << std::endl;
+//	std::cout << e - e << std::endl;
+////	while (b != e) {
+////		std::cout << *b << std::endl;
+////		b++;
+////	}
+//
+//	std::cout << ft::is_same<int, int16_t>::value << std::endl;
+//
+//	ft::vector<base> fuu(20);
+//	ft::vector<base> fizz;
+//	std::cout << "fizz is empty = " << fizz.empty() << std::endl;
+//	std::cout << "fizz data = " << fizz.data() << std::endl;
+//	fizz.assign(fuu.begin(), fuu.end());
+//	std::cout << "fizz data after assign = " << fizz.data() << std::endl;
+//	std::cout << fuu.end() - fuu.begin() << std::endl;
+//	std::vector<base> buu(20);
+//	std::vector<base> buzz;
+//	buzz.assign(buu.begin(), buu.end());
+//	std::cout << buu.end() - buu.begin() << std::endl;
+//
+//	ft::vector<base> bazz(fuu.rbegin(), fuu.rend());
+//	std::cout << bazz[0].getFloat() << std::endl;
+////	std::vector<base> bizz(buu.rbegin(), buu.rend());
+////	std::cout << bizz[0].getFloat() << std::endl;
+//	ft::vector<int>::iterator test;
 
-	foo.assign(10, 0);
-	bar.assign(10, 0);
-//	foo.reserve(10);
-//	bar.reserve(10);
-//	for (size_t i = 0; i < foo.size(); i++) {
-//		std::cout << foo[i] << std::endl;
-//	}
+
+	std::cout << std::endl;
+
+	ft::vector<Base> foo;
+//	std::vector<Base> bar;
+
+	srand(time(0));
+	for (size_t i = 0; i < 20; i++) {
+//		Base value = rand();
+		foo.push_back(Base());
+//		bar.push_back(Base());
+	}
+	foo.pop_back();
+
 //	for (size_t i = 0; i < bar.size(); i++) {
-//		std::cout << bar[i] << std::endl;
-//	}
-	ft::vector<int>::iterator it = foo.begin();
-	ft::vector<int>::iterator ite = foo.end();
-	std::cout << it - ite << std::endl;
-	std::cout << ite - it << std::endl;
-	std::cout << ite - ite << std::endl;
-//	while (it != ite) {
-//		std::cout << *it << std::endl;
-//		it++;
-//	}
-	std::vector<int>::iterator b = bar.begin();
-	std::vector<int>::iterator e = bar.end();
-	std::cout << b - e << std::endl;
-	std::cout << e - b << std::endl;
-	std::cout << e - e << std::endl;
-//	while (b != e) {
-//		std::cout << *b << std::endl;
-//		b++;
+//		std::cout << "foo = " << foo[i] << " bar = " << bar[i] << std::endl;
 //	}
 
-	std::cout << ft::is_same<int, int16_t>::value << std::endl;
+//	std::cout << *(foo.begin()) << std::endl;
+//	std::cout << *(foo.end() - 1) << std::endl;
+//	std::cout << *(bar.end() - 1) << std::endl;
 
-	ft::vector<base> fuu(20);
-	ft::vector<base> fizz;
-	std::cout << "fizz is empty = " << fizz.empty() << std::endl;
-	std::cout << "fizz data = " << fizz.data() << std::endl;
-	fizz.assign(fuu.begin(), fuu.end());
-	std::cout << "fizz data after assign = " << fizz.data() << std::endl;
-	std::cout << fuu.end() - fuu.begin() << std::endl;
-	std::vector<base> buu(20);
-	std::vector<base> buzz;
-	buzz.assign(buu.begin(), buu.end());
-	std::cout << buu.end() - buu.begin() << std::endl;
-
-	ft::vector<base> bazz(fuu.rbegin(), fuu.rend());
-	std::cout << bazz[0].getFloat() << std::endl;
-//	std::vector<base> bizz(buu.rbegin(), buu.rend());
-//	std::cout << bizz[0].getFloat() << std::endl;
-	ft::vector<int>::iterator test;
+//	ft::vector<int>::iterator it = foo.erase(foo.begin() + 3);
+//	std::vector<int>::iterator ite = bar.erase(bar.begin() + 3);
+//
+//	std::cout << "it = " << *(it) << std::endl;
+//	std::cout << "ite = " << *ite << std::endl;
 
 	return 0;
 }

@@ -11,6 +11,32 @@
 #include <cstdio>
 #include <cstdlib>
 
+class Base {
+	public:
+		Base() {
+			this->_str = new std::string[10];
+		}
+		Base(Base const &src) {
+			this->_str = new std::string[10];
+			for (int i = 0; i < 10; i++) {
+				this->_str[i] = src._str[i];
+			}
+		}
+		Base &operator=(Base const &rhs) {
+			if (this != &rhs) {
+				delete[] this->_str;
+				this->_str = new std::string[10];
+				for (int i = 0; i < 10; i++) {
+					this->_str[i] = rhs._str[i];
+				}
+			}
+			return *this;
+		}
+		~Base() { delete [] this->_str; }
+	private:
+		std::string *_str;
+};
+
 namespace ft {
 
 //	template <class Iter>
@@ -184,7 +210,7 @@ namespace ft {
 				return iterator(this->_start);
 			}
 			iterator end() {
-				return iterator(this->_end + 1);
+				return iterator(this->_end);
 			}
 			reverse_iterator rend() {
 				return reverse_iterator(this->begin()--);
@@ -197,7 +223,7 @@ namespace ft {
 				return const_iterator(this->_start);
 			}
 			const_iterator end() const {
-				return const_iterator(this->_end + 1);
+				return const_iterator(this->_end);
 			}
 			const_reverse_iterator rend() const {
 				return const_reverse_iterator(this->begin()--);
@@ -221,10 +247,12 @@ namespace ft {
 				pointer prev_start = this->_start;
 				this->_start = this->_alloc.allocate(new_cap);
 				this->_capacity = new_cap;
+				this->_end = this->_start + this->_size;
 				for (size_type i = 0; i < this->_size; i++) {
 					this->_alloc.construct(this->_start + i, *(prev_start + i));
 					this->_alloc.destroy(prev_start + i);
 				}
+				this->_alloc.deallocate(prev_start, this->_capacity);
 			}
 
 			/************************ MODIFIERS ***********************/
@@ -248,9 +276,34 @@ namespace ft {
 				}
 			};
 
+			iterator erase(iterator pos) {
+				iterator *ret = pos == this->end() ? 0 : &pos;
+				while (pos + 1 != this->end()) {
+					*pos = *(pos + 1);
+					pos++;
+				}
+				this->pop_back();
+				return ret == 0 ? this->end() : *ret;
+			}
+
+			iterator erase(iterator first, iterator last) {
+				size_type count = last - first;
+				iterator *ret = last == this->end() ? 0 : &last;
+				while (first + count != last) {
+					this->_alloc.destroy(&*first);
+					*first = *(first + count);
+					first++;
+				}
+				while (count) {
+					this->pop_back();
+					count--;
+				}
+				return ret == 0 ? this->end() : *ret;
+			}
+
 			void pop_back() {
 				if (this->_size) {
-					this->_alloc.destroy(this->_end);
+					this->_alloc.destroy(this->_end - 1);
 					this->_end--;
 					this->_size--;
 				}
