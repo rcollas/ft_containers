@@ -89,4 +89,24 @@ TEST_F(AssignVectorTest, eraseIterator) {
 	}
 }
 
+TEST_F(AssignVectorTest, resize) {
+
+	foo.resize(100);
+	bar.resize(100);
+	ASSERT_EQ(foo.size(), bar.size());
+	for (size_t i = 0; i < foo.size(); i++) {
+		ASSERT_EQ(foo[i], bar[i]);
+	}
+}
+
+TEST_F(AssignVectorTest, resizeWithValue) {
+
+	foo.resize(100, "bazz");
+	bar.resize(100, "bazz");
+	ASSERT_EQ(foo.size(), bar.size());
+	for (size_t i = 0; i < foo.size(); i++) {
+		ASSERT_EQ(foo[i], bar[i]);
+	}
+}
+
 #endif

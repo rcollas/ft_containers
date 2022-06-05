@@ -259,19 +259,6 @@ namespace ft {
 				}
 			}
 
-			void push_back(const T& value) {
-				if (this->_size != this->_capacity) {
-					this->_alloc.construct(this->_start + this->_size, value);
-					this->_size++;
-					this->_end++;
-				} else {
-					this->_capacity == 0 ? reserve(1) : reserve(this->_capacity * 2);
-					this->_alloc.construct(this->_start + this->_size, value);
-					this->_size++;
-					this->_end = this->_start + this->_size;
-				}
-			};
-
 			iterator erase(iterator pos) {
 				iterator ret = pos == this->end() ? this->end() : pos;
 				while (pos + 2 != this->end()) {
@@ -297,11 +284,36 @@ namespace ft {
 				return ret == 0 ? (this->end()) : *ret;
 			}
 
+			void push_back(const T& value) {
+				if (this->_size != this->_capacity) {
+					this->_alloc.construct(this->_start + this->_size, value);
+					this->_size++;
+					this->_end++;
+				} else {
+					this->_capacity == 0 ? reserve(1) : reserve(this->_capacity * 2);
+					this->_alloc.construct(this->_start + this->_size, value);
+					this->_size++;
+					this->_end = this->_start + this->_size;
+				}
+			};
+
 			void pop_back() {
 				if (this->_size) {
 					this->_alloc.destroy(this->_end - 2);
 					this->_end--;
 					this->_size--;
+				}
+			}
+
+			void resize(size_type count, T value = T()) {
+				if (count > this->_capacity) {
+					reserve(this->_capacity * 2);
+				}
+				while (count > this->_size) {
+					this->push_back(value);
+				}
+				while (count < this->_size) {
+					this->pop_back();
 				}
 			}
 
