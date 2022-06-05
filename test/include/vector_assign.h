@@ -4,6 +4,22 @@
 #include <vector>
 #include "../../include/Vector.hpp"
 #include "../googletest/googletest/include/gtest/gtest.h"
+#include <ctime>
+#include <cstdlib>
+
+class AssignVectorTest : public ::testing::Test {
+	protected:
+		void SetUp() override {
+			srand(time(0));
+			for (size_t i = 0; i < foo.size(); i++) {
+				int value = rand();
+				foo.push_back(value);
+				bar.push_back(value);
+			}
+		}
+	ft::vector<int> foo;
+	std::vector<int> bar;
+};
 
 TEST(vectorAssign, assignOnEmptyVector) {
 
@@ -33,14 +49,14 @@ TEST(vectorAssign, assignOnSmallerVector) {
 	}
 }
 
-TEST(vectorAssign, assignWithIterator) {
-	ft::vector<int> foo(20);
+TEST_F(AssignVectorTest, withIterator) {
+
 	ft::vector<int> fizz;
 	fizz.assign(foo.begin(), foo.end());
 
-	std::vector<int> bar(20);
 	std::vector<int> buzz;
 	buzz.assign(bar.begin(), bar.end());
+
 	ASSERT_EQ(fizz.size(), buzz.size());
 	ASSERT_EQ(fizz.capacity(), buzz.capacity());
 	for (size_t i = 0; i < fizz.size(); i++) {

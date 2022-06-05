@@ -122,16 +122,14 @@ namespace ft {
 			};
 
 			void assign(size_type count, const T& value) {
+
+				this->clear();
 				if (count > this->_capacity) {
-					this->_capacity == 0 ? reserve(count) : reserve(this->_capacity * 2);
+					this->_capacity == 0 ? reserve(count) :
+											reserve(this->_capacity * 2);
 				}
-				for (size_type i = 0; i < this->_size; i++) {
-					this->_alloc.destroy(this->_start + i);
-				}
-				this->_size = count;
-				this->_end = this->_start + count;
-				for (size_type i = 0; i < count; i++) {
-					this->_alloc.construct(this->_start + i, value);
+				while (this->_size < count) {
+					this->push_back(value);
 				}
 			}
 
@@ -141,17 +139,14 @@ namespace ft {
 				size_type count = last - first;
 				InputIt tmp = first;
 
+				this->clear();
 				if (count > this->_capacity) {
-					this->_capacity == 0 ? reserve(count) : reserve(this->_capacity * 2);
+					this->_capacity == 0 ? reserve(count) :
+											reserve(this->_capacity * 2);
 				}
-				for (size_type i = 0; i < this->_size; i++) {
-					this->_alloc.destroy(this->_start + i);
-				}
-				this->_size = count;
 				for (size_type i = 0; i < count; i++) {
-					this->_alloc.construct(this->_start + i, *tmp);
+					this->push_back(*tmp++);
 				}
-				this->_end = this->_start + this->_size;
 			}
 
 			allocator_type get_allocator() const { return this->_alloc; }
@@ -202,7 +197,7 @@ namespace ft {
 				return const_iterator(this->_start);
 			}
 			const_iterator end() const {
-				return const_iterator(this->_end);
+				return const_iterator(this->_end + 1);
 			}
 			const_reverse_iterator rend() const {
 				return const_reverse_iterator(this->begin()--);
@@ -216,6 +211,7 @@ namespace ft {
 			bool empty() const { return this->begin() == this->end(); }
 
 			size_type size() { return this->_size; }
+			size_type max_size() { return this->_alloc.max_size(); }
 			size_type capacity() { return this->_capacity; }
 
 			void reserve(size_type new_cap) {
@@ -231,6 +227,14 @@ namespace ft {
 				}
 			}
 
+			/************************ MODIFIERS ***********************/
+
+			void clear() {
+				while (this->_size > 0) {
+					this->_alloc.destroy(this->_start + --this->_size);
+				}
+			}
+
 			void push_back(const T& value) {
 				if (this->_size != this->_capacity) {
 					this->_alloc.construct(this->_start + this->_size, value);
@@ -243,6 +247,14 @@ namespace ft {
 					this->_end++;
 				}
 			};
+
+			void pop_back() {
+				if (this->_size) {
+					this->_alloc.destroy(this->_end);
+					this->_end--;
+					this->_size--;
+				}
+			}
 
 		private:
 			Allocator _alloc;

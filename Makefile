@@ -105,6 +105,9 @@ $(TEST_NAME):		$(TEST_OBJS)
 					@./$@
 					@$(RM) $(TEST_OBJS) $(TEST_OBJS_DIR) $(TEST_NAME)
 
+.DELETE_ON_ERROR:
+					$(TEST_NAME)
+					$(TEST_OBJS)
 
 .PHONY:	all clean fclean re test
 
