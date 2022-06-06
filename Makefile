@@ -102,7 +102,8 @@ test:	$(TEST_NAME)
 $(TEST_NAME):		$(TEST_OBJS)
 					@$(CC) -pthread -I$(GTEST_INCLUDE) $^ -o $@ $(GTEST_FLAGS) -g
 					@echo "$(CUT)$(GREEN)✔ $(TEST_NAME) created$(RESET)"
-					@valgrind --leak-check=full ./$@
+					#@valgrind --leak-check=full ./$@
+					@./$@
 					@$(RM) $(TEST_OBJS) $(TEST_OBJS_DIR) $(TEST_NAME)
 
 .DELETE_ON_ERROR:

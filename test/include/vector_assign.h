@@ -33,7 +33,7 @@ TEST(vectorAssign, assignOnEmptyVector) {
 	ASSERT_EQ(foo.size(), bar.size());
 	ASSERT_EQ(foo.capacity(), bar.capacity());
 	for (size_t i = 0; i < foo.size(); i++) {
-			ASSERT_EQ(foo[i], bar[i]);
+		EXPECT_EQ(foo[i], bar[i]);
 	}
 }
 
@@ -47,7 +47,7 @@ TEST(vectorAssign, assignOnSmallerVector) {
 	ASSERT_EQ(foo.size(), bar.size());
 	ASSERT_EQ(foo.capacity(), bar.capacity());
 	for (size_t i = 0; i < foo.size(); i++) {
-		ASSERT_EQ(foo[i], bar[i]);
+		EXPECT_EQ(foo[i], bar[i]);
 	}
 }
 
@@ -62,7 +62,7 @@ TEST_F(AssignVectorTest, withIterator) {
 	ASSERT_EQ(fizz.size(), buzz.size());
 	ASSERT_EQ(fizz.capacity(), buzz.capacity());
 	for (size_t i = 0; i < fizz.size(); i++) {
-		ASSERT_EQ(fizz[i], buzz[i]);
+		EXPECT_EQ(fizz[i], buzz[i]);
 	}
 }
 
@@ -74,7 +74,7 @@ TEST_F(AssignVectorTest, erasePos) {
 	ASSERT_EQ(foo.size(), bar.size());
 	ASSERT_EQ(*it, *ite);
 	for (size_t i = 0; i < foo.size(); i++) {
-		ASSERT_EQ(foo[i], bar[i]);
+		EXPECT_EQ(foo[i], bar[i]);
 	}
 }
 
@@ -85,7 +85,7 @@ TEST_F(AssignVectorTest, eraseIterator) {
 	ASSERT_EQ(foo.size(), bar.size());
 	ASSERT_EQ(*it, *ite);
 	for (size_t i = 0; i < foo.size(); i++) {
-		ASSERT_EQ(foo[i], bar[i]);
+		EXPECT_EQ(foo[i], bar[i]);
 	}
 }
 
@@ -105,8 +105,31 @@ TEST_F(AssignVectorTest, resizeWithValue) {
 	bar.resize(100, "bazz");
 	ASSERT_EQ(foo.size(), bar.size());
 	for (size_t i = 0; i < foo.size(); i++) {
-		ASSERT_EQ(foo[i], bar[i]);
+		EXPECT_EQ(foo[i], bar[i]);
 	}
+}
+
+TEST_F(AssignVectorTest, insertPos) {
+
+	foo.insert(foo.begin(), "zapp");
+	bar.insert(bar.begin(), "zapp");
+	ASSERT_EQ(foo.size(), bar.size());
+	for (size_t i = 0; i < foo.size() - 1; i++) {
+		EXPECT_EQ(foo[i], bar[i]);
+	}
+}
+
+TEST_F(AssignVectorTest, insertIterator) {
+	foo.insert(foo.begin() + 10, 10, "zlut");
+	bar.insert(bar.begin() + 10, 10, "zlut");
+	ASSERT_EQ(foo.size(), bar.size());
+	for (size_t i = 0; i < foo.size() - 1; i++) {
+		EXPECT_EQ(foo[i], bar[i]);
+	}
+}
+
+TEST_F(AssignVectorTest, end) {
+	EXPECT_EQ(*(foo.end() - 1), *(bar.end() - 1));
 }
 
 #endif

@@ -14,17 +14,6 @@
 #include <memory>
 #include "is_same.hpp"
 
-class base {
-	public:
-		base() : i(0), b(10.1f) {};
-		int getInt() const { return i; }
-		float getFloat() const { return b; }
-	private:
-		int i;
-		float b;
-};
-
-
 int main() {
 
 //	ft::stack<int> foo;
@@ -216,19 +205,25 @@ int main() {
 
 	std::cout << std::endl;
 
-	ft::vector<Base> foo(20);
-//	ft::vector<Base> bar(20);
-//	std::vector<Base> bar(20);
-
-//	srand(time(0));
-	Base value;
-	for (size_t i = 0; i < 10; i++) {
-//		Base value = rand();
-		foo.push_back(value);
-//		bar.push_back(Base());
-	}
-//	foo.pop_back();
-	foo.erase(foo.begin());
+//	ft::vector<Base> foo(20);
+////	ft::vector<Base> bar(20);
+////	std::vector<Base> bar(20);
+//
+////	srand(time(0));
+//	Base value;
+//	for (size_t i = 0; i < 10; i++) {
+////		Base value = rand();
+//		foo.push_back(value);
+////		bar.push_back(Base());
+//	}
+////	foo.pop_back();
+//	foo.erase(foo.begin());
+//	foo.reserve(100);
+//	ft::vector<Base>::iterator it = foo.begin();
+//	std::cout << *it << std::endl;
+//	std::cout << *foo.insert(it, Base()) << std::endl;
+//	std::cout << *foo.begin() << std::endl;
+//	std::cout << *it << std::endl;
 //	bar.erase(bar.begin(), bar.end());
 //	std::cout << foo.size() << std::endl;
 //	std::cout << bar.end() - bar.begin() << std::endl;
@@ -246,6 +241,33 @@ int main() {
 //
 //	std::cout << "it = " << *(it) << std::endl;
 //	std::cout << "ite = " << *ite << std::endl;
+
+//	std::vector<Base> bar;
+//	std::cout << &*bar.begin() << std::endl;
+//	bar.insert(bar.begin(), Base());
+//	std::cout << *bar.begin() << std::endl;
+
+	ft::vector<Base> foo;
+	std::vector<Base> bar;
+//	std::cout << *(foo.end() - 1) << std::endl;
+//	std::cout << *(bar.end() - 1) << std::endl;
+//	foo.erase(foo.begin(), foo.end());
+//	for (int i = 0; i < 4; i++) {
+//		foo.push_back(Base());
+//	}
+//	foo.push_back(Base());
+//	std::cout << "capacity = " << foo.capacity() << " size = " << foo.size() << std::endl;
+//	foo.insert(foo.begin(), 20, Base());
+	std::cout << foo.empty() << std::endl;
+//	bar.insert(fazz.begin(), 20, Base());
+//	for (size_t i = 0; i < foo.size(); i++) {
+//		std::cout << foo[i] << std::endl;
+//	}
+//	bar.insert(bar.end(), Base());
+//	for (size_t i = 0; i < foo.size(); i++) {
+//		std::cout << foo[i] << std::endl;
+//	}
+//	std::cout << foo.size() << std::endl;
 
 	return 0;
 }

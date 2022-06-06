@@ -10,11 +10,17 @@
 #include <stdexcept>
 #include <cstdio>
 #include <cstdlib>
+#include <sstream>
 
 class Base {
 	public:
 		Base() {
 			this->_str = new std::string[10];
+			for (int i = 0; i < 10; i++) {
+				std::ostringstream ss;
+				ss << rand();
+				this->_str[i] = ss.str();
+			}
 		}
 		Base(Base const &src) {
 			this->_str = new std::string[10];
@@ -33,9 +39,17 @@ class Base {
 			return *this;
 		}
 		~Base() { delete [] this->_str; }
+		std::string getStr(size_t pos) const { return this->_str[pos]; };
 	private:
 		std::string *_str;
 };
+
+std::ostream &operator<<(std::ostream &out, Base const &src) {
+	for (int i = 0; i < 10; i++) {
+		out << src.getStr(i) << std::endl;
+	}
+	return out;
+}
 
 namespace ft {
 
@@ -91,7 +105,7 @@ namespace ft {
 				this->_capacity = count * 2;
 				this->_start = this->_alloc.allocate(count * 2);
 				this->_size = count;
-				this->_end = this->_start + this->_size + 1;
+				this->_end = this->_start + this->_size;
 				for (size_type i = 0; i < count; i++) {
 					this->_alloc.construct((_start + i), value);
 				}
@@ -158,7 +172,7 @@ namespace ft {
 			template< class InputIt >
 			void assign(InputIt first, InputIt last,
 						typename ft::enable_if<!ft::is_same<InputIt, int>::value>::type* = 0) {
-				size_type count = last - first;
+				size_type count = last - first + 1;
 				InputIt tmp = first;
 
 				this->clear();
@@ -237,7 +251,7 @@ namespace ft {
 			size_type capacity() { return this->_capacity; }
 
 			void reserve(size_type new_cap) {
-				if (new_cap > this->_alloc.max_size()) {
+				if (new_cap > this->max_size()) {
 					throw std::length_error("Your allocation capacity exceed the maximum available size");
 				}
 				pointer prev_start = this->_start;
@@ -259,9 +273,55 @@ namespace ft {
 				}
 			}
 
+			iterator insert(iterator pos, const T& value) {
+
+				size_type index = this->size() - 1 - (this->end() - pos);
+				if (this->size() == 0) {
+					this->push_back(value);
+				} else {
+					if (this->size() == this->capacity()) {
+						reserve(this->capacity() * 2);
+					}
+					for (size_type i = this->size(); i > index; i--) {
+						this->_alloc.construct(this->_start + i, *(this->_start + i - 1));
+						this->_alloc.destroy(this->_start + i - 1);
+					}
+					this->_size++;
+					this->_end++;
+					this->_alloc.construct(this->_start + index, value);
+				}
+				return iterator(this->_start + index);
+			}
+
+			void insert(iterator pos, size_type count, const T& value) {
+				size_type index = this->size() - 1 - (this->end() - pos);
+
+				if (this->size() == 0) {
+					for (size_type i = 0; i < count; i++) {
+						this->push_back(value);
+					}
+				} else {
+					while (this->size() + count >= this->capacity()) {
+						reserve(this->capacity() * 2);
+					}
+					for (size_type i = this->size(); i > index; i--) {
+						this->_alloc.construct(this->_start + i + count - 1, *(this->_start + i - 1));
+						this->_alloc.destroy(this->_start + i - 1);
+					}
+					for (size_type i = 0; i < count; i++) {
+						this->_alloc.construct(this->_start + index + i, value);
+						this->_size++;
+						this->_end++;
+					}
+				}
+			}
+
+			//template<class InputIt>
+			//void insert(iterator pos, InputIt first, InputIt last) {}
+
 			iterator erase(iterator pos) {
 				iterator ret = pos == this->end() ? this->end() : pos;
-				while (pos + 2 != this->end()) {
+				while (pos + 1 != this->end()) {
 					*pos = *(pos + 1);
 					pos++;
 				}
@@ -270,14 +330,14 @@ namespace ft {
 			}
 
 			iterator erase(iterator first, iterator last) {
-				size_type count = last - first;
+				size_type count = last - first + 1;
 				iterator *ret = last == this->end() ? 0 : &last;
-				while (first + count + 1 != last) {
+				while (first + count != last) {
 					this->_alloc.destroy(&*first);
-					*first = *(first + count + 1);
+					*first = *(first + count);
 					first++;
 				}
-				while (count) {
+				while (count + 1) {
 					this->pop_back();
 					count--;
 				}
@@ -293,13 +353,13 @@ namespace ft {
 					this->_capacity == 0 ? reserve(1) : reserve(this->_capacity * 2);
 					this->_alloc.construct(this->_start + this->_size, value);
 					this->_size++;
-					this->_end = this->_start + this->_size;
+					this->_end++;
 				}
 			};
 
 			void pop_back() {
 				if (this->_size) {
-					this->_alloc.destroy(this->_end - 2);
+					this->_alloc.destroy(this->_end - 1);
 					this->_end--;
 					this->_size--;
 				}
