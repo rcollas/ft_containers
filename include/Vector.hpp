@@ -212,8 +212,8 @@ namespace ft {
 			reference front() { return *(this->_start); }
 			const_reference front() const { return *(this->_start); }
 
-			reference back() { return *(this->_end); }
-			const_reference back() const { return *(this->_end); }
+			reference back() { return *(this->_end - 1); }
+			const_reference back() const { return *(this->_end - 1); }
 
 			T* data(){ return this->_start; }
 			const T* data() const { return this->_start; }
@@ -337,7 +337,6 @@ namespace ft {
 						reserve(this->capacity() * 2);
 					}
 					for (size_type i = this->size(); i > index; --i) {
-//						std::cout << "from " << i << " to " << i + count << std::endl;
 						this->_alloc.construct(this->_start + i + count - 1, *(this->_start + i - 1));
 						this->_alloc.destroy(this->_start + i - 1);
 					}
