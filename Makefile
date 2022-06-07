@@ -16,10 +16,12 @@ INC_DIR		=	./include/
 
 INC_FILES	=	Stack.hpp \
 				Vector.hpp \
-				IteratorsTraits.hpp \
-				ReverseIterator.hpp \
-				Iterator.hpp \
-				RandomAccessIterator.hpp \
+				Map.hpp \
+				utils/IteratorsTraits.hpp \
+				utils/ReverseIterator.hpp \
+				utils/Iterator.hpp \
+				utils/RandomAccessIterator.hpp \
+				utils/AVL_BST.hpp \
 
 OBJS		=	$(addprefix $(OBJS_DIR)/, $(SRC_FILES:.cpp=.o))
 

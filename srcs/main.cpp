@@ -14,6 +14,7 @@
 #include <memory>
 #include "utils/is_same.hpp"
 #include "utils/lexicographical_compare.hpp"
+#include "utils/AVL_BST.hpp"
 
 int main() {
 
@@ -204,7 +205,7 @@ int main() {
 //	ft::vector<int>::iterator test;
 
 
-	std::cout << std::endl;
+//	std::cout << std::endl;
 
 //	ft::vector<Base> foo(20);
 ////	ft::vector<Base> bar(20);
@@ -238,48 +239,49 @@ int main() {
 //	std::cout << *(bar.end() - 1) << std::endl;
 
 //	ft::vector<int>::iterator it = foo.erase(foo.begin() + 3);
-//	std::vector<int>::iterator ite = bar.erase(bar.begin() + 3);
+////	std::vector<int>::iterator ite = bar.erase(bar.begin() + 3);
+////
+////	std::cout << "it = " << *(it) << std::endl;
+////	std::cout << "ite = " << *ite << std::endl;
 //
-//	std::cout << "it = " << *(it) << std::endl;
-//	std::cout << "ite = " << *ite << std::endl;
-
-//	std::vector<Base> bar;
-//	std::cout << &*bar.begin() << std::endl;
-//	bar.insert(bar.begin(), Base());
-//	std::cout << *bar.begin() << std::endl;
-
-	ft::vector<int> foo(10);
-//	std::cout << *(foo.end() - 1) << std::endl;
-//	std::cout << *(bar.end() - 1) << std::endl;
-//	foo.erase(foo.begin(), foo.end());
-//	for (int i = 0; i < 4; i++) {
-//		foo.push_back(Base());
-//	}
-//	foo.push_back(Base());
-//	std::cout << "capacity = " << foo.capacity() << " size = " << foo.size() << std::endl;
-//	foo.insert(foo.begin(), 20, Base());
-	std::vector<int> bar(10);
-	std::vector<int> zap(20);
-	ft::vector<int> buzz;
-//	std::cout << test + 4 << std::endl;
-//	buzz.assign(test, test + 3);
-//	std::cout << buzz.size() << std::endl;
-//	buzz.assign(buzz.begin(), buzz.end());
-//	std::cout << bar.end() - bar.begin() << std::endl;
-	foo.insert(foo.begin(), foo.begin(), foo.end());
-	foo.swap(buzz);
-//	bar.insert(bar.begin(), bar.begin(), bar.end());
-//	bar.insert(fazz.begin(), 20, Base());
-//	for (size_t i = 0; i < foo.size(); i++) {
-//		std::cout << foo[i] << std::endl;
-//	}
-//	bar.insert(bar.end(), Base());
-//	for (size_t i = 0; i < foo.size(); i++) {
-//		std::cout << foo[i] << std::endl;
-//	}
-//	std::cout << foo.size() << std::endl;
-	std::cout << (foo == buzz) << std::endl;
-	std::cout << (bar == zap) << std::endl;
+////	std::vector<Base> bar;
+////	std::cout << &*bar.begin() << std::endl;
+////	bar.insert(bar.begin(), Base());
+////	std::cout << *bar.begin() << std::endl;
+//
+//	ft::vector<int> foo(10);
+////	std::cout << *(foo.end() - 1) << std::endl;
+////	std::cout << *(bar.end() - 1) << std::endl;
+////	foo.erase(foo.begin(), foo.end());
+////	for (int i = 0; i < 4; i++) {
+////		foo.push_back(Base());
+////	}
+////	foo.push_back(Base());
+////	std::cout << "capacity = " << foo.capacity() << " size = " << foo.size() << std::endl;
+////	foo.insert(foo.begin(), 20, Base());
+//	std::vector<int> bar(10);
+//	std::vector<int> zap(20);
+//	ft::vector<int> buzz;
+////	std::cout << test + 4 << std::endl;
+////	buzz.assign(test, test + 3);
+////	std::cout << buzz.size() << std::endl;
+////	buzz.assign(buzz.begin(), buzz.end());
+////	std::cout << bar.end() - bar.begin() << std::endl;
+//	foo.insert(foo.begin(), foo.begin(), foo.end());
+//	foo.swap(buzz);
+////	bar.insert(bar.begin(), bar.begin(), bar.end());
+////	bar.insert(fazz.begin(), 20, Base());
+////	for (size_t i = 0; i < foo.size(); i++) {
+////		std::cout << foo[i] << std::endl;
+////	}
+////	bar.insert(bar.end(), Base());
+////	for (size_t i = 0; i < foo.size(); i++) {
+////		std::cout << foo[i] << std::endl;
+////	}
+////	std::cout << foo.size() << std::endl;
+//	std::cout << (foo == buzz) << std::endl;
+//	std::cout << (bar == zap) << std::endl;
+	ft::AVLTree<int, int> tree;
 
 	return 0;
 }

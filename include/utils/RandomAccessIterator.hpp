@@ -43,6 +43,8 @@ namespace ft {
 
 			iterator operator+(int n) const { return iterator(this->_ptr + n) ;}
 			iterator operator-(int n) const { return iterator(this->_ptr - n) ;}
+			iterator &operator+=(difference_type n) { this->_ptr += n; return *this; }
+			iterator &operator-=(difference_type n) { this->_ptr -= n; return *this; }
 
 			bool operator==(iterator const &rhs) { return this->_ptr == rhs._ptr; }
 			bool operator!=(iterator const &rhs) { return this->_ptr != rhs._ptr; }
