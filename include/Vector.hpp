@@ -408,6 +408,9 @@ namespace ft {
 		return ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end());
 	};
 
+	template<class T, class Alloc>
+	void swap(ft::vector<T,Alloc>& lhs,
+			   ft::vector<T,Alloc>& rhs) { lhs.swap(rhs); };
 }
 
 #endif
