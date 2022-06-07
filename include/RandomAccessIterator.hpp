@@ -29,7 +29,7 @@ namespace ft {
 				iterator tmp = *this;
 				if (tmp._ptr < rhs._ptr) while (tmp != rhs) {tmp++; i--;}
 				else if (tmp._ptr > rhs._ptr) while (tmp != rhs) {tmp--; i++;};
-				return i - 1;
+				return i;
 			}
 
 			value_type &operator*() const { return *this->_ptr; };
@@ -45,6 +45,10 @@ namespace ft {
 
 			bool operator==(iterator const &rhs) { return this->_ptr == rhs._ptr; }
 			bool operator!=(iterator const &rhs) { return this->_ptr != rhs._ptr; }
+			bool operator<(iterator const &rhs) { return this->_ptr < rhs._ptr; }
+			bool operator>(iterator const &rhs) { return this->_ptr > rhs._ptr; }
+			bool operator<=(iterator const &rhs) { return this->_ptr <= rhs._ptr; }
+			bool operator>=(iterator const &rhs) { return this->_ptr >= rhs._ptr; }
 
 		private:
 			pointer _ptr;

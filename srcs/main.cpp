@@ -247,8 +247,7 @@ int main() {
 //	bar.insert(bar.begin(), Base());
 //	std::cout << *bar.begin() << std::endl;
 
-	ft::vector<Base> foo;
-	std::vector<Base> bar;
+	ft::vector<Base> foo(10);
 //	std::cout << *(foo.end() - 1) << std::endl;
 //	std::cout << *(bar.end() - 1) << std::endl;
 //	foo.erase(foo.begin(), foo.end());
@@ -258,7 +257,16 @@ int main() {
 //	foo.push_back(Base());
 //	std::cout << "capacity = " << foo.capacity() << " size = " << foo.size() << std::endl;
 //	foo.insert(foo.begin(), 20, Base());
-	std::cout << foo.empty() << std::endl;
+	std::vector<Base> bar(10);
+	ft::vector<Base> buzz;
+	Base test[] = {Base(), Base(), Base()};
+//	std::cout << test + 4 << std::endl;
+//	buzz.assign(test, test + 3);
+//	std::cout << buzz.size() << std::endl;
+//	buzz.assign(buzz.begin(), buzz.end());
+//	std::cout << bar.end() - bar.begin() << std::endl;
+	foo.insert(foo.begin(), foo.begin(), foo.end());
+//	bar.insert(bar.begin(), bar.begin(), bar.end());
 //	bar.insert(fazz.begin(), 20, Base());
 //	for (size_t i = 0; i < foo.size(); i++) {
 //		std::cout << foo[i] << std::endl;

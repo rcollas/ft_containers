@@ -119,9 +119,18 @@ TEST_F(AssignVectorTest, insertPos) {
 	}
 }
 
-TEST_F(AssignVectorTest, insertIterator) {
+TEST_F(AssignVectorTest, insertCount) {
 	foo.insert(foo.begin() + 10, 10, "zlut");
 	bar.insert(bar.begin() + 10, 10, "zlut");
+	ASSERT_EQ(foo.size(), bar.size());
+	for (size_t i = 0; i < foo.size() - 1; i++) {
+		EXPECT_EQ(foo[i], bar[i]);
+	}
+}
+
+TEST_F(AssignVectorTest, insertIterator) {
+	foo.insert(foo.begin() + 10, foo.begin(), foo.end() - 1);
+	bar.insert(bar.begin() + 10, bar.begin(), bar.end() - 1);
 	ASSERT_EQ(foo.size(), bar.size());
 	for (size_t i = 0; i < foo.size() - 1; i++) {
 		EXPECT_EQ(foo[i], bar[i]);

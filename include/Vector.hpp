@@ -115,6 +115,10 @@ namespace ft {
 					const Allocator& alloc = Allocator(),
 					typename ft::enable_if<!ft::is_same<InputIt, int>::value>::type* = 0) {
 				this->_alloc = alloc;
+				this->_size = 0;
+				this->_capacity = 0;
+				this->_start = 0;
+				this->_end = 0;
 				assign(first, last);
 			};
 
@@ -172,7 +176,7 @@ namespace ft {
 			template< class InputIt >
 			void assign(InputIt first, InputIt last,
 						typename ft::enable_if<!ft::is_same<InputIt, int>::value>::type* = 0) {
-				size_type count = last - first + 1;
+				size_type count = last - first;
 				InputIt tmp = first;
 
 				this->clear();
@@ -180,7 +184,7 @@ namespace ft {
 					this->_capacity == 0 ? reserve(count) :
 											reserve(this->_capacity * 2);
 				}
-				for (size_type i = 0; i < count; i++) {
+				while (this->_size < count) {
 					this->push_back(*tmp++);
 				}
 			}
@@ -275,7 +279,7 @@ namespace ft {
 
 			iterator insert(iterator pos, const T& value) {
 
-				size_type index = this->size() - 1 - (this->end() - pos);
+				size_type index = &*pos - this->_start;
 				if (this->size() == 0) {
 					this->push_back(value);
 				} else {
@@ -294,7 +298,7 @@ namespace ft {
 			}
 
 			void insert(iterator pos, size_type count, const T& value) {
-				size_type index = this->size() - 1 - (this->end() - pos);
+				size_type index = &*pos - this->_start;
 
 				if (this->size() == 0) {
 					for (size_type i = 0; i < count; i++) {
@@ -316,8 +320,34 @@ namespace ft {
 				}
 			}
 
-			//template<class InputIt>
-			//void insert(iterator pos, InputIt first, InputIt last) {}
+			template<class InputIt>
+			void insert(iterator pos, InputIt first, InputIt last,
+						typename ft::enable_if<!ft::is_same<InputIt, int>::value>::type* = 0) {
+
+				size_type index = &*pos - this->_start;
+				size_type count = last - first;
+				ft::vector<value_type> tmp(first, last);
+
+				if (this->size() == 0) {
+					for (size_type i = 0; i < count; i++) {
+						this->push_back(*first++);
+					}
+				} else {
+					while (this->size() + count >= this->capacity()) {
+						reserve(this->capacity() * 2);
+					}
+					for (size_type i = this->size(); i > index; --i) {
+//						std::cout << "from " << i << " to " << i + count << std::endl;
+						this->_alloc.construct(this->_start + i + count - 1, *(this->_start + i - 1));
+						this->_alloc.destroy(this->_start + i - 1);
+					}
+					for (size_type i = 0; i < count; i++) {
+						this->_alloc.construct(this->_start + index + i, tmp[i]);
+						this->_size++;
+						this->_end++;
+					}
+				}
+			}
 
 			iterator erase(iterator pos) {
 				iterator ret = pos == this->end() ? this->end() : pos;
@@ -330,14 +360,14 @@ namespace ft {
 			}
 
 			iterator erase(iterator first, iterator last) {
-				size_type count = last - first + 1;
+				size_type count = last - first;
 				iterator *ret = last == this->end() ? 0 : &last;
 				while (first + count != last) {
 					this->_alloc.destroy(&*first);
 					*first = *(first + count);
 					first++;
 				}
-				while (count + 1) {
+				while (count) {
 					this->pop_back();
 					count--;
 				}
