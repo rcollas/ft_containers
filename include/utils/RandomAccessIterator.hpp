@@ -23,6 +23,7 @@ namespace ft {
 				*this = src;
 			}
 			iterator &operator=(iterator const &rhs) { this->_ptr = rhs._ptr; return *this; }
+			reference operator[](size_t pos) { return this->_ptr[pos]; }
 
 			long operator-(iterator const &rhs) {
 				long i = 0;

@@ -5,14 +5,15 @@
 #include <compare>
 #include <iterator>
 #include <vector>
-#include "ReverseIterator.hpp"
-#include "IteratorsTraits.hpp"
-#include "Iterator.hpp"
+#include "utils/ReverseIterator.hpp"
+#include "utils/IteratorsTraits.hpp"
+#include "utils/Iterator.hpp"
 #include "Vector.hpp"
 #include <ctime>
 #include <cstdlib>
 #include <memory>
-#include "is_same.hpp"
+#include "utils/is_same.hpp"
+#include "utils/lexicographical_compare.hpp"
 
 int main() {
 
@@ -247,7 +248,7 @@ int main() {
 //	bar.insert(bar.begin(), Base());
 //	std::cout << *bar.begin() << std::endl;
 
-	ft::vector<Base> foo(10);
+	ft::vector<int> foo(10);
 //	std::cout << *(foo.end() - 1) << std::endl;
 //	std::cout << *(bar.end() - 1) << std::endl;
 //	foo.erase(foo.begin(), foo.end());
@@ -257,15 +258,16 @@ int main() {
 //	foo.push_back(Base());
 //	std::cout << "capacity = " << foo.capacity() << " size = " << foo.size() << std::endl;
 //	foo.insert(foo.begin(), 20, Base());
-	std::vector<Base> bar(10);
-	ft::vector<Base> buzz;
-	Base test[] = {Base(), Base(), Base()};
+	std::vector<int> bar(10);
+	std::vector<int> zap(20);
+	ft::vector<int> buzz;
 //	std::cout << test + 4 << std::endl;
 //	buzz.assign(test, test + 3);
 //	std::cout << buzz.size() << std::endl;
 //	buzz.assign(buzz.begin(), buzz.end());
 //	std::cout << bar.end() - bar.begin() << std::endl;
 	foo.insert(foo.begin(), foo.begin(), foo.end());
+	foo.swap(buzz);
 //	bar.insert(bar.begin(), bar.begin(), bar.end());
 //	bar.insert(fazz.begin(), 20, Base());
 //	for (size_t i = 0; i < foo.size(); i++) {
@@ -276,6 +278,8 @@ int main() {
 //		std::cout << foo[i] << std::endl;
 //	}
 //	std::cout << foo.size() << std::endl;
+	std::cout << (foo == buzz) << std::endl;
+	std::cout << (bar == zap) << std::endl;
 
 	return 0;
 }

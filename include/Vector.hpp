@@ -2,70 +2,22 @@
 #define FT_CONTAINERS_VECTOR_HPP
 
 #include <memory>
-#include "ReverseIterator.hpp"
-#include "Iterator.hpp"
-#include "RandomAccessIterator.hpp"
-#include "enable_if.hpp"
-#include "is_same.hpp"
+#include "utils/ReverseIterator.hpp"
+#include "utils/Iterator.hpp"
+#include "utils/RandomAccessIterator.hpp"
+#include "utils/enable_if.hpp"
+#include "utils/is_same.hpp"
+#include "utils/equal.hpp"
+#include "utils/lexicographical_compare.hpp"
 #include <stdexcept>
 #include <cstdio>
 #include <cstdlib>
 #include <sstream>
 
-class Base {
-	public:
-		Base() {
-			this->_str = new std::string[10];
-			for (int i = 0; i < 10; i++) {
-				std::ostringstream ss;
-				ss << rand();
-				this->_str[i] = ss.str();
-			}
-		}
-		Base(Base const &src) {
-			this->_str = new std::string[10];
-			for (int i = 0; i < 10; i++) {
-				this->_str[i] = src._str[i];
-			}
-		}
-		Base &operator=(Base const &rhs) {
-			if (this != &rhs) {
-				delete[] this->_str;
-				this->_str = new std::string[10];
-				for (int i = 0; i < 10; i++) {
-					this->_str[i] = rhs._str[i];
-				}
-			}
-			return *this;
-		}
-		~Base() { delete [] this->_str; }
-		std::string getStr(size_t pos) const { return this->_str[pos]; };
-	private:
-		std::string *_str;
-};
-
-std::ostream &operator<<(std::ostream &out, Base const &src) {
-	for (int i = 0; i < 10; i++) {
-		out << src.getStr(i) << std::endl;
-	}
-	return out;
-}
-
 namespace ft {
-
-//	template <class Iter>
-//	class vectorIterator : public ft::iterator_traits<Iter> {
-//		public:
-//			explicit vectorIterator(pointer const &src) {_ptr = src;}
-//			pointer operator*() const {return this->_ptr; };
-//			pointer operator++() {this->_ptr++; return *this; };
-//		private:
-//			pointer _ptr;
-//	};
 
 	template <class T, class Allocator = std::allocator<T> >
 	class vector {
-//			friend class iterator<T, vector>;
 		public:
 
 			/********* MEMBER TYPES ***********/
@@ -155,7 +107,7 @@ namespace ft {
 				this->_capacity = other._capacity;
 				this->_start = this->_alloc.allocate(this->_capacity);
 				this->_end = this->_start + this->_size;
-				for (size_type i = 0; i < this->_capacity; i++) {
+				for (size_type i = 0; i < other.size(); i++) {
 					this->_alloc.construct(this->_start + i, other[i]);
 				}
 				return *this;
@@ -250,9 +202,9 @@ namespace ft {
 
 			bool empty() const { return this->begin() == this->end(); }
 
-			size_type size() { return this->_size; }
-			size_type max_size() { return this->_alloc.max_size(); }
-			size_type capacity() { return this->_capacity; }
+			size_type size() const { return this->_size; }
+			size_type max_size() const { return this->_alloc.max_size(); }
+			size_type capacity() const { return this->_capacity; }
 
 			void reserve(size_type new_cap) {
 				if (new_cap > this->max_size()) {
@@ -406,6 +358,12 @@ namespace ft {
 				}
 			}
 
+			void swap(vector& other) {
+				vector tmp = other;
+				other = *this;
+				*this = tmp;
+			}
+
 		private:
 			Allocator _alloc;
 			pointer _start;
@@ -414,6 +372,42 @@ namespace ft {
 			pointer _end;
 
 	};
+
+	template< class T, class Alloc >
+	bool operator==( const ft::vector<T,Alloc>& lhs,
+					 const ft::vector<T,Alloc>& rhs ) {
+
+		return lhs.size() == rhs.size() && ft::equal(lhs.begin(), lhs.end(), rhs.begin());
+	};
+
+	template<class T, class Alloc>
+	bool operator!=(const ft::vector<T,Alloc>& lhs,
+					 const ft::vector<T,Alloc>& rhs) { return !(lhs == rhs); };
+
+	template<class T, class Alloc>
+	bool operator<(const ft::vector<T,Alloc>& lhs,
+					const ft::vector<T,Alloc>& rhs) {
+		return ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end());
+	};
+
+	template<class T, class Alloc>
+	bool operator<=(const ft::vector<T,Alloc>& lhs,
+					 const ft::vector<T,Alloc>& rhs) {
+		return ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end());
+	};
+
+	template<class T, class Alloc>
+	bool operator>(const ft::vector<T,Alloc>& lhs,
+					const ft::vector<T,Alloc>& rhs) {
+		return ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end());
+	};
+
+	template<class T, class Alloc>
+	bool operator>=(const ft::vector<T,Alloc>& lhs,
+					const ft::vector<T,Alloc>& rhs) {
+		return ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end());
+	};
+
 }
 
 #endif
