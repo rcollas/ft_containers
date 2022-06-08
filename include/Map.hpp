@@ -5,6 +5,7 @@
 #include "utils/ReverseIterator.hpp"
 #include "utils/Iterator.hpp"
 #include "utils/RandomAccessIterator.hpp"
+#include "utils/pair.hpp"
 
 namespace ft {
 
@@ -12,7 +13,7 @@ namespace ft {
 			class Key,
 			class T,
 			class Compare = std::less<Key>,
-			class Allocator = std::allocator<std::pair<const Key, T>>
+			class Allocator = std::allocator<std::pair<const Key, T> >
 	> class map {
 
 		public:

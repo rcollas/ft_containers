@@ -5,10 +5,12 @@
 #include <compare>
 #include <iterator>
 #include <vector>
+#include <map>
 #include "utils/ReverseIterator.hpp"
 #include "utils/IteratorsTraits.hpp"
 #include "utils/Iterator.hpp"
 #include "Vector.hpp"
+#include "Map.hpp"
 #include <ctime>
 #include <cstdlib>
 #include <memory>
@@ -18,6 +20,7 @@
 
 int main() {
 
+	std::cout << std::endl;
 //	ft::stack<int> foo;
 //	ft::stack<int> bar;
 //	std::cout << std::boolalpha;
@@ -281,7 +284,15 @@ int main() {
 ////	std::cout << foo.size() << std::endl;
 //	std::cout << (foo == buzz) << std::endl;
 //	std::cout << (bar == zap) << std::endl;
-	ft::AVLTree<int, int> tree;
+//	std::map<int, int> foo;
+//	foo.insert(std::pair<char, int>('a', 100));
+//	std::cout << foo.at('a') << std::endl;
+
+	std::pair<int, std::string> p(10, "hello");
+	std::cout << p.first << std::endl;
+	ft::pair<int, std::string> bar(10, "hello");
+	std::cout << bar._first << std::endl;
+
 
 	return 0;
 }
