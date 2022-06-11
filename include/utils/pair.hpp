@@ -2,12 +2,13 @@
 #define FT_CONTAINERS_TMP_PAIR_HPP
 
 namespace ft {
+
 	template<class T1, class T2>
 	struct pair {
 		typedef T1 first_type;
 		typedef T2 second_type;
 
-		pair() : _first(0), _second(0) {};
+		pair() : _first(first_type()), _second(second_type()) {};
 		pair(const T1& x, const T2& y) : _first(x), _second(y) {};
 
 		template< class U1, class U2 >
