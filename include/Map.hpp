@@ -14,7 +14,7 @@ namespace ft {
 			class Key,
 			class T,
 			class Compare = std::less<Key>,
-			class Allocator = std::allocator<std::pair<const Key, T> >
+			class Allocator = std::allocator<ft::pair<const Key, T> >
 	> class map {
 
 		public:
@@ -46,9 +46,13 @@ namespace ft {
 				std::cout << "map(const Compare& comp, const Allocator& alloc = Allocator())" << std::endl;
 			};
 
-			ft::pair<int, bool> insert( const value_type& value ){
-				this->_tree->insert(value);
-				return ft::pair<int, bool>(0, false);
+			~map() {
+				delete this->_tree;
+			}
+
+			ft::pair<iterator, bool> insert( const value_type& value ){
+				pointer ret = this->_tree->insert(value);
+				return ft::make_pair(iterator(ret), false);
 			};
 
 			void print() const {
@@ -56,8 +60,14 @@ namespace ft {
 				std::cout << std::endl;
 			}
 
-		private:
+			iterator begin() {
+				if (!this->_tree->_root) {
+					return  iterator(new value_type());
+				}
+				return iterator(&(this->_tree->_root->_data)); }
+
 			RBTree *_tree;
+		private:
 			key_compare _compare;
 
 	};

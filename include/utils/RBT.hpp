@@ -11,6 +11,13 @@ namespace ft {
 	template<class T>
 	class Node {
 		public:
+			Node() :
+				_data(T()),
+				_parent(0),
+				_left(0),
+				_right(0),
+				_color(RED) {};
+
 			Node(T const &data) :
 				_data(data),
 				_parent(0),
@@ -43,12 +50,41 @@ namespace ft {
 			typedef T value_type;
 			typedef Compare key_compare;
 			typedef Allocator allocator_type;
+			typedef typename Allocator::pointer pointer;
 			typedef Node<T> Node;
+//			typedef typename Allocator::template node_allocator;
+//			typedef typename node_allocator::pointer pointer;
 
 			RBTree() : _root(0), _compare(key_compare()) {};
 			RBTree(value_type value) : _root(new Node(value)), _compare(key_compare()) {
 				this->_root->setColor(BLACK);
 			};
+
+			void clear(Node *node) {
+
+				if (node->_right) {
+					clear(node->_right);
+				}
+				if (node->_left) {
+					clear(node->_left);
+				}
+				std::cout << "node value = " << node->_data._second << std::endl;
+				std::cout << "!node left = " << !node->_left << std::endl;
+				std::cout << "!node right = " << !node->_right << std::endl;
+				if (node->_right) {
+					std::cout << "fuck right node = " << node->_right->_data._second << std::endl;
+				}
+				if (!node->_left && !node->_right) {
+					delete node;
+					node = 0;
+				}
+			}
+
+			~RBTree() {
+				clear(this->_root);
+				delete this->_root;
+				std::cout << "tree deleted" << std::endl;
+			}
 
 			void print() {
 				print_tree(this->_root);
@@ -166,14 +202,13 @@ namespace ft {
 					root->_right = insertHelper(root->_right, insert);
 					root->_right->_parent = root;
 				}
-				delete insert;
-				insert = 0;
 				return root;
 			}
-			void insert(value_type value) {
+			pointer insert(value_type value) {
 				Node *node = new Node(value);
 				this->_root = insertHelper(this->_root, node);
 				insertFix(this->_root, node);
+				return &(node->_data);
 			};
 
 			Node *_root;
