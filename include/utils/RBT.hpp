@@ -6,9 +6,6 @@
 #define RED 0
 #define BLACK 1
 #define _grandParent _parent->_parent
-#define _rightUncle _grandParent->_right
-#define _leftUncle _grandParent->_left
-#define _grandSon _left->_left
 
 namespace ft {
 	template<class T>
@@ -38,7 +35,6 @@ namespace ft {
 		lhs->setColor(tmpColor);
 	}
 
-#define COUNT 5
 
 	template<class T, class Compare, class Allocator = std::allocator<T> >
 	class RBTree {
@@ -53,41 +49,10 @@ namespace ft {
 			RBTree(value_type value) : _root(new Node(value)), _compare(key_compare()) {
 				this->_root->setColor(BLACK);
 			};
-			void printHelper(Node* node, int space) const {
-				if (node == 0) {
-					return;
-				}
-				space += COUNT;
-				printHelper(node->_right, space);
 
-				std::cout << std::endl;
-				for (int i = COUNT; i < space; i++) {
-					std::cout << " ";
-				}
-				if (node->getColor() == RED) {
-					std::cout << "\x1B[31m" << node->_data._second << "\033[0m" << std::endl;
-				} else {
-					std::cout << node->_data._second << std::endl;
-				}
-				printHelper(node->_left, space);
-			}
 			void print() {
 				print_tree(this->_root);
 				std::cout << std::endl;
-			}
-
-			bool isLeftChildOf(Node *parent, Node *node) {
-				return node == parent->_left;
-			}
-			bool isRightChildOf(Node *parent, Node *node) {
-				return parent && node == parent->_right;
-			}
-
-			bool hasLeftSubtree(Node *node)	{
-				return node && node->_left;
-			}
-			bool hasRightSubTree(Node *node) {
-				return node && node->_right;
 			}
 
 			void leftRotate(Node *&root, Node *&node) {
