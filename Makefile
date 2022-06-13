@@ -6,7 +6,8 @@
 
 NAME		=	ft_containers
 
-SRC_FILES 	=	main.cpp
+SRC_FILES 	=	main.cpp \
+				RBTree.cpp \
 
 OBJS_DIR	=	objs
 

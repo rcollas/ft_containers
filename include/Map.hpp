@@ -12,31 +12,35 @@ namespace ft {
 
 	template<
 			class Key,
-			class T,
+			class Type,
 			class Compare = std::less<Key>,
-			class Allocator = std::allocator<ft::pair<const Key, T> >
+			class Allocator = std::allocator<ft::pair<const Key, Type> >
 	> class map {
 
 		public:
 			typedef Key key_type;
-			typedef T mapped_type;
-			typedef typename ft::pair<const Key, T> value_type;
-			typedef typename std::size_t size_type;
-			typedef typename std::ptrdiff_t difference_type;
+			typedef typename ft::pair<const Key, Type> value_type;
 			typedef Compare key_compare;
 			typedef Allocator allocator_type;
+
+
+		typedef RBTree<key_type, value_type, std::_Select1st<value_type>, key_compare, allocator_type> RBTree;
+
+		public:
+			typedef Type mapped_type;
+			typedef typename std::size_t size_type;
+			typedef typename std::ptrdiff_t difference_type;
 			typedef value_type& reference;
 			typedef const value_type& const_reference;
 			typedef typename Allocator::pointer pointer;
 			typedef typename Allocator::const_pointer const_pointer;
-			typedef typename ft::random_access_iterator<pointer> iterator;
-			typedef typename ft::random_access_iterator<pointer> const_iterator;
-			typedef typename ft::reverse_iterator<iterator> reverse_iterator;
-			typedef typename ft::reverse_iterator<const_iterator> const_reverse_iterator;
+			typedef typename RBTree::iterator iterator;
+			typedef typename RBTree::const_iterator const_iterator;
+			typedef typename RBTree::reverse_iterator reverse_iterator;
+			typedef typename RBTree::const_reverse_iterator const_reverse_iterator;
 
-			typedef RBTree<value_type, key_compare, allocator_type> RBTree;
 
-			map() : _tree(new RBTree()) {
+			map() : _tree(new RBTree(_compare)) {
 				std::cout << "Default constructor" << std::endl;
 			};
 			explicit map(const Compare& comp,
@@ -50,9 +54,9 @@ namespace ft {
 				delete this->_tree;
 			}
 
-			ft::pair<iterator, bool> insert( const value_type& value ){
-				pointer ret = this->_tree->insert(value);
-				return ft::make_pair(iterator(ret), false);
+			ft::pair<iterator, bool>
+			insert( const value_type& value ){
+				return _tree->insertUnique(value);
 			};
 
 			void print() const {
@@ -60,11 +64,9 @@ namespace ft {
 				std::cout << std::endl;
 			}
 
-			iterator begin() {
-				if (!this->_tree->_root) {
-					return  iterator(new value_type());
-				}
-				return iterator(&(this->_tree->_root->_data)); }
+			iterator begin() { return _tree->begin(); }
+
+			iterator end() { return _tree->end(); }
 
 			RBTree *_tree;
 		private:

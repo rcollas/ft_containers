@@ -1,11 +1,11 @@
 #ifndef MAP_DISPLAY_HPP
 # define MAP_DISPLAY_HPP 1
 
-# define __NODE		Node<T>	 // name of your strucure/class which contain your node
+# define __NODE		RbTreeNode<Value>	 // name of your strucure/class which contain your node
 # define __VALUE	_data._second	 // name of your value variable in your structure/class
 # define __SIZE		5		 // size between nodes (only for display)
-# define __ROOT		_root	 // name of your tree's root variable
-# define __IS_BLACK	_color // name of the bool variable for the color of nodes
+# define __ROOT		header// name of your tree's root variable
+# define __IS_BLACK	color // name of the bool variable for the color of nodes
 # define __NIL		0		 // name of your NULL pointer
 # define __RIGHT	_right	 // name of the right child of your nodes
 # define __LEFT		_left	 // name of the left child of your nodes

@@ -96,19 +96,21 @@ namespace ft {
 			/************* ASSIGNMENT OPERATOR *********/
 
 			vector& operator=(const vector& other) {
-				if (this->_start) {
-					for (size_type i = 0; i < this->_size; i++) {
-						this->_alloc.destroy(this->_start + i);
+				if (*this != other) {
+					if (this->_start) {
+						for (size_type i = 0; i < this->_size; i++) {
+							this->_alloc.destroy(this->_start + i);
+						}
+						this->_alloc.deallocate(this->_start, this->_capacity);
 					}
-					this->_alloc.deallocate(this->_start, this->_capacity);
-				}
-				this->_alloc = other._alloc;
-				this->_size = other._size;
-				this->_capacity = other._capacity;
-				this->_start = this->_alloc.allocate(this->_capacity);
-				this->_end = this->_start + this->_size;
-				for (size_type i = 0; i < other.size(); i++) {
-					this->_alloc.construct(this->_start + i, other[i]);
+					this->_alloc = other._alloc;
+					this->_size = other._size;
+					this->_capacity = other._capacity;
+					this->_start = this->_alloc.allocate(this->_capacity);
+					this->_end = this->_start + this->_size;
+					for (size_type i = 0; i < other.size(); i++) {
+						this->_alloc.construct(this->_start + i, other[i]);
+					}
 				}
 				return *this;
 			};

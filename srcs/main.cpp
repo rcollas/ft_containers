@@ -16,7 +16,7 @@
 #include <memory>
 #include "utils/is_same.hpp"
 #include "utils/lexicographical_compare.hpp"
-#include "utils/RBT.hpp"
+//#include "utils/RBT.hpp"
 
 int main() {
 
@@ -276,38 +276,88 @@ int main() {
 ////	bar.insert(fazz.begin(), 20, Base());
 ////	for (size_t i = 0; i < foo.size(); i++) {
 ////		std::cout << foo[i] << std::endl;
-////	}
-////	bar.insert(bar.end(), Base());
-////	for (size_t i = 0; i < foo.size(); i++) {
-////		std::cout << foo[i] << std::endl;
-////	}
-////	std::cout << foo.size() << std::endl;
-//	std::cout << (foo == buzz) << std::endl;
-//	std::cout << (bar == zap) << std::endl;
+//////	}
+//////	bar.insert(bar.end(), Base());
+//////	for (size_t i = 0; i < foo.size(); i++) {
+//////		std::cout << foo[i] << std::endl;
+//////	}
+//////	std::cout << foo.size() << std::endl;
+////	std::cout << (foo == buzz) << std::endl;
+////	std::cout << (bar == zap) << std::endl;
+////	std::map<int, int> foo;
+////	foo.insert(std::pair<char, int>('a', 100));
+////	std::cout << foo.at('a') << std::endl;
+//
+//
+//	ft::map<int, int> bar;
+////	ft::map<int, int>::iterator ite = bar.begin();
+//	bar.insert(ft::pair<int, int>(10, 0));
+//	bar.insert(ft::pair<int, int>(-10, 1));
+//	bar.insert(ft::pair<int, int>(20, 2));
+//	bar.insert(ft::pair<int, int>(0, 3));
+//	std::cout << "root = " << bar._tree->_root->valueField.second << std::endl;
+//	std::cout << "node left " << bar._tree->_root->left->valueField.second << std::endl;
+//	std::cout << "node left right " << bar._tree->_root->left->right->data.second << std::endl;
+////	bar.insert(ft::pair<int, int>(1, 100));
+////	bar.insert(ft::pair<int, int>(2, 100));
+////	bar.insert(ft::pair<int, int>(3, 100));
+////	bar.insert(ft::pair<int, int>(4, 100));
+////	bar.insert(ft::pair<int, int>(5, 100));
+////	bar.print();
+////	std::cout << (*ite).second << std::endl;
+//
 //	std::map<int, int> foo;
-//	foo.insert(std::pair<char, int>('a', 100));
-//	std::cout << foo.at('a') << std::endl;
+//	std::map<int, int>::iterator it = foo.begin();
+//	foo.insert(std::pair<int, int>(10, 10));
+//	std::cout << (*it).second << std::endl;
+//	std::map<int, int> foo;
+//	foo.insert(std::pair<int, int>(0, 0));
+//	foo.insert(std::pair<int, int>(1, 1));
+//	foo.insert(std::pair<int, int>(2, 2));
+//	std::map<int, int>::iterator it(foo.begin());
+//	std::cout << ++(++it)->second << std::endl;
+//	foo.insert(std::pair<int, int>(3, 3));
+//	foo.insert(std::pair<int, int>(4, 4));
+//	foo.insert(std::pair<int, int>(5, 5));
+//	foo.insert(std::pair<int, int>(6, 6));
+//	it = foo.begin();
+//	std::cout << ++(++it)->second << std::endl;
+	ft::map<int, int> foo;
+	std::cout << (foo.insert(ft::pair<int, int>(0, 1))).second << std::endl;
+	std::cout << (foo.insert(ft::pair<int, int>(0, 2))).second << std::endl;
+	std::cout << (foo.insert(ft::pair<int, int>(0, 3))).second << std::endl;
+	std::cout << (foo.insert(ft::pair<int, int>(0, 4))).second << std::endl;
+	std::cout << (foo.insert(ft::pair<int, int>(0, 5))).second << std::endl;
+	ft::map<int, int>::iterator it = foo.begin();
+	ft::map<int, int>::iterator ite = foo.end();
+
+	std::cout << "start ft " << std::endl;
+	while (it != ite) {
+		std::cout << it->second << std::endl;
+		it++;
+	}
+	std::cout << foo.begin()->second << std::endl;
+	std::cout << foo.end()->second << std::endl;
+	std::cout << std::endl;
 
 
-	ft::map<int, int> bar;
-//	ft::map<int, int>::iterator ite = bar.begin();
-	bar.insert(ft::pair<int, int>(10, 0));
-	bar.insert(ft::pair<int, int>(-10, 1));
-	bar.insert(ft::pair<int, int>(20, 2));
-	bar.insert(ft::pair<int, int>(0, 3));
-	std::cout << "root = " << bar._tree->_root->_data._second << std::endl;
-	std::cout << "node left " << bar._tree->_root->_left->_data._second << std::endl;
-	std::cout << "node left right " << bar._tree->_root->_left->_right->_data._second << std::endl;
-//	bar.insert(ft::pair<int, int>(1, 100));
-//	bar.insert(ft::pair<int, int>(2, 100));
-//	bar.insert(ft::pair<int, int>(3, 100));
-//	bar.insert(ft::pair<int, int>(4, 100));
-//	bar.insert(ft::pair<int, int>(5, 100));
-//	bar.print();
-//	std::cout << (*ite)._second << std::endl;
 
-	std::map<int, int> foo;
-	std::map<int, int>::iterator it = foo.begin();
-	foo.insert(std::pair<int, int>(10, 10));
-	std::cout << (*it).second << std::endl;
+	std::map<int, int> bar;
+	std::cout << (bar.insert(std::pair<int, int>(0, 1))).second << std::endl;
+	std::cout << (bar.insert(std::pair<int, int>(0, 2))).second << std::endl;
+	std::cout << (bar.insert(std::pair<int, int>(0, 3))).second << std::endl;
+	std::cout << (bar.insert(std::pair<int, int>(0, 4))).second << std::endl;
+	std::cout << (bar.insert(std::pair<int, int>(0, 5))).second << std::endl;
+	std::map<int, int>::iterator rit = bar.begin();
+	std::map<int, int>::iterator rite = bar.end();
+
+	std::cout << "start std" << std::endl;
+	while (rit != rite) {
+		std::cout << rit->second << std::endl;
+		rit++;
+	}
+	std::cout << bar.begin()->second << std::endl;
+	std::cout << bar.end()->second << std::endl;
+
+
 }
