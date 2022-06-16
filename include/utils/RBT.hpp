@@ -9,6 +9,7 @@
 #include "ReverseIterator.hpp"
 #include <memory>
 #include <iostream>
+#include <vector>
 
 #define _grandParent parent->parent
 
@@ -70,6 +71,8 @@ namespace ft
 	RbTreeNodeBase*
 	RbTreeIncrement(RbTreeNodeBase* x);
 
+	RbTreeNodeBase::constBasePtr
+	RbTreeIncrement(RbTreeNodeBase::constBasePtr x);
 
 	void
 	insertAndRebalance(const bool insertLeft,
@@ -82,7 +85,7 @@ namespace ft
 
 
 
-		typedef typename Allocator::template rebind<RbTreeNode<Value> >::other node_allocator;
+			typedef typename Allocator::template rebind<RbTreeNode<Value> >::other node_allocator;
 
 		protected:
 			typedef RbTreeNodeBase*			basePtr;
@@ -101,6 +104,7 @@ namespace ft
 			typedef size_t					size_type;
 			typedef std::ptrdiff_t 			difference_type;
 			typedef Allocator				allocator_type;
+
 
 			RbTreeNodeBase	header;
 			key_compare		compare;
@@ -399,10 +403,11 @@ namespace ft
 
 				bool
 				operator!=(const self& rhs) const {
-					return this->_node != rhs.node;
+					return this->node != rhs.node;
 				}
 
 			};
+
 
 
 		public:
@@ -428,13 +433,29 @@ namespace ft
 						rightmost() = maximum(root());
 						impl.node_count = src.impl.node_count;
 					}
-				}
+				};
 
 				~RBTree() {}
+
+#include "printTree.hpp"
+
+				void
+				print() {
+					print_tree(impl.header.parent);
+				}
+
+				size_type
+				size() const
+				{ return impl.node_count; }
 
 				iterator
 				begin() {
 					return iterator(static_cast<link_type>(this->impl.header.left));
+				}
+
+				const_iterator
+				begin() const {
+					return const_iterator(static_cast<const_link_type>(this->impl.header.left));
 				}
 
 				iterator
@@ -442,14 +463,19 @@ namespace ft
 					return iterator(static_cast<link_type>(&this->impl.header));
 				}
 
+				const_iterator
+				end() const {
+					return const_iterator(static_cast<const_link_type>(&this->impl.header));
+				}
+
 
 				iterator
-				insert(basePtr x, basePtr p, const value_type& v) {
+				insert(basePtr x, basePtr p, const value_type& value) {
 					bool insertLeft = (x != 0 || p == _l_end()
-							|| impl.key_compare(KeyOfValue()(v),
+							|| impl.key_compare(KeyOfValue()(value),
 												key(p)));
 
-					link_type z = createNode(v);
+					link_type z = createNode(value);
 					insertAndRebalance(insertLeft, z,
 									   const_cast<basePtr>(p),
 									   this->impl.header);
@@ -458,28 +484,85 @@ namespace ft
 				}
 
 				pair<iterator, bool>
-				insertUnique(const value_type& inVal) {
-					link_type x =	_l_begin();
-					link_type y =	_l_end();
+				insertUnique(const value_type& value) {
+					link_type x =	this->_l_begin();
+					link_type y =	this->_l_end();
 					bool comp =		true;
 
+					std::cout << "printTree" << std::endl;
+					print_tree(impl.header.parent);
+					std::cout << std::endl;
 					while (x != 0) {
+//						std::cout << key(x) << std::endl;
 						y = x;
-						comp = impl.key_compare(KeyOfValue()(inVal), key(x));
+						comp = impl.key_compare(KeyOfValue()(value), key(x));
 						x = comp ? left(x) : right(x);
 					}
 					iterator j = iterator(y);
 					if (comp) {
 						if (j == begin()) {
-							return pair<iterator, bool>(insert(x, y, inVal), true);
+							return pair<iterator, bool>(insert(x, y, value), true);
 						} else {
 							--j;
 						}
 					}
-					if (impl.key_compare(key(j.node), KeyOfValue()(inVal))) {
-						return pair<iterator, bool>(insert(x, y, inVal), true);
+					if (impl.key_compare(key(j.node), KeyOfValue()(value))) {
+						return pair<iterator, bool>(insert(x, y, value), true);
 					}
 					return pair<iterator, bool>(j, false);
+				}
+
+				iterator
+				insertUnique(iterator hint, const value_type& value) {
+					if (hint.node == this->_l_end()) {
+						if (this->size() > 0
+							&& impl.key_compare(key(rightmost()),
+												KeyOfValue()(value))) {
+							return insert(0, rightmost(), value);
+						} else {
+							return insertUnique(value).first;
+						}
+					} else if (impl.key_compare(KeyOfValue()(value),
+												key(hint.node))) {
+						iterator before = hint;
+						if (hint.node == leftmost()) {
+							return insert(leftmost(), leftmost(), value);
+						} else if (impl.key_compare(key((--before).node),
+													KeyOfValue()(value))) {
+							if (right(before.node) == 0) {
+								return insert(0, before.node, value);
+							} else {
+								return insert(hint.node, hint.node, value);
+							}
+						} else {
+							return insertUnique(value).first;
+						}
+					} else if (impl.key_compare(key(hint.node),
+													KeyOfValue()(value))) {
+							iterator after = hint;
+							if (hint.node == rightmost()) {
+								return insert(0, rightmost(), value);
+							} else if (impl.key_compare(KeyOfValue()(value),
+														key((++after).node))) {
+								if (right(hint.node) == 0) {
+									return insert (0, hint.node, value);
+								} else {
+									return insert(after.node, after.node, value);
+								}
+							} else {
+								return insertUnique(value).first;
+							}
+					} else {
+						return hint;
+					}
+				}
+
+				template<typename InputIt>
+					void
+					insertUnique(InputIt first, InputIt last) {
+					for (; first != last; ++first) {
+						insertUnique(end(), *first);
+					}
 				}
 
 				Compare

@@ -6,10 +6,14 @@
 
 NAME		=	ft_containers
 
+NAME_TEST	=	ft_containers_test
+
 SRC_FILES 	=	main.cpp \
 				RBTree.cpp \
 
 OBJS_DIR	=	objs
+
+TEST_DIR	=	objs_test
 
 SRC_DIR		=	./srcs/
 
@@ -25,6 +29,8 @@ INC_FILES	=	Stack.hpp \
 				utils/RBT.hpp \
 
 OBJS		=	$(addprefix $(OBJS_DIR)/, $(SRC_FILES:.cpp=.o))
+
+STD_OBJS	=	$(addprefix $(TEST_DIR)/, $(SRC_FILES:.cpp=.o))
 
 INCLUDE		=	$(addprefix $(INC_DIR)/, $(INC_FILES))
 
@@ -50,21 +56,43 @@ $(OBJS_DIR)/%.o: $(SRC_DIR)/%.cpp $(INCLUDE)
 				@echo "$(CUT)$(BLUE)clang $(RESET)$(notdir $@)"
 				@printf "$(UP)"
 
+$(TEST_DIR)/%.o: $(SRC_DIR)/%.cpp $(INCLUDE)
+				@mkdir -p $(@D)
+				@$(CC) $(CFLAGS) -I$(INC_DIR) -DSTD -c $< -o $@
+				@echo "$(CUT)$(BLUE)clang $(RESET)$(notdir $@)"
+				@printf "$(UP)"
+
 all:	$(NAME)
 
 $(NAME):		$(OBJS)
 				@$(CC) $(CFLAGS) $^ -o $@
 				@echo "$(CUT)$(GREEN)✔ $(NAME) created$(RESET)"
 
-clean:
-				@$(RM) $(OBJS) $(OBJS_DIR)
-				@echo "$(RED)✘ clean$(RESET)"
-
 fclean:	clean
 				@$(RM) $(NAME)
 				@echo "$(RED)✘ fclean$(RESET)"
 
+test:	$(NAME_TEST)
+
+$(NAME_TEST):	$(OBJS) $(STD_OBJS)
+				@$(CC) $(CFLAGS) $(OBJS) -o $(NAME)
+				@./$(NAME) > ft_test.log
+				@$(RM) $(OBJS) $(OBJS_DIR)
+				@$(CC) $(CFLAGS) $(STD_OBJS) -o $(NAME_TEST)
+				@./$(NAME_TEST) > std_test.log
+				@$(RM) $(STD_OBJS) $(TEST_DIR)
+				-@diff -ys ft_test.log std_test.log
+				@rm ft_test.log std_test.log $(NAME) $(NAME_TEST)
+
+clean:
+				@$(RM) $(OBJS) $(OBJS_DIR)
+				@echo "$(RED)✘ clean$(RESET)"
+
+
+
 re:		fclean all
+
+.PHONY:	all clean fclean re test diff
 
 ################################################################################
 ################################################################################
@@ -72,46 +100,45 @@ re:		fclean all
 ################################################################################
 ################################################################################
 
-TEST_NAME		=	ft_containers_test
-
-TEST_SRC_FILES	=	main_test.cpp
-
-TEST_OBJS_DIR	=	test/objs
-
-TEST_SRC_DIR	=	test/srcs
-
-TEST_INC_DIR	=	test/include
-
-TEST_INC_FILES	=	vector_assign.h
-
-TEST_OBJS		=	$(addprefix $(TEST_OBJS_DIR)/, $(TEST_SRC_FILES:.cpp=.o))
-
-TEST_INC		=	$(addprefix $(TEST_INC_DIR)/, $(TEST_INC_FILES))
-
-GTEST_INCLUDE	=	./test/googletest/googletest/include/
-
-CC				=	c++
-
-GTEST_FLAGS		=	./test/googletest/lib/libgtest.a -lpthread
-
-$(TEST_OBJS_DIR)/%.o: $(TEST_SRC_DIR)/%.cpp $(TEST_INC)
-				@mkdir -p $(@D)
-				@$(CC) -I$(GTEST_INCLUDE) -Igtest -c $< -o $@
-				@echo "$(CUT)$(BLUE)clang $(RESET)$(notdir $@)"
-				@printf "$(UP)"
-
-test:	$(TEST_NAME)
-
-$(TEST_NAME):		$(TEST_OBJS)
-					@$(CC) -pthread -I$(GTEST_INCLUDE) $^ -o $@ $(GTEST_FLAGS) -g
-					@echo "$(CUT)$(GREEN)✔ $(TEST_NAME) created$(RESET)"
-					#@valgrind --leak-check=full ./$@
-					@./$@
-					@$(RM) $(TEST_OBJS) $(TEST_OBJS_DIR) $(TEST_NAME)
-
-.DELETE_ON_ERROR:
-					$(TEST_NAME)
-					$(TEST_OBJS)
-
-.PHONY:	all clean fclean re test
+#TEST_NAME		=	ft_containers_test
+#
+#TEST_SRC_FILES	=	main_test.cpp
+#
+#TEST_OBJS_DIR	=	test/objs
+#
+#TEST_SRC_DIR	=	test/srcs
+#
+#TEST_INC_DIR	=	test/include
+#
+#TEST_INC_FILES	=	vector_assign.h
+#
+#TEST_OBJS		=	$(addprefix $(TEST_OBJS_DIR)/, $(TEST_SRC_FILES:.cpp=.o))
+#
+#TEST_INC		=	$(addprefix $(TEST_INC_DIR)/, $(TEST_INC_FILES))
+#
+#GTEST_INCLUDE	=	./test/googletest/googletest/include/
+#
+#CC				=	c++
+#
+#GTEST_FLAGS		=	./test/googletest/lib/libgtest.a -lpthread
+#
+#$(TEST_OBJS_DIR)/%.o: $(TEST_SRC_DIR)/%.cpp $(TEST_INC)
+#				@mkdir -p $(@D)
+#				@$(CC) -I$(GTEST_INCLUDE) -Igtest -c $< -o $@
+#				@echo "$(CUT)$(BLUE)clang $(RESET)$(notdir $@)"
+#				@printf "$(UP)"
+#
+#test:	$(TEST_NAME)
+#
+#$(TEST_NAME):		$(TEST_OBJS)
+#					@$(CC) -pthread -I$(GTEST_INCLUDE) $^ -o $@ $(GTEST_FLAGS) -g
+#					@echo "$(CUT)$(GREEN)✔ $(TEST_NAME) created$(RESET)"
+#					#@valgrind --leak-check=full ./$@
+#					@./$@
+#					@$(RM) $(TEST_OBJS) $(TEST_OBJS_DIR) $(TEST_NAME)
+#
+#.DELETE_ON_ERROR:
+#					$(TEST_NAME)
+#					$(TEST_OBJS)
+#
 

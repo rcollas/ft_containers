@@ -49,115 +49,139 @@ namespace ft {
 		return x;
 	}
 
-	static inline void
-	swapColor(RbTreeNodeBase *rhs, RbTreeNodeBase *lhs) {
-		RbTreeColor tmpColor = rhs->color;
-		rhs->color = lhs->color;
-		lhs->color = tmpColor;
+	RbTreeNodeBase::constBasePtr
+	RbTreeIncrement(RbTreeNodeBase::constBasePtr x) {
+		if (x->right != 0) {
+			x = x->right;
+			while (x->left != 0) {
+				x = x->left;
+			}
+		} else {
+			RbTreeNodeBase* y = x->parent;
+			while (x == y->right) {
+				x = y;
+				y = y->parent;
+			}
+			if (x->right != y) {
+				x = y;
+			}
+		}
+		return x;
 	}
+//
+//	static inline void
+//	swapColor(RbTreeNodeBase *rhs, RbTreeNodeBase *lhs) {
+//		RbTreeColor tmpColor = rhs->color;
+//		rhs->color = lhs->color;
+//		lhs->color = tmpColor;
+//	}
 
 	static void
 	leftRotate(RbTreeNodeBase *&root, RbTreeNodeBase *&node) {
 
-		RbTreeNodeBase *right = node->right;
+		RbTreeNodeBase* const y = node->right;
 
-		node->right = node->left;
-		if (node->right != 0) {
-			node->right->parent = node;
+		node->right = y->left;
+		if (y->left != 0) {
+			y->left->parent = node;
 		}
+		y->parent = node->parent;
 
-		right->parent = node->parent;
-
-		if (node->parent == 0) {
-			root = right;
+		if (node == root) {
+			root = y;
 		} else if (node == node->parent->left) {
-			node->parent->left = right;
+			node->parent->left = y;
 		} else {
-			node->parent->right = right;
+			node->parent->right = y;
 		}
-		right->left = node;
-		node->parent = right;
+		y->left = node;
+		node->parent = y;
 	}
 
 	static void
 	rightRotate(RbTreeNodeBase *&root, RbTreeNodeBase *&node) {
 
-		RbTreeNodeBase *left = node->left;
+		RbTreeNodeBase* const y = node->left;
 
-		node->left = node->right;
-		if (node->left != 0) {
-			node->left->parent = node;
+		node->left = y->right;
+		if (y->right != 0) {
+			y->right->parent = node;
 		}
+		y->parent = node->parent;
 
-		left->parent = node->parent;
-
-		if (node->parent == 0) {
-			root = left;
-		} else if (node == node->parent->left) {
-			node->parent->left = left;
+		if (node == root) {
+			root = y;
+		} else if (node == node->parent->right) {
+			node->parent->right = y;
 		} else {
-			node->parent->right = left;
+			node->parent->left = y;
 		}
-		left->right = node;
-		node->parent = left;
+		y->right = node;
+		node->parent = y;
 	}
 
 	void
-	insertFix(RbTreeNodeBase *&root, RbTreeNodeBase *&x) {
+	rebalance(RbTreeNodeBase *&root, RbTreeNodeBase *&x) {
 
-		RbTreeNodeBase *parent = 0;
-		RbTreeNodeBase *grandParent = 0;
-		while (x && x != root && x->color != black && x->parent->color == red) {
+		while (x != root && x->parent->color == red) {
 
-			parent = x->parent;
-			grandParent = x->_grandParent;
+			RbTreeNodeBase* grandParent = x->_grandParent;
 
-			if (parent == grandParent->left) {
+			if (x->parent == grandParent->left) {
 
 				RbTreeNodeBase *uncle = grandParent->right;
 
 				if (uncle && uncle->color == red) {
 
-					grandParent->color = red;
-					parent->color = black;
+					x->parent->color = black;
 					uncle->color = black;
+					grandParent->color = red;
 					x = grandParent;
 
 				} else {
 
-					if (x == parent->right) {
-						leftRotate(root, parent);
-						x = parent;
-						parent = x->parent;
+					if (x == x->parent->right) {
+						x = x->parent;
+						leftRotate(root, x->parent);
 					}
+					x->parent->color = black;
+					grandParent->color = red;
 					rightRotate(root, grandParent);
-					swapColor(parent, grandParent);
-					x = parent;
 				}
 			} else {
 				RbTreeNodeBase *uncle = grandParent->left;
 				if (uncle && uncle->color == red) {
 
-					grandParent->color = red;
-					parent->color = black;
+					x->parent->color = black;
 					uncle->color = black;
+					grandParent->color = red;
 					x = grandParent;
 
 				} else {
 
-					if (x == parent->left) {
-						rightRotate(root, parent);
-						x = parent;
-						parent = x->parent;
+					if (x == x->parent->left) {
+						x = x->parent;
+						rightRotate(root, x);
 					}
+					x->parent->color = black;
+					grandParent->color = red;
 					leftRotate(root, grandParent);
-					swapColor(parent, grandParent);
-					x = parent;
 				}
 			}
 		}
 		root->color = black;
 	}
+
+	/**
+	 * @brief
+	 * insert a node in the actual tree and rebalance it
+	 * @param[in] insertLeft bool value
+	 * @param[in] x the node to insert
+	 * @param[in] p
+	 * @param[in] header header of the tree
+	 * @details
+	 *
+	 */
 
 	void
 	insertAndRebalance(const bool insertLeft,
@@ -187,28 +211,6 @@ namespace ft {
 				header.right = x;
 			}
 		}
-		insertFix(root, x);
+		rebalance(root, x);
 	}
-
-//	RbTreeNodeBase *insertHelper(RbTreeNodeBase *root, RbTreeNodeBase *&insert) {
-//		if (root == NULL) {
-//			return insert;
-//		}
-//		if (_compare(insert->_data.first, root->_data.first)) {
-//			root->_left = insertHelper(root->_left, insert);
-//			root->_left->_parent = root;
-//		} else if (_compare(root->_data.first, insert->_data.first)) {
-//			root->_right = insertHelper(root->_right, insert);
-//			root->_right->_parent = root;
-//		}
-//		return root;
-//	}
-//	pointer insert(value_type value) {
-//		RbTreeNodeBase *node = new RbTreeNodeBase(value);
-//		this->_root = insertHelper(this->_root, node);
-//		insertFix(this->_root, node);
-//		return &(node->_data);
-//	};
-
-
 }

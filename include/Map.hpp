@@ -7,6 +7,7 @@
 #include "utils/RandomAccessIterator.hpp"
 #include "utils/pair.hpp"
 #include "utils/RBT.hpp"
+#include <vector>
 
 namespace ft {
 
@@ -40,15 +41,19 @@ namespace ft {
 			typedef typename RBTree::const_reverse_iterator const_reverse_iterator;
 
 
-			map() : _tree(new RBTree(_compare)) {
-				std::cout << "Default constructor" << std::endl;
-			};
+			map()
+			: _tree(new RBTree(_compare)) {};
+
 			explicit map(const Compare& comp,
-						  const Allocator& alloc = Allocator()) : _tree(0) {
-				(void) comp;
-				(void)alloc;
-				std::cout << "map(const Compare& comp, const Allocator& alloc = Allocator())" << std::endl;
-			};
+						  const Allocator& alloc = Allocator())
+						  : _tree(new RBTree(comp, alloc)) {};
+
+			template< class InputIt >
+				map(InputIt first, InputIt last,
+					 const Compare& comp = Compare(),
+					 const Allocator& alloc = Allocator())
+					 : _tree(new RBTree(comp, alloc))
+					 { _tree->insertUnique(first, last); };
 
 			~map() {
 				delete this->_tree;
@@ -59,7 +64,16 @@ namespace ft {
 				return _tree->insertUnique(value);
 			};
 
-			void print() const {
+			iterator insert( iterator hint, const value_type& value ) {
+				return _tree->insertUnique(hint, value);
+			};
+
+			template< class InputIt >
+			void insert( InputIt first, InputIt last ) {
+				_tree->insertUnique(first, last);
+			};
+
+			void print() {
 				this->_tree->print();
 				std::cout << std::endl;
 			}
