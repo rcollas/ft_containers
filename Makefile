@@ -81,7 +81,7 @@ $(NAME_TEST):	$(OBJS) $(STD_OBJS)
 				@$(CC) $(CFLAGS) $(STD_OBJS) -o $(NAME_TEST)
 				@./$(NAME_TEST) > std_test.log
 				@$(RM) $(STD_OBJS) $(TEST_DIR)
-				-@diff -ys ft_test.log std_test.log
+				-@diff -pqys ft_test.log std_test.log
 				@rm ft_test.log std_test.log $(NAME) $(NAME_TEST)
 
 clean:
@@ -93,52 +93,3 @@ clean:
 re:		fclean all
 
 .PHONY:	all clean fclean re test diff
-
-################################################################################
-################################################################################
-############################/? TEST FILES ?/####################################
-################################################################################
-################################################################################
-
-#TEST_NAME		=	ft_containers_test
-#
-#TEST_SRC_FILES	=	main_test.cpp
-#
-#TEST_OBJS_DIR	=	test/objs
-#
-#TEST_SRC_DIR	=	test/srcs
-#
-#TEST_INC_DIR	=	test/include
-#
-#TEST_INC_FILES	=	vector_assign.h
-#
-#TEST_OBJS		=	$(addprefix $(TEST_OBJS_DIR)/, $(TEST_SRC_FILES:.cpp=.o))
-#
-#TEST_INC		=	$(addprefix $(TEST_INC_DIR)/, $(TEST_INC_FILES))
-#
-#GTEST_INCLUDE	=	./test/googletest/googletest/include/
-#
-#CC				=	c++
-#
-#GTEST_FLAGS		=	./test/googletest/lib/libgtest.a -lpthread
-#
-#$(TEST_OBJS_DIR)/%.o: $(TEST_SRC_DIR)/%.cpp $(TEST_INC)
-#				@mkdir -p $(@D)
-#				@$(CC) -I$(GTEST_INCLUDE) -Igtest -c $< -o $@
-#				@echo "$(CUT)$(BLUE)clang $(RESET)$(notdir $@)"
-#				@printf "$(UP)"
-#
-#test:	$(TEST_NAME)
-#
-#$(TEST_NAME):		$(TEST_OBJS)
-#					@$(CC) -pthread -I$(GTEST_INCLUDE) $^ -o $@ $(GTEST_FLAGS) -g
-#					@echo "$(CUT)$(GREEN)✔ $(TEST_NAME) created$(RESET)"
-#					#@valgrind --leak-check=full ./$@
-#					@./$@
-#					@$(RM) $(TEST_OBJS) $(TEST_OBJS_DIR) $(TEST_NAME)
-#
-#.DELETE_ON_ERROR:
-#					$(TEST_NAME)
-#					$(TEST_OBJS)
-#
-

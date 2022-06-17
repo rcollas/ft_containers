@@ -182,23 +182,23 @@ namespace ft
 
 				constBasePtr
 				root() const
-				{ return this->header.parent; }
+				{ return this->impl.header.parent; }
 
 				basePtr&
 				leftmost()
-				{ return this->header.left; }
+				{ return this->impl.header.left; }
 
 				constBasePtr
 				leftmost() const
-				{ return this->header.left; }
+				{ return this->impl.header.left; }
 
 				basePtr&
 				rightmost()
-				{ return this->header.right; }
+				{ return this->impl.header.right; }
 
 				constBasePtr
 				rightmost() const
-				{ return this->header.right; }
+				{ return this->impl.header.right; }
 
 				link_type
 				_l_begin()
@@ -244,10 +244,6 @@ namespace ft
 				static const_link_type
 				right(constBasePtr x)
 				{ return static_cast<const_link_type>(x->right); }
-
-//				static const_reference
-//				value(constBasePtr x)
-//				{ return static_cast<const_link_type>(x)->valueField; }
 
 				static const Key&
 				key(constBasePtr x)
@@ -489,11 +485,7 @@ namespace ft
 					link_type y =	this->_l_end();
 					bool comp =		true;
 
-					std::cout << "printTree" << std::endl;
-					print_tree(impl.header.parent);
-					std::cout << std::endl;
 					while (x != 0) {
-//						std::cout << key(x) << std::endl;
 						y = x;
 						comp = impl.key_compare(KeyOfValue()(value), key(x));
 						x = comp ? left(x) : right(x);

@@ -2,8 +2,8 @@
 
 namespace ft {
 
-	static RbTreeNodeBase*
-	LocalRbTreeDecrement(RbTreeNodeBase* x) {
+	RbTreeNodeBase*
+	RbTreeDecrement(RbTreeNodeBase* x) {
 		if (x->color == red
 			&& x->parent->parent == x) {
 			x = x->right;
@@ -24,9 +24,26 @@ namespace ft {
 		return x;
 	}
 
-	RbTreeNodeBase*
-	RbTreeDecrement(RbTreeNodeBase* x)  {
-		return LocalRbTreeDecrement(x);
+	RbTreeNodeBase::constBasePtr
+	RbTreeDecrement(RbTreeNodeBase::constBasePtr  x) {
+		if (x->color == red
+			&& x->parent->parent == x) {
+			x = x->right;
+		} else if (x->left != 0) {
+			RbTreeNodeBase* y = x->left;
+			while (y->right != 0) {
+				y = y->right;
+				x = y;
+			}
+		} else {
+			RbTreeNodeBase* y = x->parent;
+			while (x == y->left) {
+				x = y;
+				y = y->parent;
+			}
+			x = y;
+		}
+		return x;
 	}
 
 	RbTreeNodeBase*
@@ -68,13 +85,6 @@ namespace ft {
 		}
 		return x;
 	}
-//
-//	static inline void
-//	swapColor(RbTreeNodeBase *rhs, RbTreeNodeBase *lhs) {
-//		RbTreeColor tmpColor = rhs->color;
-//		rhs->color = lhs->color;
-//		lhs->color = tmpColor;
-//	}
 
 	static void
 	leftRotate(RbTreeNodeBase *&root, RbTreeNodeBase *&node) {
@@ -177,10 +187,13 @@ namespace ft {
 	 * insert a node in the actual tree and rebalance it
 	 * @param[in] insertLeft bool value
 	 * @param[in] x the node to insert
-	 * @param[in] p
+	 * @param[in] p x's parent
 	 * @param[in] header header of the tree
 	 * @details
-	 *
+	 * if insertLeft is true, make x the left child of p
+	 * else make x the right child of p
+	 * if tree is empty, set x as the root (header.parent)
+	 * if p is rightmost or leftmost, update the header
 	 */
 
 	void
