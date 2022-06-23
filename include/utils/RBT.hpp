@@ -464,6 +464,23 @@ namespace ft
 					return const_iterator(static_cast<const_link_type>(&this->impl.header));
 				}
 
+				RbTreeNodeBase* getRoot() { return this->root(); }
+
+				iterator search(const Key& key) {
+
+					basePtr root = this->root();
+					while (root) {
+						if (impl.key_compare(KeyOfValue()((static_cast<link_type>(root))->valueField), key)) {
+							root = root->right;
+						} else if (impl.key_compare(key, KeyOfValue()(static_cast<link_type>(root)->valueField))) {
+							root = root->left;
+						} else {
+							return iterator(static_cast<link_type>(root));
+						}
+					}
+					throw std::out_of_range("");
+				}
+
 
 				iterator
 				insert(basePtr x, basePtr p, const value_type& value) {

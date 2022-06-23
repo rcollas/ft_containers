@@ -66,7 +66,38 @@ int main() {
 			std::cout << it->second << std::endl;
 			it++;
 		}
-//		foo.print();
+	}
+	{
+		NS::map<int, int> foo;
+		foo.insert(NS::pair<int, int>(-3, -3));
+		foo.insert(NS::pair<int, int>(-2, -2));
+		foo.insert(NS::pair<int, int>(-1, -1));
+		foo.insert(NS::pair<int, int>(0, 0));
+		foo.insert(NS::pair<int, int>(1, 1));
+		foo.insert(NS::pair<int, int>(2, 2));
+		foo.insert(NS::pair<int, int>(4, 4));
+		foo.insert(NS::pair<int, int>(5, 5));
+		NS::map<int, int>::iterator it = foo.begin();
+		for (; it != foo.end(); it++) {
+			std::cout << it->second << std::endl;
+		}
+		for (size_t i = -3; i < 6; i++) {
+			std::cout << foo.at(i) << std::endl;
+		}
+	}
+	{
+		NS::map<std::string, int> foo;
+		foo.insert(NS::pair<std::string, int>("one", 1));
+		foo.insert(NS::pair<std::string, int>("two", 2));
+		foo.insert(NS::pair<std::string, int>("three", 3));
+		foo.insert(NS::pair<std::string, int>("four", 4));
+		foo.insert(NS::pair<std::string, int>("five", 5));
+		foo.insert(NS::pair<std::string, int>("six", 6));
+		foo.insert(NS::pair<std::string, int>("seven", 7));
+		std::cout << "foo[one] = " << foo["one"] << std::endl;
+		std::cout << "foo[two] = " << foo["two"] << std::endl;
+		std::cout << "foo[three] = " << foo["three"] << std::endl;
+		std::cout << "foo[ten] = " << foo["ten"] << std::endl;
 	}
 
 

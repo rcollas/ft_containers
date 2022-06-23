@@ -34,7 +34,7 @@ STD_OBJS	=	$(addprefix $(TEST_DIR)/, $(SRC_FILES:.cpp=.o))
 
 INCLUDE		=	$(addprefix $(INC_DIR)/, $(INC_FILES))
 
-CC			=	c++
+CC			=	clang++
 
 CFLAGS		=	-Wall -Wextra -Werror -g -std=c++98
 

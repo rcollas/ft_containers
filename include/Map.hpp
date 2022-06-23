@@ -82,6 +82,23 @@ namespace ft {
 
 			iterator end() { return _tree->end(); }
 
+			size_type size() const { return _tree->size(); }
+
+
+			mapped_type& at(const Key& key) {
+				return _tree->search(key)->second;
+			}
+
+			mapped_type& operator[](const Key& key) {
+				try {
+					mapped_type& value = this->at(key);
+					return value;
+				} catch (...) {
+					return (this->insert(value_type(key, mapped_type()))).first->second;
+				}
+			}
+//			const mapped_type& at(const Key& key) const { return _tree->search(_tree->getRoot(), key); }
+
 			RBTree *_tree;
 		private:
 			key_compare _compare;
