@@ -20,7 +20,7 @@ INC_FILES	=	Stack.hpp \
 				utils/ReverseIterator.hpp \
 				utils/Iterator.hpp \
 				utils/RandomAccessIterator.hpp \
-				utils/RBT.hpp \
+				utils/RBTree.hpp \
 
 OBJS		=	$(addprefix $(OBJS_DIR)/, $(SRC_FILES:.cpp=.o))
 
@@ -28,7 +28,7 @@ STD_OBJS	=	$(addprefix $(TEST_DIR)/, $(SRC_FILES:.cpp=.o))
 
 INCLUDE		=	$(addprefix $(INC_DIR)/, $(INC_FILES))
 
-CC			=	c++
+CC			=	clang++
 
 CFLAGS		=	-Wall -Wextra -Werror -g -std=c++98
 

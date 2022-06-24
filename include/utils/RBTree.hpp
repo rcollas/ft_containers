@@ -80,6 +80,10 @@ namespace ft
 					   RbTreeNodeBase* p,
 					   RbTreeNodeBase& header);
 
+	RbTreeNodeBase*
+	eraseAndRebalance(RbTreeNodeBase* const z,
+					  RbTreeNodeBase& header);
+
 	template<typename Key, typename Value, typename KeyOfValue, class Compare, class Allocator = std::allocator<Value> >
 	class RBTree {
 
@@ -468,6 +472,22 @@ namespace ft
 					return const_iterator(static_cast<const_link_type>(&this->impl.header));
 				}
 
+				RbTreeNodeBase* getRoot() { return this->root(); }
+
+				iterator search(const Key& key) {
+
+					basePtr root = this->root();
+					while (root) {
+						if (impl.key_compare(KeyOfValue()((static_cast<link_type>(root))->valueField), key)) {
+							root = root->right;
+						} else if (impl.key_compare(key, KeyOfValue()(static_cast<link_type>(root)->valueField))) {
+							root = root->left;
+						} else {
+							return iterator(static_cast<link_type>(root));
+						}
+					}
+					throw std::out_of_range("");
+				}
 
 				iterator
 				insert(basePtr x, basePtr p, const value_type& value) {
@@ -483,7 +503,15 @@ namespace ft
 					return iterator(z);
 				}
 
-				pair<iterator, bool>
+				void
+				erase(iterator pos) {
+					link_type y =
+							static_cast<link_type>(eraseAndRebalance(pos.node, this->impl.header));
+					destroyNode(y);
+					--this->impl.node_count;
+				}
+
+			pair<iterator, bool>
 				insertUnique(const value_type& value) {
 					link_type x =	this->_l_begin();
 					link_type y =	this->_l_end();

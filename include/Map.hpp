@@ -6,7 +6,7 @@
 #include "utils/Iterator.hpp"
 #include "utils/RandomAccessIterator.hpp"
 #include "utils/pair.hpp"
-#include "utils/RBT.hpp"
+#include "utils/RBTree.hpp"
 #include <vector>
 
 namespace ft {
@@ -81,6 +81,26 @@ namespace ft {
 			iterator begin() { return _tree->begin(); }
 
 			iterator end() { return _tree->end(); }
+
+			size_type size() const { return _tree->size(); }
+
+
+			mapped_type& at(const Key& key) {
+				return _tree->search(key)->second;
+			}
+
+			mapped_type& operator[](const Key& key) {
+				try {
+					mapped_type& value = this->at(key);
+					return value;
+				} catch (...) {
+					return (this->insert(value_type(key, mapped_type()))).first->second;
+				}
+			}
+
+			void erase(iterator pos) { this->_tree->erase(pos) ; }
+
+//			const mapped_type& at(const Key& key) const { return _tree->search(_tree->getRoot(), key); }
 
 			RBTree *_tree;
 		private:
