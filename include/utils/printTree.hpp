@@ -6,7 +6,7 @@
 # define __RED   "\e[1;41m"
 # define __STOP  "\033[0m"
 
-#include "RBT.hpp"
+#include "RBTree.hpp"
 
 int countFromNode(ft::RbTreeNodeBase* ptr, int count = 0) {
 	if (ptr != 0) {

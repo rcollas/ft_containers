@@ -98,6 +98,7 @@ int main() {
 		std::cout << "foo[two] = " << foo["two"] << std::endl;
 		std::cout << "foo[three] = " << foo["three"] << std::endl;
 		std::cout << "foo[ten] = " << foo["ten"] << std::endl;
+		foo.erase(foo.begin());
 	}
 
 

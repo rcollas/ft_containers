@@ -80,6 +80,10 @@ namespace ft
 					   RbTreeNodeBase* p,
 					   RbTreeNodeBase& header);
 
+	RbTreeNodeBase*
+	eraseAndRebalance(RbTreeNodeBase* const z,
+					  RbTreeNodeBase& header);
+
 	template<typename Key, typename Value, typename KeyOfValue, class Compare, class Allocator = std::allocator<Value> >
 	class RBTree {
 
@@ -481,7 +485,6 @@ namespace ft
 					throw std::out_of_range("");
 				}
 
-
 				iterator
 				insert(basePtr x, basePtr p, const value_type& value) {
 					bool insertLeft = (x != 0 || p == _l_end()
@@ -496,7 +499,15 @@ namespace ft
 					return iterator(z);
 				}
 
-				pair<iterator, bool>
+				void
+				erase(iterator pos) {
+					link_type y =
+							static_cast<link_type>(eraseAndRebalance(pos.node, this->impl.header));
+					destroyNode(y);
+					--this->impl.node_count;
+				}
+
+			pair<iterator, bool>
 				insertUnique(const value_type& value) {
 					link_type x =	this->_l_begin();
 					link_type y =	this->_l_end();
