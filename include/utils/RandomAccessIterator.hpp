@@ -18,7 +18,7 @@ namespace ft {
 
 
 			explicit random_access_iterator() { this->_ptr = 0; }
-			explicit random_access_iterator(pointer const &src) { this->_ptr = src; }
+			explicit random_access_iterator(pointer const src) { this->_ptr = src; }
 			random_access_iterator(iterator const &src) {
 				*this = src;
 			}

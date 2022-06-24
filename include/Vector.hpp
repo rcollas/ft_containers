@@ -18,6 +18,9 @@ namespace ft {
 
 	template <class T, class Allocator = std::allocator<T> >
 	class vector {
+
+
+
 		public:
 
 			/********* MEMBER TYPES ***********/
@@ -34,22 +37,33 @@ namespace ft {
 			typedef typename ft::reverse_iterator<iterator> reverse_iterator;
 			typedef typename ft::reverse_iterator<const_iterator> const_reverse_iterator;
 
-			/********** CONSTRUCTOR ********/
-			vector() {
+		private:
+			Allocator _alloc;
+			size_type _capacity;
+			pointer _start;
+			size_type _size;
+			pointer _end;
 
-				this->_alloc = Allocator();
-				this->_capacity = 0;
-				this->_start = 0;
-				this->_end = 0;
-				this->_size = 0;
-			};
-			explicit vector( const Allocator& alloc ) {
-				this->_alloc = alloc;
-				this->_capacity = 0;
-				this->_start = 0;
-				this->_end = 0;
-				this->_size = 0;
-			};
+		public:
+
+			/********** CONSTRUCTOR ********/
+
+			vector()
+			:
+			_alloc(Allocator()),
+			_capacity(0),
+			_start(0),
+			_size(0),
+			_end(0) {}
+
+			explicit vector( const Allocator& alloc )
+			:
+			_alloc(alloc),
+			_capacity(0),
+			_start(0),
+			_size(0),
+			_end(0) {}
+
 			explicit vector(size_type count,
 							 const T& value = T(),
 							 const Allocator& alloc = Allocator()) {
@@ -61,28 +75,26 @@ namespace ft {
 				for (size_type i = 0; i < count; i++) {
 					this->_alloc.construct((_start + i), value);
 				}
-			};
+			}
+
 			template <class InputIt>
 			vector(InputIt first, InputIt last,
 					const Allocator& alloc = Allocator(),
-					typename ft::enable_if<!ft::is_same<InputIt, int>::value>::type* = 0) {
-				this->_alloc = alloc;
-				this->_size = 0;
-				this->_capacity = 0;
-				this->_start = 0;
-				this->_end = 0;
-				assign(first, last);
-			};
-
-			vector(const vector& other)
-				:
-					_alloc(Allocator()),
+					typename ft::enable_if<!ft::is_same<InputIt, int>::value>::type* = 0)
+					:
+					_alloc(alloc),
+					_capacity(0),
 					_start(0),
 					_size(0),
-					_capacity(0),
-					_end(0) {
-				*this = other;
-			};
+					_end(0) { assign(first, last); };
+
+			vector(const vector& other)
+			:
+			_alloc(Allocator()),
+			_capacity(0),
+			_start(0),
+			_size(0),
+			_end(0) { *this = other; };
 
 			/********** DESTRUCTOR **********/
 
@@ -169,10 +181,10 @@ namespace ft {
 			reference back() { return *(this->_end - 1); }
 			const_reference back() const { return *(this->_end - 1); }
 
-			T* data(){ return this->_start; }
+			T* data() { return this->_start; }
 			const T* data() const { return this->_start; }
 
-			/************ ITERATORS *************/
+			/*************** ITERATORS ****************/
 
 			iterator begin() {
 				return iterator(this->_start);
@@ -200,7 +212,7 @@ namespace ft {
 				return const_reverse_iterator(this->end()--);
 			}
 
-				/*************** CAPACITY ********************/
+			/****************** CAPACITY ********************/
 
 			bool empty() const { return this->begin() == this->end(); }
 
@@ -229,6 +241,7 @@ namespace ft {
 				while (this->_size > 0) {
 					this->_alloc.destroy(this->_start + --this->_size);
 				}
+				this->_end = this->_start;
 			}
 
 			iterator insert(iterator pos, const T& value) {
@@ -254,23 +267,17 @@ namespace ft {
 			void insert(iterator pos, size_type count, const T& value) {
 				size_type index = &*pos - this->_start;
 
-				if (this->size() == 0) {
-					for (size_type i = 0; i < count; i++) {
-						this->push_back(value);
-					}
-				} else {
-					while (this->size() + count >= this->capacity()) {
-						reserve(this->capacity() * 2);
-					}
-					for (size_type i = this->size(); i > index; i--) {
-						this->_alloc.construct(this->_start + i + count - 1, *(this->_start + i - 1));
-						this->_alloc.destroy(this->_start + i - 1);
-					}
-					for (size_type i = 0; i < count; i++) {
-						this->_alloc.construct(this->_start + index + i, value);
-						this->_size++;
-						this->_end++;
-					}
+				if (this->size() + count > this->capacity()) {
+					reserve(this->size() + count);
+				}
+				for (size_type i = this->size(); i > index; i--) {
+					this->_alloc.construct(this->_start + i + count - 1, *(this->_start + i - 1));
+					this->_alloc.destroy(this->_start + i - 1);
+				}
+				for (size_type i = 0; i < count; i++) {
+					this->_alloc.construct(this->_start + index + i, value);
+					this->_size++;
+					this->_end++;
 				}
 			}
 
@@ -282,23 +289,17 @@ namespace ft {
 				size_type count = last - first;
 				ft::vector<value_type> tmp(first, last);
 
-				if (this->size() == 0) {
-					for (size_type i = 0; i < count; i++) {
-						this->push_back(*first++);
-					}
-				} else {
-					while (this->size() + count >= this->capacity()) {
-						reserve(this->capacity() * 2);
-					}
-					for (size_type i = this->size(); i > index; --i) {
-						this->_alloc.construct(this->_start + i + count - 1, *(this->_start + i - 1));
-						this->_alloc.destroy(this->_start + i - 1);
-					}
-					for (size_type i = 0; i < count; i++) {
-						this->_alloc.construct(this->_start + index + i, tmp[i]);
-						this->_size++;
-						this->_end++;
-					}
+				if (this->size() + count > this->capacity()) {
+					reserve(this->size() + count);
+				}
+				for (size_type i = this->size(); i > index; --i) {
+					this->_alloc.construct(this->_start + i + count - 1, *(this->_start + i - 1));
+					this->_alloc.destroy(this->_start + i - 1);
+				}
+				for (size_type i = 0; i < count; i++) {
+					this->_alloc.construct(this->_start + index + i, tmp[i]);
+					this->_size++;
+					this->_end++;
 				}
 			}
 
@@ -366,19 +367,13 @@ namespace ft {
 				*this = tmp;
 			}
 
-		private:
-			Allocator _alloc;
-			pointer _start;
-			size_type _size;
-			size_type _capacity;
-			pointer _end;
+
 
 	};
 
 	template< class T, class Alloc >
 	bool operator==( const ft::vector<T,Alloc>& lhs,
 					 const ft::vector<T,Alloc>& rhs ) {
-
 		return lhs.size() == rhs.size() && ft::equal(lhs.begin(), lhs.end(), rhs.begin());
 	};
 

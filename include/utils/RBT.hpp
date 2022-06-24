@@ -165,7 +165,11 @@ namespace ft
 
 				RbTreeImpl(const node_allocator& a = node_allocator(),
 						   const Key_Compare& comp = Key_Compare())
-				: node_allocator(a), key_compare(comp), header(), node_count(0) {
+				:
+				node_allocator(a),
+				key_compare(comp),
+				header(),
+				node_count(0) {
 					this->header.color = red;
 					this->header.parent = 0;
 					this->header.left = &this->header;

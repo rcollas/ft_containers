@@ -1,9 +1,3 @@
-################################################################################
-################################################################################
-############################/? MAIN FILES ?/####################################
-################################################################################
-################################################################################
-
 NAME		=	ft_containers
 
 NAME_TEST	=	ft_containers_test
@@ -74,14 +68,17 @@ fclean:	clean
 
 test:	$(NAME_TEST)
 
+DIFF			=	-@diff -sc --suppress-common-lines ft_test.log std_test.log
+
 $(NAME_TEST):	$(OBJS) $(STD_OBJS)
-				@$(CC) $(CFLAGS) $(OBJS) -o $(NAME)
-				@./$(NAME) > ft_test.log
-				@$(RM) $(OBJS) $(OBJS_DIR)
 				@$(CC) $(CFLAGS) $(STD_OBJS) -o $(NAME_TEST)
 				@./$(NAME_TEST) > std_test.log
 				@$(RM) $(STD_OBJS) $(TEST_DIR)
-				-@diff -pqys ft_test.log std_test.log
+				@$(CC) $(CFLAGS) $(OBJS) -o $(NAME)
+				@./$(NAME) > ft_test.log
+				@$(RM) $(OBJS) $(OBJS_DIR)
+				@$(DIFF) > diff.log
+				@$(DIFF)
 				@rm ft_test.log std_test.log $(NAME) $(NAME_TEST)
 
 clean:
