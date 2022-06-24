@@ -64,16 +64,19 @@ namespace ft {
 				return _tree->insertUnique(value);
 			};
 
-			iterator insert( iterator hint, const value_type& value ) {
+			iterator
+			insert( iterator hint, const value_type& value ) {
 				return _tree->insertUnique(hint, value);
 			};
 
 			template< class InputIt >
-			void insert( InputIt first, InputIt last ) {
+			void
+			insert( InputIt first, InputIt last ) {
 				_tree->insertUnique(first, last);
 			};
 
-			void print() {
+			void
+			print() {
 				this->_tree->print();
 				std::cout << std::endl;
 			}
@@ -98,7 +101,11 @@ namespace ft {
 				}
 			}
 
-			void erase(iterator pos) { this->_tree->erase(pos) ; }
+			void
+			erase(iterator pos) { this->_tree->erase(pos) ; }
+
+			size_type
+			erase(const Key& key) { return this->_tree->erase(key); }
 
 //			const mapped_type& at(const Key& key) const { return _tree->search(_tree->getRoot(), key); }
 

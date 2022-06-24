@@ -503,6 +503,17 @@ namespace ft
 					return iterator(z);
 				}
 
+				size_type
+				erase(const Key& key) {
+					try {
+						iterator i = this->search(key);
+						erase(i);
+						return 1;
+					} catch (...) {
+						return 0;
+					}
+				}
+
 				void
 				erase(iterator pos) {
 					link_type y =
