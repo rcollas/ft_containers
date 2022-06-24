@@ -314,16 +314,11 @@ namespace ft {
 			}
 
 			iterator erase(iterator first, iterator last) {
-				size_type count = last - first;
 				iterator *ret = last == this->end() ? 0 : &last;
-				while (first + count != last) {
-					this->_alloc.destroy(&*first);
-					*first = *(first + count);
-					first++;
-				}
-				while (count) {
-					this->pop_back();
-					count--;
+				int i = 0;
+				while (first + i != last) {
+					this->erase(iterator(first));
+					i++;
 				}
 				return ret == 0 ? (this->end()) : *ret;
 			}

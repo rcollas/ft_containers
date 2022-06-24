@@ -126,6 +126,7 @@ int main() {
 			std::cout << "foo[" << i << "] = " << foo[i] << std::endl;
 			std::cout << "foo.at(" << i << ") = " << foo.at(i) << std::endl;
 		}
+		std::cout << "foo.erase(foo.begin(), foo.begin() + 5" << std::endl;
 		foo.erase(foo.begin(), foo.begin() + 5);
 		for (size_t i = 0; i < foo.size(); i++) {
 			std::cout << "foo[" << i << "] = " << foo[i] << std::endl;
