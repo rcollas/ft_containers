@@ -110,30 +110,41 @@ int main() {
 //	}
 
 	{
-		printTest("INT VECTOR ERASE");
-
+//		printTest("INT VECTOR ERASE");
+//
 		NS::vector<int> foo;
-		srand(time(0));
+//		srand(time(0));
+//		for (int i = 0; i < 10; i++) {
+//			foo.push_back(i);
+//		}
+//		for (size_t i = 0; i < foo.size(); i++) {
+//			std::cout << "foo[" << i << "] = " << foo[i] << std::endl;
+//			std::cout << "foo.at(" << i << ") = " << foo.at(i) << std::endl;
+//		}
+////		foo.erase(foo.end());
+////		for (size_t i = 0; i < foo.size(); i++) {
+////			std::cout << "foo[" << i << "] = " << foo[i] << std::endl;
+////			std::cout << "foo.at(" << i << ") = " << foo.at(i) << std::endl;
+////		}
+//		std::cout << "foo.erase(foo.begin(), foo.begin() + 5" << std::endl;
+//		foo.erase(foo.begin(), foo.begin() + 5);
+//		for (size_t i = 0; i < foo.size(); i++) {
+//			std::cout << "foo[" << i << "] = " << foo[i] << std::endl;
+//			std::cout << "foo.at(" << i << ") = " << foo.at(i) << std::endl;
+//		}
+//		std::cout << "foo.insert(foo.begin() + 1, foo.begin(), foo.end())" << std::endl;
+//		foo.insert(foo.begin() + 1, foo.begin(), foo.end());
+//		for (size_t i = 0; i < foo.size(); i++) {
+//			std::cout << "foo[" << i << "] = " << foo[i] << std::endl;
+//			std::cout << "foo.at(" << i << ") = " << foo.at(i) << std::endl;
+//			std::cout << std::endl;
+//		}
+//		foo.clear();
 		for (int i = 0; i < 10; i++) {
 			foo.push_back(i);
 		}
-		for (size_t i = 0; i < foo.size(); i++) {
-			std::cout << "foo[" << i << "] = " << foo[i] << std::endl;
-			std::cout << "foo.at(" << i << ") = " << foo.at(i) << std::endl;
-		}
-//		foo.erase(foo.end());
-//		for (size_t i = 0; i < foo.size(); i++) {
-//			std::cout << "foo[" << i << "] = " << foo[i] << std::endl;
-//			std::cout << "foo.at(" << i << ") = " << foo.at(i) << std::endl;
-//		}
-		std::cout << "foo.erase(foo.begin(), foo.begin() + 5" << std::endl;
-		foo.erase(foo.begin(), foo.begin() + 5);
-//		for (size_t i = 0; i < foo.size(); i++) {
-//			std::cout << "foo[" << i << "] = " << foo[i] << std::endl;
-//			std::cout << "foo.at(" << i << ") = " << foo.at(i) << std::endl;
-//		}
-		std::cout << "foo.insert(foo.begin() + 1, foo.begin(), foo.end())" << std::endl;
-		foo.insert(foo.begin() + 1, foo.begin(), foo.end());
+		std::cout << "foo.insert(foo.begin(), foo.begin(), foo.end())" << std::endl;
+		foo.insert(foo.begin(), foo.begin(), foo.end());
 		for (size_t i = 0; i < foo.size(); i++) {
 			std::cout << "foo[" << i << "] = " << foo[i] << std::endl;
 			std::cout << "foo.at(" << i << ") = " << foo.at(i) << std::endl;

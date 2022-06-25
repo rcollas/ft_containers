@@ -116,6 +116,7 @@ namespace ft {
 						this->_alloc.deallocate(this->_start, this->_capacity);
 					}
 					this->_alloc = other._alloc;
+//					this->assign(other.begin(), other.end());
 					this->_size = other._size;
 					this->_capacity = other._capacity;
 					this->_start = this->_alloc.allocate(this->_capacity);
@@ -274,26 +275,12 @@ namespace ft {
 			void insert(iterator pos, InputIt first, InputIt last,
 						typename ft::enable_if<!ft::is_same<InputIt, int>::value>::type* = 0) {
 
-//				size_type index = &*pos - this->_start;
 				size_type count = last - first;
+				ft::vector<value_type> tmp(first, last);
 				size_type position = pos - begin();
-//				ft::vector<value_type> tmp(first, last);
-//
-//				if (this->size() + count > this->capacity()) {
-//					reserve(this->size() + count);
-//				}
-//				for (size_type i = this->size(); i > index; --i) {
-//					this->_alloc.construct(this->_start + i + count - 1, *(this->_start + i - 1));
-//					this->_alloc.destroy(this->_start + i - 1);
-//				}
-//				for (size_type i = 0; i < count; i++) {
-//					this->_alloc.construct(this->_start + index + i, tmp[i]);
-//					this->_size++;
-//					this->_end++;
-//				}
-				size_type i = 0;
-				while (i < count) {
-					this->insert(begin() + position, *(first + i));
+
+				while (count--) {
+					this->insert(begin() + position, tmp[count]);
 				}
 			}
 

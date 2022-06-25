@@ -63,12 +63,12 @@ $(NAME):		$(OBJS)
 				@echo "$(CUT)$(GREEN)✔ $(NAME) created$(RESET)"
 
 fclean:	clean
-				@$(RM) $(NAME)
+				@$(RM) $(NAME) diff.log ft_test.log std_test.log
 				@echo "$(RED)✘ fclean$(RESET)"
 
 test:	$(NAME_TEST)
 
-DIFF			=	-@diff -sc --suppress-common-lines ft_test.log std_test.log
+DIFF			=	-@diff -sy --suppress-common-lines ft_test.log std_test.log
 
 $(NAME_TEST):	$(OBJS) $(STD_OBJS)
 				@$(CC) $(CFLAGS) $(STD_OBJS) -o $(NAME_TEST)
