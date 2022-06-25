@@ -656,7 +656,6 @@ int main() {
 //			std::cout << foo.at(i) << std::endl;
 //		}
 //	}
-
 //	{
 //		NS::map<std::string, int> foo;
 //		foo.insert(NS::pair<std::string, int>("one", 1));
