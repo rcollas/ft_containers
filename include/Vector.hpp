@@ -38,11 +38,11 @@ namespace ft {
 			typedef typename ft::reverse_iterator<const_iterator> const_reverse_iterator;
 
 		private:
-			Allocator _alloc;
-			size_type _capacity;
-			pointer _start;
-			size_type _size;
-			pointer _end;
+			Allocator	_alloc;
+			size_type	_capacity;
+			pointer		_start;
+			size_type	_size;
+			pointer		_end;
 
 		public:
 
@@ -81,12 +81,12 @@ namespace ft {
 			vector(InputIt first, InputIt last,
 					const Allocator& alloc = Allocator(),
 					typename ft::enable_if<!ft::is_same<InputIt, int>::value>::type* = 0)
-					:
-					_alloc(alloc),
-					_capacity(0),
-					_start(0),
-					_size(0),
-					_end(0) { assign(first, last); };
+			:
+			_alloc(alloc),
+			_capacity(0),
+			_start(0),
+			_size(0),
+			_end(0) { assign(first, last); };
 
 			vector(const vector& other)
 			:
@@ -108,21 +108,13 @@ namespace ft {
 			/************* ASSIGNMENT OPERATOR *********/
 
 			vector& operator=(const vector& other) {
-				if (*this != other) {
-					if (this->_start) {
-						for (size_type i = 0; i < this->_size; i++) {
-							this->_alloc.destroy(this->_start + i);
-						}
-						this->_alloc.deallocate(this->_start, this->_capacity);
-					}
-					this->_alloc = other._alloc;
-					this->_size = other._size;
-					this->_capacity = other._capacity;
-					this->_start = this->_alloc.allocate(this->_capacity);
-					this->_end = this->_start + this->_size;
-					for (size_type i = 0; i < other.size(); i++) {
-						this->_alloc.construct(this->_start + i, other[i]);
-					}
+				if (this != &other) {
+					clear();
+					if (_capacity < other._size)
+						reserve(other._capacity);
+					_size = other._size;
+					for (size_t i = 0; i < other._size; i++)
+						_alloc.construct(_start + i, other._start[i]);
 				}
 				return *this;
 			};
@@ -172,55 +164,68 @@ namespace ft {
 				return *(this->_start + pos);
 			};
 
-			reference operator[]( size_type pos ) { return *(this->_start + pos); };
-			const_reference operator[]( size_type pos ) const { return *(this->_start + pos); };
+			reference
+			operator[]( size_type pos ) { return *(this->_start + pos); };
 
-			reference front() { return *(this->_start); }
-			const_reference front() const { return *(this->_start); }
+			const_reference
+			operator[]( size_type pos ) const { return *(this->_start + pos); };
 
-			reference back() { return *(this->_end - 1); }
-			const_reference back() const { return *(this->_end - 1); }
+			reference
+			front() { return *(this->_start); }
+
+			const_reference
+			front() const { return *(this->_start); }
+
+			reference
+			back() { return *(this->_end - 1); }
+
+			const_reference
+			back() const { return *(this->_end - 1); }
 
 			T* data() { return this->_start; }
 			const T* data() const { return this->_start; }
 
 			/*************** ITERATORS ****************/
 
-			iterator begin() {
-				return iterator(this->_start);
-			}
-			iterator end() {
-				return iterator(this->_end);
-			}
-			reverse_iterator rend() {
-				return reverse_iterator(this->begin()--);
-			}
-			reverse_iterator rbegin() {
-				return reverse_iterator(this->end()--);
-			}
+			iterator
+			begin() { return iterator(this->_start); }
 
-			const_iterator begin() const {
-				return const_iterator(this->_start);
-			}
-			const_iterator end() const {
-				return const_iterator(this->_end);
-			}
-			const_reverse_iterator rend() const {
-				return const_reverse_iterator(this->begin()--);
-			}
-			const_reverse_iterator rbegin() const {
-				return const_reverse_iterator(this->end()--);
-			}
+			iterator
+			end() { return iterator(this->_end); }
+
+			const_iterator
+			begin() const { return const_iterator(this->_start); }
+
+			const_iterator
+			end() const { return const_iterator(this->_end); }
+
+			reverse_iterator
+			rbegin() { return reverse_iterator(this->end()); }
+
+			reverse_iterator
+			rend() { return reverse_iterator(this->begin()); }
+
+			const_reverse_iterator
+			rbegin() const { return const_reverse_iterator(this->end()); }
+
+			const_reverse_iterator
+			rend() const { return const_reverse_iterator(this->begin()); }
 
 			/****************** CAPACITY ********************/
 
 			bool empty() const { return this->begin() == this->end(); }
 
-			size_type size() const { return this->_size; }
-			size_type max_size() const { return this->_alloc.max_size(); }
-			size_type capacity() const { return this->_capacity; }
+			size_type
+			size() const { return this->_size; }
 
-			void reserve(size_type new_cap) {
+			size_type
+			max_size() const { return this->_alloc.max_size(); }
+
+			size_type
+			capacity() const { return this->_capacity; }
+
+			void
+			reserve(size_type new_cap) {
 				if (new_cap > this->max_size()) {
 					throw std::length_error("Your allocation capacity exceed the maximum available size");
 				}
@@ -237,14 +242,16 @@ namespace ft {
 
 			/************************ MODIFIERS ***********************/
 
-			void clear() {
+			void
+			clear() {
 				while (this->_size > 0) {
 					this->_alloc.destroy(this->_start + --this->_size);
 				}
 				this->_end = this->_start;
 			}
 
-			iterator insert(iterator pos, const T& value) {
+			iterator
+			insert(iterator pos, const T& value) {
 
 				size_type index = &*pos - this->_start;
 				if (this->size() == 0) {
@@ -264,7 +271,8 @@ namespace ft {
 				return iterator(this->_start + index);
 			}
 
-			void insert(iterator pos, size_type count, const T& value) {
+			void
+			insert(iterator pos, size_type count, const T& value) {
 				size_type index = &*pos - this->_start;
 
 				if (this->size() + count > this->capacity()) {
@@ -282,7 +290,8 @@ namespace ft {
 			}
 
 			template<class InputIt>
-			void insert(iterator pos, InputIt first, InputIt last,
+			void
+			insert(iterator pos, InputIt first, InputIt last,
 						typename ft::enable_if<!ft::is_same<InputIt, int>::value>::type* = 0) {
 
 				size_type index = &*pos - this->_start;
@@ -303,7 +312,8 @@ namespace ft {
 				}
 			}
 
-			iterator erase(iterator pos) {
+			iterator
+			erase(iterator pos) {
 				iterator ret = pos == this->end() ? this->end() : pos;
 				while (pos + 1 != this->end()) {
 					*pos = *(pos + 1);
@@ -313,17 +323,24 @@ namespace ft {
 				return ret;
 			}
 
-			iterator erase(iterator first, iterator last) {
+			iterator
+			erase(iterator first, iterator last) {
+
 				iterator *ret = last == this->end() ? 0 : &last;
-				int i = 0;
-				while (first + i != last) {
-					this->erase(iterator(first));
-					i++;
+				size_type count = last - first;
+
+				while (first + count != this->end()) {
+					*(first) = *(first + count);
+					first++;
 				}
-				return ret == 0 ? (this->end()) : *ret;
+				while (count--) {
+					this->pop_back();
+				}
+				return ret == 0 ? (this->end()) : * ret;
 			}
 
-			void push_back(const T& value) {
+			void
+			push_back(const T& value) {
 				if (this->_size != this->_capacity) {
 					this->_alloc.construct(this->_start + this->_size, value);
 					this->_size++;
@@ -336,7 +353,8 @@ namespace ft {
 				}
 			};
 
-			void pop_back() {
+			void
+			pop_back() {
 				if (this->_size) {
 					this->_alloc.destroy(this->_end - 1);
 					this->_end--;
@@ -344,7 +362,8 @@ namespace ft {
 				}
 			}
 
-			void resize(size_type count, T value = T()) {
+			void
+			resize(size_type count, T value = T()) {
 				if (count > this->_capacity) {
 					reserve(this->_capacity * 2);
 				}
@@ -356,10 +375,13 @@ namespace ft {
 				}
 			}
 
-			void swap(vector& other) {
-				vector tmp = other;
-				other = *this;
-				*this = tmp;
+			void
+			swap(vector& other) {
+				std::swap(_start, other._start);
+				std::swap(_end, other._end);
+				std::swap(_size, other._size);
+				std::swap(_capacity, other._capacity);
+				std::swap(_alloc, other._alloc);
 			}
 
 
@@ -385,19 +407,19 @@ namespace ft {
 	template<class T, class Alloc>
 	bool operator<=(const ft::vector<T,Alloc>& lhs,
 					 const ft::vector<T,Alloc>& rhs) {
-		return lhs < rhs || lhs == rhs;
+		return !(rhs < lhs);
 	};
 
 	template<class T, class Alloc>
 	bool operator>(const ft::vector<T,Alloc>& lhs,
 					const ft::vector<T,Alloc>& rhs) {
-		return ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end());
+		return rhs < lhs;
 	};
 
 	template<class T, class Alloc>
 	bool operator>=(const ft::vector<T,Alloc>& lhs,
 					const ft::vector<T,Alloc>& rhs) {
-		return lhs > rhs || lhs == rhs;
+		return !(lhs < rhs);
 	};
 
 	template<class T, class Alloc>

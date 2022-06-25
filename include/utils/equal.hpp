@@ -9,10 +9,9 @@ namespace ft {
 	bool equal(InputIt1 first1, InputIt1 last1,
 			   InputIt2 first2) {
 
-		for (size_t i = 0; &(first1[i]) != &(last1[i]); i++) {
-			if (first1[i] != first2[i]) {
+		for (; first1 != last1; first1++, first2++) {
+			if (*first1 != *first2)
 				return false;
-			}
 		}
 		return true;
 	};
