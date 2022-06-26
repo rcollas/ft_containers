@@ -2,6 +2,7 @@
 #define FT_CONTAINERS_VECTOR_HPP
 
 #include <memory>
+#include <cmath>
 #include "utils/ReverseIterator.hpp"
 #include "utils/Iterator.hpp"
 #include "utils/RandomAccessIterator.hpp"
@@ -218,6 +219,7 @@ namespace ft {
 			size_type
 			size() const { return this->_size; }
 
+
 			size_type
 			max_size() const { return this->_alloc.max_size(); }
 
@@ -227,7 +229,7 @@ namespace ft {
 			void
 			reserve(size_type new_cap) {
 				if (new_cap > this->max_size()) {
-					throw std::length_error("Your allocation capacity exceed the maximum available size");
+					throw std::length_error("vector::reserve");
 				}
 				pointer prev_start = this->_start;
 				this->_start = this->_alloc.allocate(new_cap);
@@ -253,7 +255,7 @@ namespace ft {
 			iterator
 			insert(iterator pos, const T& value) {
 
-				size_type index = &*pos - this->_start;
+				size_type index = pos - this->begin();
 				if (this->size() == 0) {
 					this->push_back(value);
 				} else {
@@ -264,16 +266,16 @@ namespace ft {
 						this->_alloc.construct(this->_start + i, *(this->_start + i - 1));
 						this->_alloc.destroy(this->_start + i - 1);
 					}
-					this->_size++;
-					this->_end++;
 					this->_alloc.construct(this->_start + index, value);
+					this->_size++;
+					this->_end = this->_start + this->_size;
 				}
 				return iterator(this->_start + index);
 			}
 
 			void
 			insert(iterator pos, size_type count, const T& value) {
-				size_type index = &*pos - this->_start;
+				size_type index = pos - this->begin();
 
 				if (this->size() + count > this->capacity()) {
 					reserve(this->size() + count);
@@ -283,8 +285,10 @@ namespace ft {
 					this->_alloc.destroy(this->_start + i - 1);
 				}
 				for (size_type i = 0; i < count; i++) {
-					this->insert(pos + i, value);
+					this->_alloc.construct(this->_start + index + i, value);
+					this->_size++;
 				}
+				this->_end = this->_start + this->_size;
 			}
 
 			template<class InputIt>
@@ -346,8 +350,8 @@ namespace ft {
 			pop_back() {
 				if (this->_size) {
 					this->_alloc.destroy(this->_end - 1);
-					this->_end--;
 					this->_size--;
+					this->_end = this->_start + this->_size;
 				}
 			}
 
