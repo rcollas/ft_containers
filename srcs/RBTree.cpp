@@ -2,7 +2,7 @@
 
 namespace ft {
 
-	RbTreeNodeBase *
+	RbTreeNodeBase*
 	RbTreeDecrement(RbTreeNodeBase *x) {
 
 		if (x->color == red
@@ -12,8 +12,8 @@ namespace ft {
 			RbTreeNodeBase *y = x->left;
 			while (y->right != 0) {
 				y = y->right;
-				x = y;
 			}
+			x = y;
 		} else {
 			RbTreeNodeBase *y = x->parent;
 			while (x == y->left) {
@@ -29,16 +29,18 @@ namespace ft {
 	RbTreeDecrement(RbTreeNodeBase::constBasePtr x) {
 
 		if (x->color == red
-			&& x->parent->parent == x) {
+			&& x->parent->parent == x)
 			x = x->right;
-		} else if (x->left != 0) {
-			RbTreeNodeBase *y = x->left;
-			while (y->right != 0) {
+		else if (x->left != 0)
+		{
+			RbTreeNodeBase* y = x->left;
+			while (y->right != 0)
 				y = y->right;
-				x = y;
-			}
-		} else {
-			RbTreeNodeBase *y = x->parent;
+			x = y;
+		}
+		else
+		{
+			RbTreeNodeBase* y = x->parent;
 			while (x == y->left) {
 				x = y;
 				y = y->parent;
@@ -48,7 +50,7 @@ namespace ft {
 		return x;
 	}
 
-	RbTreeNodeBase *
+	RbTreeNodeBase*
 	RbTreeIncrement(RbTreeNodeBase *x) {
 
 		if (x->right != 0) {

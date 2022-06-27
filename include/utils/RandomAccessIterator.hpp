@@ -56,6 +56,7 @@ namespace ft {
 		private:
 			pointer _ptr;
 	};
+
 	template <class T>
 	size_t range(random_access_iterator<T> start, random_access_iterator<T> end) {
 		size_t i = 0;

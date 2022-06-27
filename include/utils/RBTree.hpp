@@ -68,6 +68,9 @@ namespace ft
 	RbTreeNodeBase*
 	RbTreeDecrement(RbTreeNodeBase* x);
 
+	RbTreeNodeBase::constBasePtr
+	RbTreeDecrement(RbTreeNodeBase::constBasePtr x);
+
 	RbTreeNodeBase*
 	RbTreeIncrement(RbTreeNodeBase* x);
 
@@ -86,8 +89,6 @@ namespace ft
 
 	template<typename Key, typename Value, typename KeyOfValue, class Compare, class Allocator = std::allocator<Value> >
 	class RBTree {
-
-
 
 			typedef typename Allocator::template rebind<RbTreeNode<Value> >::other node_allocator;
 
@@ -283,18 +284,18 @@ namespace ft
 				typedef ft::bidirectional_iterator_tag	iterator_category;
 				typedef std::ptrdiff_t 				difference_type;
 
-				typedef RbTreeIterator<Type>	self;
+				typedef RbTreeIterator<Type>		self;
 				typedef ft::RbTreeNodeBase::basePtr basePtr;
 				typedef ft::RbTreeNode<Type>*		linkType;
 
 				basePtr	node;
 
 				RbTreeIterator()
-						: node() {}
+				: node() {}
 
 				explicit
 				RbTreeIterator(linkType x)
-						: node(x) {}
+				: node(x) {}
 
 				reference
 				operator*() const
@@ -351,28 +352,33 @@ namespace ft
 				typedef RbTreeIterator<Type> iterator;
 
 				typedef ft::bidirectional_iterator_tag	iterator_category;
-				typedef std::ptrdiff_t 				difference_type;
+				typedef std::ptrdiff_t 					difference_type;
 
-				typedef RbTreeConstIterator<Type>		self;
+				typedef RbTreeConstIterator<Type>			self;
 				typedef ft::RbTreeNodeBase::constBasePtr	basePtr;
 				typedef const ft::RbTreeNode<Type>*			linkType;
 
 				basePtr	node;
 
 				RbTreeConstIterator()
-						: node() {}
+				: node() {}
 
 				explicit
 				RbTreeConstIterator(linkType x)
-						: node(x) {}
+				: node(x) {}
+
+				RbTreeConstIterator(const iterator& it)
+				: node(it.node) {}
 
 				reference
 				operator*() const
-				{ return static_cast<linkType>(this->node)->valueField; }
+				{
+					return static_cast<linkType>(this->node)->valueField; }
 
 				pointer
 				operator->() const
-				{ return &static_cast<linkType>(this->node)->valueField; }
+				{
+					return &static_cast<linkType>(this->node)->valueField; }
 
 				self&
 				operator++() {
@@ -472,9 +478,20 @@ namespace ft
 					return const_iterator(static_cast<const_link_type>(&this->impl.header));
 				}
 
-				RbTreeNodeBase* getRoot() { return this->root(); }
+				reverse_iterator
+				rbegin() { return reverse_iterator(end()); }
 
-				iterator search(const Key& key) {
+				const_reverse_iterator
+				rbegin() const { return const_reverse_iterator(end()); }
+
+				reverse_iterator
+				rend() { return reverse_iterator(begin()); }
+
+				const_reverse_iterator
+				rend() const { return const_reverse_iterator(begin()); }
+
+			iterator
+				search(const Key& key) {
 
 					basePtr root = this->root();
 					while (root) {

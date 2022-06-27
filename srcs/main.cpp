@@ -686,6 +686,27 @@ int main() {
 		}
 	}
 
+	{
+		printTest("MAP ITERATOR");
+		NS::map<int, int> foo;
+		for (int i = 0; i < 30; i++) {
+			foo.insert(NS::pair<int, int>(i, i));
+		}
+		NS::map<int, int>::const_iterator cit = foo.begin();
+		NS::map<int, int>::const_iterator cite = foo.end();
+		NS::map<int, int>::const_reverse_iterator crit(foo.rbegin());
+		NS::map<int, int>::reverse_iterator rit = foo.rbegin();
+		std::cout << "rit->second = " << rit->second << std::endl;
+		std::cout << "crit->second = " << crit->second << std::endl;
+		std::cout << "cit->second = " << cit->second << std::endl;
+		std::cout << "cite->second = " << cite->second << std::endl;
+		std::cout << "(--cite)->second = " << (--cite)->second << std::endl;
+		std::cout << "rbegin()->second = " << foo.rbegin()->second << std::endl;
+		std::cout << "rend()->second = " << foo.rend()->second << std::endl;
+		std::cout << "begin()->second = " << foo.begin()->second << std::endl;
+		std::cout << "end()->second = " << foo.end()->second << std::endl;
+	}
+
 
 
 }
