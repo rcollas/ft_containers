@@ -48,7 +48,7 @@ void printCapacity(NS::vector<T> v) {
 int main() {
 
 	std::cout << std::endl;
-	{
+//	{
 //		using namespace ft;
 //
 //		vector<int>			test(3, 3);
@@ -411,146 +411,146 @@ int main() {
 //		std::cout << '\n';
 //
 //		std::cout << std::endl;
-
-
-	}
-
-	{
-		printTest("EMPTY VECTOR");
-
-		NS::vector<std::string> foo;
-		printCapacity(foo);
-		foo.clear();
-		std::cout << foo.get_allocator().max_size() << std::endl;
-		try {
-			std::cout << foo.at(10)	<< std::endl;
-		} catch (...) {
-			std::cout << "bad index" << std::endl;
-		}
-		std::cout << foo.data() << std::endl;
-		std::cout << foo.data() + foo.size() << std::endl;
-
-		printTest("EMPTY VECTOR ITERATOR");
-		NS::vector<std::string>::iterator it = foo.begin();
-		NS::vector<std::string>::iterator ite = foo.end();
-		for (; it != ite; it++) {
-			std::cout << "vector iteration" << std::endl;
-		}
-		if (it == ite) {
-			std::cout << "it == ite" << std::endl;
-		}
-
-		printTest("EMPTY VECTOR MODIFIERS");
-		std::cout << *(foo.insert(foo.begin(), "ten")) << std::endl;
-		printCapacity(foo);
-		foo.clear();
-		std::cout << "foo.insert(foo.end(), 0, \"hello\")" << std::endl;
-		foo.insert(foo.end(), 0, "hello");
-		printCapacity(foo);
-		std::cout << "foo.insert(foo.end(), 100000, \"trello\")" << std::endl;
-		foo.insert(foo.end(), 1000, "trello");
-		printCapacity(foo);
-		std::cout << "foo.insert(foo.end(), 20, \"mello\")" << std::endl;
-		foo.insert(foo.end(), 20, "mello");
-		printCapacity(foo);
-		std::cout << "foo.insert(foo.begin() + 5, foo.begin(), foo.end())" << std::endl;
-		foo.insert(foo.begin() + 5, foo.begin(), foo.end());
-		printCapacity(foo);
-		std::cout << "foo.insert(foo.begin() + 999, 0, \"brello\")" << std::endl;
-		foo.insert(foo.begin() + 999, 0, "brello");
-		printCapacity(foo);
-		std::cout << "foo.insert(foo.end() - 2, foo.begin(), foo.end())" << std::endl;
-		foo.insert(foo.end() - 2, foo.begin(), foo.end());
-		for (size_t i = 0; i < foo.size(); i++) {
-			std::cout << "foo[" << i << "] = " << foo[i] << std::endl;
-			std::cout << "foo.at(" << i << ") = " << foo.at(i) << std::endl;
-		}
-		std::cout << foo.front() << std::endl;
-		std::cout << foo.back() << std::endl;
-		std::cout << *(foo.erase(foo.begin() + 100)) << std::endl;
-		std::cout << *(foo.erase(foo.end() - 1)) << std::endl;
-		std::cout << *(foo.erase(foo.end() - 1)) << std::endl;
-		for (size_t i = 0; i < foo.size(); i++) {
-			std::cout << "foo[" << i << "] = " << foo[i] << std::endl;
-			std::cout << "foo.at(" << i << ") = " << foo.at(i) << std::endl;
-		}
-		std::cout << *(foo.erase(foo.begin(), foo.end())) << std::endl;
-		for (size_t i = 0; i < foo.size(); i++) {
-			std::cout << "foo[" << i << "] = " << foo[i] << std::endl;
-			std::cout << "foo.at(" << i << ") = " << foo.at(i) << std::endl;
-		}
-	}
-
-	{
-		printTest("INT VECTOR ERASE");
-
-		NS::vector<int> foo;
-		srand(time(0));
-		for (int i = 0; i < 10; i++) {
-			foo.push_back(i);
-		}
-		for (size_t i = 0; i < foo.size(); i++) {
-			std::cout << "foo[" << i << "] = " << foo[i] << std::endl;
-			std::cout << "foo.at(" << i << ") = " << foo.at(i) << std::endl;
-		}
-		std::cout << "foo.erase(foo.begin(), foo.begin() + 5" << std::endl;
-		foo.erase(foo.begin(), foo.begin() + 5);
-		for (size_t i = 0; i < foo.size(); i++) {
-			std::cout << "foo[" << i << "] = " << foo[i] << std::endl;
-			std::cout << "foo.at(" << i << ") = " << foo.at(i) << std::endl;
-		}
-		std::cout << "foo.insert(foo.begin() + 1, foo.begin(), foo.end())" << std::endl;
-		foo.insert(foo.begin() + 1, foo.begin(), foo.end());
-		for (size_t i = 0; i < foo.size(); i++) {
-			std::cout << "foo[" << i << "] = " << foo[i] << std::endl;
-			std::cout << "foo.at(" << i << ") = " << foo.at(i) << std::endl;
-			std::cout << std::endl;
-		}
-		foo.clear();
-		for (int i = 0; i < 10; i++) {
-			foo.push_back(i);
-		}
-		std::cout << "foo.insert(foo.begin(), foo.begin(), foo.end())" << std::endl;
-		foo.insert(foo.begin(), foo.begin(), foo.end());
-		for (size_t i = 0; i < foo.size(); i++) {
-			std::cout << "foo[" << i << "] = " << foo[i] << std::endl;
-			std::cout << "foo.at(" << i << ") = " << foo.at(i) << std::endl;
-			std::cout << std::endl;
-		}
-	}
-
-	{
-		printTest("SELF ASSIGNED VECTOR");
-
-		NS::vector<int> test(3, 3);
-		NS::vector<int> test2(10, 3);
-		NS::vector<NS::vector<int> > foo;
-		NS::vector<NS::vector<int> > bar;
-		bar.assign(4, test2);
-		printCapacity(foo);
-		NS::vector<NS::vector<int> > *ptr = &foo;
-		NS::vector<NS::vector<int> > *ptr2 = &foo;
-		std::cout << ptr->size() << std::endl;
-		foo.assign(4, test);
-		std::cout << ptr2->size() << std::endl;
-		*ptr = *ptr2;
-		std::cout << (*ptr == *ptr2) << std::endl;
-		std::cout << "before swap foo > bar " << (foo > bar) << std::endl;
-		NS::swap(foo, bar);
-		std::cout << "after swap foo > bar " << (foo > bar) << std::endl;
-		foo.swap(bar);
-		std::cout << "after swap foo > bar " << (foo > bar) << std::endl;
-		foo.clear();
-		printCapacity(foo);
-		std::cout << "foo.reserve(1000)" << std::endl;
-		foo.reserve(1000);
-		printCapacity(foo);
-		std::cout << "foo.reserve(10)" << std::endl;
-		foo.reserve(10);
-		printCapacity(foo);
-	}
-
-	{
+//
+//
+//	}
+//
+//	{
+//		printTest("EMPTY VECTOR");
+//
+//		NS::vector<std::string> foo;
+//		printCapacity(foo);
+//		foo.clear();
+//		std::cout << foo.get_allocator().max_size() << std::endl;
+//		try {
+//			std::cout << foo.at(10)	<< std::endl;
+//		} catch (...) {
+//			std::cout << "bad index" << std::endl;
+//		}
+//		std::cout << foo.data() << std::endl;
+//		std::cout << foo.data() + foo.size() << std::endl;
+//
+//		printTest("EMPTY VECTOR ITERATOR");
+//		NS::vector<std::string>::iterator it = foo.begin();
+//		NS::vector<std::string>::iterator ite = foo.end();
+//		for (; it != ite; it++) {
+//			std::cout << "vector iteration" << std::endl;
+//		}
+//		if (it == ite) {
+//			std::cout << "it == ite" << std::endl;
+//		}
+//
+//		printTest("EMPTY VECTOR MODIFIERS");
+//		std::cout << *(foo.insert(foo.begin(), "ten")) << std::endl;
+//		printCapacity(foo);
+//		foo.clear();
+//		std::cout << "foo.insert(foo.end(), 0, \"hello\")" << std::endl;
+//		foo.insert(foo.end(), 0, "hello");
+//		printCapacity(foo);
+//		std::cout << "foo.insert(foo.end(), 100000, \"trello\")" << std::endl;
+//		foo.insert(foo.end(), 1000, "trello");
+//		printCapacity(foo);
+//		std::cout << "foo.insert(foo.end(), 20, \"mello\")" << std::endl;
+//		foo.insert(foo.end(), 20, "mello");
+//		printCapacity(foo);
+//		std::cout << "foo.insert(foo.begin() + 5, foo.begin(), foo.end())" << std::endl;
+//		foo.insert(foo.begin() + 5, foo.begin(), foo.end());
+//		printCapacity(foo);
+//		std::cout << "foo.insert(foo.begin() + 999, 0, \"brello\")" << std::endl;
+//		foo.insert(foo.begin() + 999, 0, "brello");
+//		printCapacity(foo);
+//		std::cout << "foo.insert(foo.end() - 2, foo.begin(), foo.end())" << std::endl;
+//		foo.insert(foo.end() - 2, foo.begin(), foo.end());
+//		for (size_t i = 0; i < foo.size(); i++) {
+//			std::cout << "foo[" << i << "] = " << foo[i] << std::endl;
+//			std::cout << "foo.at(" << i << ") = " << foo.at(i) << std::endl;
+//		}
+//		std::cout << foo.front() << std::endl;
+//		std::cout << foo.back() << std::endl;
+//		std::cout << *(foo.erase(foo.begin() + 100)) << std::endl;
+//		std::cout << *(foo.erase(foo.end() - 1)) << std::endl;
+//		std::cout << *(foo.erase(foo.end() - 1)) << std::endl;
+//		for (size_t i = 0; i < foo.size(); i++) {
+//			std::cout << "foo[" << i << "] = " << foo[i] << std::endl;
+//			std::cout << "foo.at(" << i << ") = " << foo.at(i) << std::endl;
+//		}
+//		std::cout << *(foo.erase(foo.begin(), foo.end())) << std::endl;
+//		for (size_t i = 0; i < foo.size(); i++) {
+//			std::cout << "foo[" << i << "] = " << foo[i] << std::endl;
+//			std::cout << "foo.at(" << i << ") = " << foo.at(i) << std::endl;
+//		}
+//	}
+//
+//	{
+//		printTest("INT VECTOR ERASE");
+//
+//		NS::vector<int> foo;
+//		srand(time(0));
+//		for (int i = 0; i < 10; i++) {
+//			foo.push_back(i);
+//		}
+//		for (size_t i = 0; i < foo.size(); i++) {
+//			std::cout << "foo[" << i << "] = " << foo[i] << std::endl;
+//			std::cout << "foo.at(" << i << ") = " << foo.at(i) << std::endl;
+//		}
+//		std::cout << "foo.erase(foo.begin(), foo.begin() + 5" << std::endl;
+//		foo.erase(foo.begin(), foo.begin() + 5);
+//		for (size_t i = 0; i < foo.size(); i++) {
+//			std::cout << "foo[" << i << "] = " << foo[i] << std::endl;
+//			std::cout << "foo.at(" << i << ") = " << foo.at(i) << std::endl;
+//		}
+//		std::cout << "foo.insert(foo.begin() + 1, foo.begin(), foo.end())" << std::endl;
+//		foo.insert(foo.begin() + 1, foo.begin(), foo.end());
+//		for (size_t i = 0; i < foo.size(); i++) {
+//			std::cout << "foo[" << i << "] = " << foo[i] << std::endl;
+//			std::cout << "foo.at(" << i << ") = " << foo.at(i) << std::endl;
+//			std::cout << std::endl;
+//		}
+//		foo.clear();
+//		for (int i = 0; i < 10; i++) {
+//			foo.push_back(i);
+//		}
+//		std::cout << "foo.insert(foo.begin(), foo.begin(), foo.end())" << std::endl;
+//		foo.insert(foo.begin(), foo.begin(), foo.end());
+//		for (size_t i = 0; i < foo.size(); i++) {
+//			std::cout << "foo[" << i << "] = " << foo[i] << std::endl;
+//			std::cout << "foo.at(" << i << ") = " << foo.at(i) << std::endl;
+//			std::cout << std::endl;
+//		}
+//	}
+//
+//	{
+//		printTest("SELF ASSIGNED VECTOR");
+//
+//		NS::vector<int> test(3, 3);
+//		NS::vector<int> test2(10, 3);
+//		NS::vector<NS::vector<int> > foo;
+//		NS::vector<NS::vector<int> > bar;
+//		bar.assign(4, test2);
+//		printCapacity(foo);
+//		NS::vector<NS::vector<int> > *ptr = &foo;
+//		NS::vector<NS::vector<int> > *ptr2 = &foo;
+//		std::cout << ptr->size() << std::endl;
+//		foo.assign(4, test);
+//		std::cout << ptr2->size() << std::endl;
+//		*ptr = *ptr2;
+//		std::cout << (*ptr == *ptr2) << std::endl;
+//		std::cout << "before swap foo > bar " << (foo > bar) << std::endl;
+//		NS::swap(foo, bar);
+//		std::cout << "after swap foo > bar " << (foo > bar) << std::endl;
+//		foo.swap(bar);
+//		std::cout << "after swap foo > bar " << (foo > bar) << std::endl;
+//		foo.clear();
+//		printCapacity(foo);
+//		std::cout << "foo.reserve(1000)" << std::endl;
+//		foo.reserve(1000);
+//		printCapacity(foo);
+//		std::cout << "foo.reserve(10)" << std::endl;
+//		foo.reserve(10);
+//		printCapacity(foo);
+//	}
+//
+//	{
 //		printTest("VECTOR ITERATOR");
 //		NS::vector<int> foo;
 //		for (int i = 0; i < 10; i++) {
@@ -568,45 +568,45 @@ int main() {
 //		for (;rit != rite; rit++) {
 //			std::cout << *rit << std::endl;
 //		}
-	}
-
-	{
-		printTest("SWAP VECTOR");
-		NS::vector<int> foo;
-		NS::vector<int> bar;
-		for (int i = 0; i < 10; i++) {
-			foo.push_back(i);
-		}
-		for (int i = 0; i < 10; i++) {
-			bar.push_back(i + 10);
-		}
-		std::cout << "before swap foo > bar " << (foo > bar) << std::endl;
-		NS::swap(foo, bar);
-		std::cout << "after swap foo > bar " << (foo > bar) << std::endl;
-		foo.swap(bar);
-		std::cout << "after swap foo > bar " << (foo > bar) << std::endl;
-		std::cout << "foo.swap(foo)" << std::endl;
-		foo.swap(foo);
-
-		foo.clear();
-		bar.clear();
-		foo.assign(10, 5);
-		bar.assign(30, 0);
-		foo.swap(bar);
-		for (size_t i = 0; i < foo.size(); i++) {
-			std::cout << "foo[" << i << "] = " << foo[i] << std::endl;
-		}
-		for (size_t i = 0; i < bar.size(); i++) {
-			std::cout << "bar[" << i << "] = " << bar[i] << std::endl;
-		}
-		NS::swap(foo, bar);
-		for (size_t i = 0; i < foo.size(); i++) {
-			std::cout << "foo[" << i << "] = " << foo[i] << std::endl;
-		}
-		for (size_t i = 0; i < bar.size(); i++) {
-			std::cout << "bar[" << i << "] = " << bar[i] << std::endl;
-		}
-	}
+//	}
+//
+//	{
+//		printTest("SWAP VECTOR");
+//		NS::vector<int> foo;
+//		NS::vector<int> bar;
+//		for (int i = 0; i < 10; i++) {
+//			foo.push_back(i);
+//		}
+//		for (int i = 0; i < 10; i++) {
+//			bar.push_back(i + 10);
+//		}
+//		std::cout << "before swap foo > bar " << (foo > bar) << std::endl;
+//		NS::swap(foo, bar);
+//		std::cout << "after swap foo > bar " << (foo > bar) << std::endl;
+//		foo.swap(bar);
+//		std::cout << "after swap foo > bar " << (foo > bar) << std::endl;
+//		std::cout << "foo.swap(foo)" << std::endl;
+//		foo.swap(foo);
+//
+//		foo.clear();
+//		bar.clear();
+//		foo.assign(10, 5);
+//		bar.assign(30, 0);
+//		foo.swap(bar);
+//		for (size_t i = 0; i < foo.size(); i++) {
+//			std::cout << "foo[" << i << "] = " << foo[i] << std::endl;
+//		}
+//		for (size_t i = 0; i < bar.size(); i++) {
+//			std::cout << "bar[" << i << "] = " << bar[i] << std::endl;
+//		}
+//		NS::swap(foo, bar);
+//		for (size_t i = 0; i < foo.size(); i++) {
+//			std::cout << "foo[" << i << "] = " << foo[i] << std::endl;
+//		}
+//		for (size_t i = 0; i < bar.size(); i++) {
+//			std::cout << "bar[" << i << "] = " << bar[i] << std::endl;
+//		}
+//	}
 
 //	{
 //		printTest("MAP TEST");
@@ -664,22 +664,27 @@ int main() {
 //			std::cout << foo.at(i) << std::endl;
 //		}
 //	}
-//	{
-//		NS::map<std::string, int> foo;
-//		foo.insert(NS::pair<std::string, int>("one", 1));
-//		foo.insert(NS::pair<std::string, int>("two", 2));
-//		foo.insert(NS::pair<std::string, int>("three", 3));
-//		foo.insert(NS::pair<std::string, int>("four", 4));
-//		foo.insert(NS::pair<std::string, int>("five", 5));
-//		foo.insert(NS::pair<std::string, int>("six", 6));
-//		foo.insert(NS::pair<std::string, int>("seven", 7));
-//		std::cout << "foo[one] = " << foo["one"] << std::endl;
-//		std::cout << "foo[two] = " << foo["two"] << std::endl;
-//		std::cout << "foo[three] = " << foo["three"] << std::endl;
-//		std::cout << "foo[ten] = " << foo["ten"] << std::endl;
-//		foo.erase("one");
-//		std::cout << "foo[one] = " << foo["one"] << std::endl;
-//	}
+	{
+		NS::map<std::string, int> foo;
+		foo.insert(NS::pair<std::string, int>("one", 1));
+		foo.insert(NS::pair<std::string, int>("two", 2));
+		foo.insert(NS::pair<std::string, int>("three", 3));
+		foo.insert(NS::pair<std::string, int>("four", 4));
+		foo.insert(NS::pair<std::string, int>("five", 5));
+		foo.insert(NS::pair<std::string, int>("six", 6));
+		foo.insert(NS::pair<std::string, int>("seven", 7));
+		std::cout << "foo[one] = " << foo["one"] << std::endl;
+		std::cout << "foo[two] = " << foo["two"] << std::endl;
+		std::cout << "foo[three] = " << foo["three"] << std::endl;
+		std::cout << "foo[ten] = " << foo["ten"] << std::endl;
+		foo.erase("one");
+		std::cout << "foo[one] = " << foo["one"] << std::endl;
+		std::cout << "foo.begin()->second = " << foo.begin()->second << std::endl;
+		while (foo.size()) {
+			foo.erase(foo.begin());
+			std::cout << foo.size() << std::endl;
+		}
+	}
 
 
 
