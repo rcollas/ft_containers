@@ -3,18 +3,19 @@
 namespace ft {
 
 	RbTreeNodeBase*
-	RbTreeDecrement(RbTreeNodeBase* x) {
+	RbTreeDecrement(RbTreeNodeBase *x) {
+
 		if (x->color == red
 			&& x->parent->parent == x) {
 			x = x->right;
 		} else if (x->left != 0) {
-			RbTreeNodeBase* y = x->left;
+			RbTreeNodeBase *y = x->left;
 			while (y->right != 0) {
 				y = y->right;
-				x = y;
 			}
+			x = y;
 		} else {
-			RbTreeNodeBase* y = x->parent;
+			RbTreeNodeBase *y = x->parent;
 			while (x == y->left) {
 				x = y;
 				y = y->parent;
@@ -25,17 +26,20 @@ namespace ft {
 	}
 
 	RbTreeNodeBase::constBasePtr
-	RbTreeDecrement(RbTreeNodeBase::constBasePtr  x) {
+	RbTreeDecrement(RbTreeNodeBase::constBasePtr x) {
+
 		if (x->color == red
-			&& x->parent->parent == x) {
+			&& x->parent->parent == x)
 			x = x->right;
-		} else if (x->left != 0) {
+		else if (x->left != 0)
+		{
 			RbTreeNodeBase* y = x->left;
-			while (y->right != 0) {
+			while (y->right != 0)
 				y = y->right;
-				x = y;
-			}
-		} else {
+			x = y;
+		}
+		else
+		{
 			RbTreeNodeBase* y = x->parent;
 			while (x == y->left) {
 				x = y;
@@ -47,14 +51,15 @@ namespace ft {
 	}
 
 	RbTreeNodeBase*
-	RbTreeIncrement(RbTreeNodeBase* x) {
+	RbTreeIncrement(RbTreeNodeBase *x) {
+
 		if (x->right != 0) {
 			x = x->right;
 			while (x->left != 0) {
 				x = x->left;
 			}
 		} else {
-			RbTreeNodeBase* y = x->parent;
+			RbTreeNodeBase *y = x->parent;
 			while (x == y->right) {
 				x = y;
 				y = y->parent;
@@ -68,13 +73,14 @@ namespace ft {
 
 	RbTreeNodeBase::constBasePtr
 	RbTreeIncrement(RbTreeNodeBase::constBasePtr x) {
+
 		if (x->right != 0) {
 			x = x->right;
 			while (x->left != 0) {
 				x = x->left;
 			}
 		} else {
-			RbTreeNodeBase* y = x->parent;
+			RbTreeNodeBase *y = x->parent;
 			while (x == y->right) {
 				x = y;
 				y = y->parent;
@@ -87,9 +93,9 @@ namespace ft {
 	}
 
 	static void
-	leftRotate(RbTreeNodeBase *&root, RbTreeNodeBase *&node) {
+	leftRotate(RbTreeNodeBase *&root, RbTreeNodeBase *const node) {
 
-		RbTreeNodeBase* const y = node->right;
+		RbTreeNodeBase *const y = node->right;
 
 		node->right = y->left;
 		if (y->left != 0) {
@@ -109,9 +115,9 @@ namespace ft {
 	}
 
 	static void
-	rightRotate(RbTreeNodeBase *&root, RbTreeNodeBase *&node) {
+	rightRotate(RbTreeNodeBase *&root, RbTreeNodeBase *const node) {
 
-		RbTreeNodeBase* const y = node->left;
+		RbTreeNodeBase *const y = node->left;
 
 		node->left = y->right;
 		if (y->right != 0) {
@@ -131,15 +137,15 @@ namespace ft {
 	}
 
 	void
-	rebalance(RbTreeNodeBase *&root, RbTreeNodeBase *&x) {
+	rebalance(RbTreeNodeBase*& root, RbTreeNodeBase*& x) {
 
 		while (x != root && x->parent->color == red) {
 
-			RbTreeNodeBase* grandParent = x->_grandParent;
+			RbTreeNodeBase* const grandParent = x->_grandParent;
 
 			if (x->parent == grandParent->left) {
 
-				RbTreeNodeBase *uncle = grandParent->right;
+				RbTreeNodeBase *const uncle = grandParent->right;
 
 				if (uncle && uncle->color == red) {
 
@@ -152,14 +158,14 @@ namespace ft {
 
 					if (x == x->parent->right) {
 						x = x->parent;
-						leftRotate(root, x->parent);
+						leftRotate(root, x);
 					}
 					x->parent->color = black;
 					grandParent->color = red;
 					rightRotate(root, grandParent);
 				}
 			} else {
-				RbTreeNodeBase *uncle = grandParent->left;
+				RbTreeNodeBase *const uncle = grandParent->left;
 				if (uncle && uncle->color == red) {
 
 					x->parent->color = black;
@@ -182,12 +188,6 @@ namespace ft {
 		root->color = black;
 	}
 
-	void swapColor(RbTreeColor& a, RbTreeColor& b) {
-		RbTreeColor tmp = a;
-		a = b;
-		b = tmp;
-	}
-
 	/**
 	 * @brief
 	 * insert a node in the actual tree and rebalance it
@@ -204,11 +204,11 @@ namespace ft {
 
 	void
 	insertAndRebalance(const bool insertLeft,
-					   RbTreeNodeBase* x,
-					   RbTreeNodeBase* p,
-					   RbTreeNodeBase& header) {
+					   RbTreeNodeBase *x,
+					   RbTreeNodeBase *p,
+					   RbTreeNodeBase &header) {
 
-		RbTreeNodeBase*& root = header.parent;
+		RbTreeNodeBase *&root = header.parent;
 		x->parent = p;
 		x->left = 0;
 		x->right = 0;
@@ -220,8 +220,7 @@ namespace ft {
 			if (p == &header) {
 				header.parent = x;
 				header.right = x;
-			}
-			else if (p == header.left) {
+			} else if (p == header.left) {
 				header.left = x;
 			}
 		} else {
@@ -242,12 +241,13 @@ namespace ft {
 	 * first conditions block check z's child
 	 * second conditions block whether link z's successor in place of z
 	 * or rearrange z parent according to z's position in  the tree
-	 * the finally we rebalance the tree
+	 * then finally we rebalance the tree
 	 */
 
-	RbTreeNodeBase*
-	eraseAndRebalance(RbTreeNodeBase* const z,
-					  RbTreeNodeBase& header) {
+	RbTreeNodeBase *
+	eraseAndRebalance(RbTreeNodeBase *const z,
+					  RbTreeNodeBase &header) {
+
 		RbTreeNodeBase*& root = header.parent;
 		RbTreeNodeBase*& leftmost = header.left;
 		RbTreeNodeBase*& rightmost = header.right;
@@ -291,7 +291,7 @@ namespace ft {
 				z->parent->right = y;
 			}
 			y->parent = z->parent;
-			swapColor(y->color, z->color);
+			std::swap(y->color, z->color);
 			y = z;
 		} else {
 			x_parent = y->parent;
@@ -334,9 +334,9 @@ namespace ft {
 						w = x_parent->right;
 					}
 					if ((w->left == 0 ||
-						w->left->color == black) &&
-							(w->right == 0 ||
-							w->right->color == black)) {
+						 w->left->color == black) &&
+						(w->right == 0 ||
+						 w->right->color == black)) {
 						w->color = red;
 						x = x_parent;
 						x_parent = x_parent->parent;
@@ -365,9 +365,9 @@ namespace ft {
 						w = x_parent->left;
 					}
 					if ((w->right == 0 ||
-						w->right->color == black) &&
-							(w->left == 0 ||
-							w->left->color == black)) {
+						 w->right->color == black) &&
+						(w->left == 0 ||
+						 w->left->color == black)) {
 						w->color = red;
 						x = x_parent;
 						x_parent = x_parent->parent;

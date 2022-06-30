@@ -18,28 +18,36 @@ namespace ft {
 			class Allocator = std::allocator<ft::pair<const Key, Type> >
 	> class map {
 
+
 		public:
-			typedef Key key_type;
-			typedef typename ft::pair<const Key, Type> value_type;
-			typedef Compare key_compare;
-			typedef Allocator allocator_type;
+			typedef Key									key_type;
+			typedef typename ft::pair<const Key, Type>	value_type;
+			typedef Compare								key_compare;
+			typedef Allocator							allocator_type;
 
 
 		typedef RBTree<key_type, value_type, std::_Select1st<value_type>, key_compare, allocator_type> RBTree;
 
 		public:
-			typedef Type mapped_type;
-			typedef typename std::size_t size_type;
-			typedef typename std::ptrdiff_t difference_type;
-			typedef value_type& reference;
-			typedef const value_type& const_reference;
-			typedef typename Allocator::pointer pointer;
-			typedef typename Allocator::const_pointer const_pointer;
-			typedef typename RBTree::iterator iterator;
-			typedef typename RBTree::const_iterator const_iterator;
-			typedef typename RBTree::reverse_iterator reverse_iterator;
-			typedef typename RBTree::const_reverse_iterator const_reverse_iterator;
+			typedef Type 									mapped_type;
+			typedef typename std::size_t					size_type;
+			typedef typename std::ptrdiff_t					difference_type;
+			typedef value_type&								reference;
+			typedef const value_type&						const_reference;
+			typedef typename Allocator::pointer				pointer;
+			typedef typename Allocator::const_pointer		const_pointer;
+			typedef typename RBTree::iterator				iterator;
+			typedef typename RBTree::const_iterator			const_iterator;
+			typedef typename RBTree::reverse_iterator		reverse_iterator;
+			typedef typename RBTree::const_reverse_iterator	const_reverse_iterator;
 
+		private:
+			key_compare	_compare;
+			RBTree		*_tree;
+
+		public:
+
+			/************* CONSTRUCTOR ******************/
 
 			map()
 			: _tree(new RBTree(_compare)) {};
@@ -59,21 +67,34 @@ namespace ft {
 				delete this->_tree;
 			}
 
+
+			map& operator=( const map& other ) {
+				if (this != &other) {
+					this->_tree = other._tree;
+					this->_compare = other._compare;
+				}
+				return *this;
+			}
+
+			allocator_type get_allocator() const {
+				return this->_tree->getAllocator();
+			}
+
 			ft::pair<iterator, bool>
 			insert( const value_type& value ){
 				return _tree->insertUnique(value);
-			};
+			}
 
 			iterator
 			insert( iterator hint, const value_type& value ) {
 				return _tree->insertUnique(hint, value);
-			};
+			}
 
 			template< class InputIt >
 			void
 			insert( InputIt first, InputIt last ) {
 				_tree->insertUnique(first, last);
-			};
+			}
 
 			void
 			print() {
@@ -81,18 +102,23 @@ namespace ft {
 				std::cout << std::endl;
 			}
 
-			iterator begin() { return _tree->begin(); }
-
-			iterator end() { return _tree->end(); }
 
 			size_type size() const { return _tree->size(); }
 
+			/********** ELEMENT ACCESS ************/
 
-			mapped_type& at(const Key& key) {
+			mapped_type&
+			at(const Key& key) {
 				return _tree->search(key)->second;
 			}
 
-			mapped_type& operator[](const Key& key) {
+			const mapped_type&
+			at(const Key& key) const {
+				return _tree->search(key)->second;
+			}
+
+			mapped_type&
+			operator[](const Key& key) {
 				try {
 					mapped_type& value = this->at(key);
 					return value;
@@ -101,17 +127,39 @@ namespace ft {
 				}
 			}
 
+			/************* ITERATORS *****************/
+
+			iterator
+			begin() { return _tree->begin(); }
+
+			iterator
+			end() { return _tree->end(); }
+
+			const_iterator
+			begin() const { return _tree->begin(); }
+
+			const_iterator
+			end() const { return _tree->end(); }
+
+			reverse_iterator
+			rbegin() { return _tree->rbegin(); }
+
+			reverse_iterator
+			rend() { return _tree->rend(); }
+
+			const_reverse_iterator
+			rbegin() const { return _tree->rbegin(); }
+
+			const_reverse_iterator
+			rend() const { return _tree->rend(); }
+
+
 			void
 			erase(iterator pos) { this->_tree->erase(pos) ; }
 
 			size_type
 			erase(const Key& key) { return this->_tree->erase(key); }
 
-//			const mapped_type& at(const Key& key) const { return _tree->search(_tree->getRoot(), key); }
-
-			RBTree *_tree;
-		private:
-			key_compare _compare;
 
 	};
 
