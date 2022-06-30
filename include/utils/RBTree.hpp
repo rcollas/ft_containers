@@ -458,6 +458,10 @@ namespace ft
 				size() const
 				{ return impl.node_count; }
 
+				size_type
+				max_size() const
+				{ return node_allocator().max_size(); }
+
 				iterator
 				begin() {
 					return iterator(static_cast<link_type>(this->impl.header.left));
@@ -537,6 +541,16 @@ namespace ft
 							static_cast<link_type>(eraseAndRebalance(pos.node, this->impl.header));
 					destroyNode(y);
 					--this->impl.node_count;
+				}
+
+				void
+				erase(iterator first, iterator last) {
+					while (first != last) {
+						iterator tmp = first;
+						tmp++;
+						erase(first);
+						first = tmp;
+					}
 				}
 
 			pair<iterator, bool>

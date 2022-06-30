@@ -679,7 +679,7 @@ int main() {
 		foo.erase("one");
 		std::cout << "foo[one] = " << foo["one"] << std::endl;
 		std::cout << "foo.begin()->second = " << foo.begin()->second << std::endl;
-		while (foo.size()) {
+		while (!foo.empty()) {
 			foo.erase(foo.begin());
 			std::cout << foo.size() << std::endl;
 		}
@@ -688,6 +688,7 @@ int main() {
 	{
 		printTest("MAP ITERATOR");
 		NS::map<int, int> foo;
+		std::cout << "empty 691: " << foo.empty() << std::endl;
 		for (int i = 0; i < 30; i++) {
 			foo.insert(NS::pair<int, int>(i, i));
 		}
@@ -704,6 +705,39 @@ int main() {
 		std::cout << "rend()->second = " << foo.rend()->second << std::endl;
 		std::cout << "begin()->second = " << foo.begin()->second << std::endl;
 		std::cout << "end()->second = " << foo.end()->second << std::endl;
+		NS::map<int, int>::iterator ite = foo.end();
+		std::cout << "cite == ite" << (cite == ite) << std::endl;
+		foo[1] = 2;
+		std::cout << "foo[1] = " << foo[1] << std::endl;
+		std::cout << "empty 711: " << foo.empty() << std::endl;
+		std::cout << "max size 713: " << foo.max_size() << std::endl;
+		foo.erase(foo.begin(), foo.end());
+		std::cout << "size 715: " << foo.size() << std::endl;
+		foo.clear();
+	}
+	{
+		printTest("MAP SWAP");
+		NS::map<int, std::string> foo;
+		NS::map<int, std::string> bar;
+		for (int i = 0; i < 10; i++) {
+			foo.insert(NS::pair<int, std::string>(i, "ciao"));
+			bar.insert(NS::pair<int, std::string>(i, "hello"));
+		}
+		NS::map<int, std::string>::iterator it = foo.begin();
+		NS::map<int, std::string>::iterator bit = bar.begin();
+		std::cout << "it 728 = " << it->second << std::endl;
+		std::cout << "foo.begin() = " << foo.begin()->second << std::endl;
+		std::cout << "bit 729 = " << bit->second << std::endl;
+		std::cout << "bar.begin() = " << bar.begin()->second << std::endl;
+		foo.swap(bar);
+		std::cout << "it 731 = " << it->second << std::endl;
+		std::cout << "foo.begin() = " << foo.begin()->second << std::endl;
+		std::cout << "bit 732 = " << bit->second << std::endl;
+		std::cout << "bar.begin() = " << bar.begin()->second << std::endl;
+		std::cout << "foo.count(1) = " << foo.count(1) << std::endl;
+		std::cout << "foo.count(100) = " << foo.count(100) << std::endl;
+		bar.clear();
+		foo.clear();
 	}
 
 

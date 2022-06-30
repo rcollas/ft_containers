@@ -76,25 +76,12 @@ namespace ft {
 				return *this;
 			}
 
-			allocator_type get_allocator() const {
+			allocator_type
+			get_allocator() const {
 				return this->_tree->getAllocator();
 			}
 
-			ft::pair<iterator, bool>
-			insert( const value_type& value ){
-				return _tree->insertUnique(value);
-			}
 
-			iterator
-			insert( iterator hint, const value_type& value ) {
-				return _tree->insertUnique(hint, value);
-			}
-
-			template< class InputIt >
-			void
-			insert( InputIt first, InputIt last ) {
-				_tree->insertUnique(first, last);
-			}
 
 			void
 			print() {
@@ -103,7 +90,6 @@ namespace ft {
 			}
 
 
-			size_type size() const { return _tree->size(); }
 
 			/********** ELEMENT ACCESS ************/
 
@@ -153,12 +139,62 @@ namespace ft {
 			const_reverse_iterator
 			rend() const { return _tree->rend(); }
 
+			bool
+			empty() const { return this->begin() == this->end(); }
+
+			size_type
+			size() const { return _tree->size(); }
+
+			size_type
+			max_size() const { return this->_tree->max_size(); }
+
+			void
+			clear() { this->erase(this->begin(), this->end()); }
+
+			ft::pair<iterator, bool>
+			insert( const value_type& value ){
+				return _tree->insertUnique(value);
+			}
+
+			iterator
+			insert( iterator hint, const value_type& value ) {
+				return _tree->insertUnique(hint, value);
+			}
+
+			template< class InputIt >
+			void
+			insert( InputIt first, InputIt last ) {
+				_tree->insertUnique(first, last);
+			}
 
 			void
 			erase(iterator pos) { this->_tree->erase(pos) ; }
 
 			size_type
 			erase(const Key& key) { return this->_tree->erase(key); }
+
+			void
+			erase(iterator first, iterator last) { this->_tree->erase(first, last); }
+
+			void
+			swap(map& other) { std::swap(this->_tree, other._tree ); }
+
+			size_type
+			count( const Key& key ) const {
+				try {
+					this->_tree->search(key);
+					return 1;
+				} catch(...) {
+					return 0;
+				}
+			}
+
+			iterator
+			find(const Key &key) { return this->_tree->search(key); }
+
+			const_iterator
+			find(const Key &key) const { return this->_tree->search(key); }
+
 
 
 	};
