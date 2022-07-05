@@ -87,6 +87,8 @@ namespace ft
 	eraseAndRebalance(RbTreeNodeBase* const z,
 					  RbTreeNodeBase& header);
 
+	#include "RBTreeOP.hpp"
+
 	template<typename Key, typename Value, typename KeyOfValue, class Compare, class Allocator = std::allocator<Value> >
 	class RBTree {
 
@@ -445,7 +447,7 @@ namespace ft
 					}
 				};
 
-				~RBTree() {}
+				~RBTree() { this->erase(this->begin(), this->end()); }
 
 #include "printTree.hpp"
 
@@ -495,23 +497,83 @@ namespace ft
 				rend() const { return const_reverse_iterator(begin()); }
 
 			iterator
-				search(const Key& key) {
+			search(const Key& key) {
 
-					basePtr root = this->root();
-					while (root) {
-						if (impl.key_compare(KeyOfValue()((static_cast<link_type>(root))->valueField), key)) {
-							root = root->right;
-						} else if (impl.key_compare(key, KeyOfValue()(static_cast<link_type>(root)->valueField))) {
-							root = root->left;
-						} else {
-							return iterator(static_cast<link_type>(root));
-						}
+				basePtr root = this->root();
+				while (root) {
+					if (impl.key_compare(KeyOfValue()((static_cast<link_type>(root))->valueField), key)) {
+						root = root->right;
+					} else if (impl.key_compare(key, KeyOfValue()(static_cast<link_type>(root)->valueField))) {
+						root = root->left;
+					} else {
+						return iterator(static_cast<link_type>(root));
 					}
-					throw std::out_of_range("");
 				}
+				throw std::out_of_range("");
+			}
+
+			bool
+			is_less(RbTreeNodeBase* x, const Key& key) const {
+				return impl.key_compare(KeyOfValue()((static_cast<link_type>(x))->valueField), key);
+			}
+
+			bool
+			is_more(RbTreeNodeBase* x, const Key& key) const {
+				return impl.key_compare(key, KeyOfValue()(static_cast<link_type>(x)->valueField));
+			}
+
+			bool
+			is_equal(RbTreeNodeBase* x, const Key& key) const {
+				return !is_less(x, key) && !is_more(x, key);
+			}
 
 				iterator
-				insert(basePtr x, basePtr p, const value_type& value) {
+				lower_bound(const Key& key) {
+					basePtr root = this->root();
+					while (root) {
+						if (is_equal(root, key)) {
+							return iterator(static_cast<link_type>(root));
+						} else if (is_less(root, key)) {
+							if (is_more(maximum(root), key)) {
+								root = root->right;
+							} else {
+								return this->end();
+							}
+						} else if (is_more(root, key)) {
+							if (!root->left || is_less(maximum(root->left), key)) {
+								return iterator(static_cast<link_type>(root));
+							} else {
+								root = root->left;
+							}
+						}
+					}
+					return this->end();
+				}
+
+
+			iterator
+			upper_bound(const Key& key) {
+				basePtr root = this->root();
+				while (root) {
+					if (is_less(root, key) || is_equal(root, key)) {
+						if (is_more(maximum(root), key)) {
+							root = root->right;
+						} else {
+							return this->end();
+						}
+					} else if (is_more(root, key)) {
+						if (!root->left || is_less(maximum(root->left), key) || is_equal(root->left, key)) {
+							return iterator(static_cast<link_type>(root));
+						} else {
+							root = root->left;
+						}
+					}
+				}
+				return this->end();
+			}
+
+			iterator
+			insert(basePtr x, basePtr p, const value_type& value) {
 					bool insertLeft = (x != 0 || p == _l_end()
 							|| impl.key_compare(KeyOfValue()(value),
 												key(p)));

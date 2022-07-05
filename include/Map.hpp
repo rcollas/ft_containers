@@ -46,6 +46,24 @@ namespace ft {
 			RBTree		*_tree;
 
 		public:
+			class value_compare {
+				protected:
+					Compare comp;
+
+				public :
+					typedef bool result_type;
+					typedef value_type first_argument_type;
+					typedef value_type second_argument_type;
+
+					value_compare() : comp(Compare()) {}
+					bool
+					operator()( const value_type& lhs,
+							const value_type& rhs ) const {
+						return comp(lhs.first, rhs.first);
+					};
+			};
+
+		public:
 
 			/************* CONSTRUCTOR ******************/
 
@@ -190,14 +208,100 @@ namespace ft {
 			}
 
 			iterator
-			find(const Key &key) { return this->_tree->search(key); }
+			find(const Key &key) {
+
+				try {
+					iterator ret = this->_tree->search(key);
+					return ret;
+				} catch (...) {
+				 return this->end();
+				}
+			}
 
 			const_iterator
-			find(const Key &key) const { return this->_tree->search(key); }
+			find(const Key &key) const {
+				try {
+					const_iterator ret = this->_tree->search(key);
+					return ret;
+				} catch (...) {
+					return this->end();
+				}
+			}
 
+			iterator
+			lower_bound(const Key& key) { return this->_tree->lower_bound(key); }
 
+			const_iterator
+			lower_bound(const Key& key) const { return const_iterator(this->_tree->lower_bound(key)); }
+
+			iterator
+			upper_bound(const Key& key) { return this->_tree->upper_bound(key); }
+
+			const_iterator
+			upper_bound(const Key& key) const { return const_iterator(this->_tree->upper_bound(key)); }
+
+			ft::pair<iterator,iterator>
+			equal_range( const Key& key ) {
+				return ft::pair<iterator, iterator>(lower_bound(key),
+													upper_bound(key));
+			}
+
+			ft::pair<const_iterator,const_iterator>
+			equal_range( const Key& key ) const {
+				return ft::pair<iterator, iterator>(lower_bound(key),
+													upper_bound(key));
+			}
+
+			key_compare
+			key_comp() const { return this->_tree->key_comp(); }
+
+			map::value_compare
+			value_comp() const { return value_compare(); }
+
+		friend bool
+		operator==( const map& lhs,
+						 const map& rhs ) {
+			return lhs._tree == rhs._tree;
+		}
+
+		friend bool
+		operator!=( const map& lhs,
+								const map& rhs ) {
+			return lhs._tree != rhs._tree;
+		}
+
+		friend bool
+		operator<( const map& lhs,
+								const map& rhs ) {
+			return lhs._tree < rhs._tree;
+		}
+
+		friend bool
+		operator<=( const map& lhs,
+								const map& rhs ) {
+			return lhs._tree <= rhs._tree;
+		}
+
+		friend bool
+		operator>( const map& lhs,
+					const map& rhs ) {
+			return lhs._tree > rhs._tree;
+		}
+
+		friend bool
+		operator>=( const map& lhs,
+				const map& rhs ) {
+			return lhs._tree >= rhs._tree;
+		}
 
 	};
+
+	template< class Key, class T, class Compare, class Alloc >
+	void swap( map<Key,T,Compare,Alloc>& lhs,
+			   map<Key,T,Compare,Alloc>& rhs ) {
+		lhs.swap(rhs);
+	};
+
 
 }
 

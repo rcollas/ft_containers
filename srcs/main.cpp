@@ -62,7 +62,6 @@ int main() {
 //		*ptr = *ptr2;
 //
 //		std::cout << std::boolalpha << (*ptr == *ptr2) << '\n';
-////	self_assign = self_assign; //compiler doesn't like it!
 //
 //
 //
@@ -607,62 +606,62 @@ int main() {
 //			std::cout << "bar[" << i << "] = " << bar[i] << std::endl;
 //		}
 //	}
-//	{
-//		printTest("MAP TEST");
-//		NS::map<int, int> foo;
-//		foo.insert(NS::pair<int, int>(0, 0));
-//		foo.insert(NS::pair<int, int>(1, 1));
-//		foo.insert(NS::pair<int, int>(2, 2));
-//		foo.insert(NS::pair<int, int>(10, 10));
-//		foo.insert(NS::pair<int, int>(5, 5));
-//		foo.insert(NS::pair<int, int>(3, 3));
-//		foo.insert(NS::pair<int, int>(4, 4));
-//		foo.insert(NS::pair<int, int>(-1, -1));
-//		foo.insert(NS::pair<int, int>(-2, -2));
-//		foo.insert(NS::pair<int, int>(-3, -3));
-//		foo.insert(NS::pair<int, int>(-4, -4));
-//		foo.insert(NS::pair<int, int>(-5, -5));
-//
-//
-//		std::cout << (foo.insert(NS::pair<int, int>(0, 1))).second << std::endl;
-//		std::cout << (foo.insert(NS::pair<int, int>(0, 2))).second << std::endl;
-//		std::cout << (foo.insert(NS::pair<int, int>(0, 3))).second << std::endl;
-//		std::cout << (foo.insert(NS::pair<int, int>(0, 4))).second << std::endl;
-//		std::cout << (foo.insert(NS::pair<int, int>(0, 5))).second << std::endl;
-//		NS::map<int, int>::iterator it = foo.begin();
-//		NS::map<int, int>::iterator ite = foo.end();
-//
-//		while (it != ite) {
-//
-//			std::cout << it->second << std::endl;
-//			it++;
-//		}
-//		foo.insert(foo.begin(), foo.end());
-//		it = foo.begin();
-//		ite = foo.end();
-//		while (it != ite) {
-//			std::cout << it->second << std::endl;
-//			it++;
-//		}
-//	}
-//	{
-//		NS::map<int, int> foo;
-//		foo.insert(NS::pair<int, int>(-3, -3));
-//		foo.insert(NS::pair<int, int>(-2, -2));
-//		foo.insert(NS::pair<int, int>(-1, -1));
-//		foo.insert(NS::pair<int, int>(0, 0));
-//		foo.insert(NS::pair<int, int>(1, 1));
-//		foo.insert(NS::pair<int, int>(2, 2));
-//		foo.insert(NS::pair<int, int>(4, 4));
-//		foo.insert(NS::pair<int, int>(5, 5));
-//		NS::map<int, int>::iterator it = foo.begin();
-//		for (; it != foo.end(); it++) {
-//			std::cout << it->second << std::endl;
-//		}
-//		for (size_t i = -3; i < 6; i++) {
-//			std::cout << foo.at(i) << std::endl;
-//		}
-//	}
+	{
+		printTest("MAP TEST");
+		NS::map<int, int> foo;
+		foo.insert(NS::pair<int, int>(0, 0));
+		foo.insert(NS::pair<int, int>(1, 1));
+		foo.insert(NS::pair<int, int>(2, 2));
+		foo.insert(NS::pair<int, int>(10, 10));
+		foo.insert(NS::pair<int, int>(5, 5));
+		foo.insert(NS::pair<int, int>(3, 3));
+		foo.insert(NS::pair<int, int>(4, 4));
+		foo.insert(NS::pair<int, int>(-1, -1));
+		foo.insert(NS::pair<int, int>(-2, -2));
+		foo.insert(NS::pair<int, int>(-3, -3));
+		foo.insert(NS::pair<int, int>(-4, -4));
+		foo.insert(NS::pair<int, int>(-5, -5));
+
+
+		std::cout << (foo.insert(NS::pair<int, int>(0, 1))).second << std::endl;
+		std::cout << (foo.insert(NS::pair<int, int>(0, 2))).second << std::endl;
+		std::cout << (foo.insert(NS::pair<int, int>(0, 3))).second << std::endl;
+		std::cout << (foo.insert(NS::pair<int, int>(0, 4))).second << std::endl;
+		std::cout << (foo.insert(NS::pair<int, int>(0, 5))).second << std::endl;
+		NS::map<int, int>::iterator it = foo.begin();
+		NS::map<int, int>::iterator ite = foo.end();
+
+		while (it != ite) {
+
+			std::cout << it->second << std::endl;
+			it++;
+		}
+		foo.insert(foo.begin(), foo.end());
+		it = foo.begin();
+		ite = foo.end();
+		while (it != ite) {
+			std::cout << it->second << std::endl;
+			it++;
+		}
+	}
+	{
+		NS::map<int, int> foo;
+		foo.insert(NS::pair<int, int>(-3, -3));
+		foo.insert(NS::pair<int, int>(-2, -2));
+		foo.insert(NS::pair<int, int>(-1, -1));
+		foo.insert(NS::pair<int, int>(0, 0));
+		foo.insert(NS::pair<int, int>(1, 1));
+		foo.insert(NS::pair<int, int>(2, 2));
+		foo.insert(NS::pair<int, int>(4, 4));
+		foo.insert(NS::pair<int, int>(5, 5));
+		NS::map<int, int>::iterator it = foo.begin();
+		for (; it != foo.end(); it++) {
+			std::cout << it->second << std::endl;
+		}
+		for (size_t i = -3; i < 6; i++) {
+			std::cout << foo.at(i) << std::endl;
+		}
+	}
 	{
 		NS::map<std::string, int> foo;
 		foo.insert(NS::pair<std::string, int>("one", 1));
@@ -714,6 +713,13 @@ int main() {
 		foo.erase(foo.begin(), foo.end());
 		std::cout << "size 715: " << foo.size() << std::endl;
 		foo.clear();
+		for (int i = 0; i < 2; i++) {
+			foo.insert(NS::pair<int, int>(i, i));
+		}
+		std::cout << "foo.rend() 721 = " << foo.rend()->second << std::endl;
+		for (rit = foo.rbegin(); rit != foo.rend(); rit++) {
+			std::cout << rit->first << "=>" << rit->second << std::endl;
+		}
 	}
 	{
 		printTest("MAP SWAP");
@@ -723,6 +729,7 @@ int main() {
 			foo.insert(NS::pair<int, std::string>(i, "ciao"));
 			bar.insert(NS::pair<int, std::string>(i, "hello"));
 		}
+		std::cout << "foo == bar: " << (foo == bar) << std::endl;
 		NS::map<int, std::string>::iterator it = foo.begin();
 		NS::map<int, std::string>::iterator bit = bar.begin();
 		std::cout << "it 728 = " << it->second << std::endl;
@@ -736,8 +743,28 @@ int main() {
 		std::cout << "bar.begin() = " << bar.begin()->second << std::endl;
 		std::cout << "foo.count(1) = " << foo.count(1) << std::endl;
 		std::cout << "foo.count(100) = " << foo.count(100) << std::endl;
+		for (int i = 0; i < 10; i++) {
+			foo.find(i);
+		}
+		foo.insert(NS::pair<int, std::string>(20, "crowd"));
+		foo.insert(NS::pair<int, std::string>(30, "brown"));
+		foo.insert(NS::pair<int, std::string>(40, "frown"));
+		std::cout << "752 lower_bound: " << (foo.lower_bound(1))->first << " => " << (foo.lower_bound(1))->second << std::endl;
+		std::cout << "753 lower_bound: " << (foo.lower_bound(19))->first << " => " << (foo.lower_bound(19))->second << std::endl;
+		std::cout << "754 lower_bound: " << (foo.lower_bound(20))->first << " => " << (foo.lower_bound(20))->second << std::endl;
+		std::cout << "755 lower_bound: " << (foo.lower_bound(35))->first << " => " << (foo.lower_bound(35))->second << std::endl;
+		std::cout << "756 upper_bound: " << (foo.upper_bound(20))->first << " => " << (foo.upper_bound(20))->second << std::endl;
+		std::cout << "757 upper_bound: " << (foo.upper_bound(21))->first << " => " << (foo.upper_bound(21))->second << std::endl;
 		bar.clear();
 		foo.clear();
+	}
+	{
+		printTest("OPERATION ON EMPTY MAP");
+		NS::map<int, int> foo;
+		std::cout << "foo.find(1) 746" << std::endl;
+		foo.find(1);
+		std::cout << "foo.erase(0) 748" << std::endl;
+		foo.erase(0);
 	}
 
 
