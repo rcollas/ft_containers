@@ -34,7 +34,7 @@ namespace ft {
 			typedef typename Allocator::pointer pointer;
 			typedef typename Allocator::const_pointer const_pointer;
 			typedef typename ft::random_access_iterator<pointer> iterator;
-			typedef typename ft::random_access_iterator<pointer> const_iterator;
+			typedef typename ft::random_access_iterator<const_pointer> const_iterator;
 			typedef typename ft::reverse_iterator<iterator> reverse_iterator;
 			typedef typename ft::reverse_iterator<const_iterator> const_reverse_iterator;
 
@@ -136,16 +136,14 @@ namespace ft {
 			template< class InputIt >
 			void assign(InputIt first, InputIt last,
 						typename ft::enable_if<!ft::is_same<InputIt, int>::value>::type* = 0) {
-				size_type count = last - first;
-				InputIt tmp = first;
-
+				size_type count = iterator_distance(first, last);
 				this->clear();
 				if (count > this->_capacity) {
 					this->_capacity == 0 ? reserve(count) :
 											reserve(this->_capacity * 2);
 				}
 				while (this->_size < count) {
-					this->push_back(*tmp++);
+					this->push_back(*first++);
 				}
 			}
 
@@ -303,7 +301,7 @@ namespace ft {
 			insert(iterator pos, InputIt first, InputIt last,
 						typename ft::enable_if<!ft::is_same<InputIt, int>::value>::type* = 0) {
 
-				size_type count = last - first;
+				size_type count = iterator_distance(first, last);
 				ft::vector<value_type> tmp(first, last);
 				size_type position = pos - begin();
 
@@ -326,8 +324,10 @@ namespace ft {
 			iterator
 			erase(iterator first, iterator last) {
 
-				iterator *ret = last == this->end() ? 0 : &last;
+				iterator start = first;
+				iterator end = this->end();
 				size_type count = last - first;
+				if (count == 0) return last;
 
 				while (first + count != this->end()) {
 					*(first) = *(first + count);
@@ -336,7 +336,10 @@ namespace ft {
 				while (count--) {
 					this->pop_back();
 				}
-				return ret == 0 ? (this->end()) : * ret;
+				if (last == end) {
+					return this->end();
+				}
+				return iterator(start);
 			}
 
 			void
@@ -364,17 +367,6 @@ namespace ft {
 
 			void
 			resize(size_type count, T value = T()) {
-//				if (this->_capacity == 0) {
-//					reserve(count);
-//				} else if (count > this->_capacity) {
-//					reserve(count * 1.5);
-//				}
-//				while (count > this->_size) {
-//					this->push_back(value);
-//				}
-//				while (count < this->_size) {
-//					this->pop_back();
-//				}
 				if (count < this->_size) {
 					this->erase(this->begin() + count, this->end());
 				} else {
@@ -391,6 +383,17 @@ namespace ft {
 				std::swap(this->_alloc, other._alloc);
 			}
 
+		protected:
+
+			template<class InputIt>
+			size_type
+			iterator_distance(InputIt first, InputIt last) {
+				size_type count = 0;
+				for (;first != last; first++) {
+					count++;
+				}
+				return count;
+			}
 
 
 	};
