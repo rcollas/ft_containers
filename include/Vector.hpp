@@ -65,13 +65,15 @@ namespace ft {
 			_size(0),
 			_end(0) {}
 
-			explicit vector(size_type count,
-							 const T& value = T(),
-							 const Allocator& alloc = Allocator()) {
-				this->_alloc = alloc;
-				this->_capacity = count * 2;
+			explicit
+			vector(size_type count,
+					const T& value = T(),
+					const Allocator& alloc = Allocator())
+					:
+					_alloc(alloc),
+					_capacity(count * 2),
+					_size(count) {
 				this->_start = this->_alloc.allocate(count * 2);
-				this->_size = count;
 				this->_end = this->_start + this->_size;
 				for (size_type i = 0; i < count; i++) {
 					this->_alloc.construct((_start + i), value);
@@ -109,14 +111,13 @@ namespace ft {
 			/************* ASSIGNMENT OPERATOR *********/
 
 			vector& operator=(const vector& other) {
-				if (this != &other) {
-					clear();
-					if (_capacity < other._size)
-						reserve(other._capacity);
-					_size = other._size;
-					for (size_t i = 0; i < other._size; i++)
-						_alloc.construct(_start + i, other._start[i]);
-				}
+				clear();
+				if (this->_capacity < other._size)
+					reserve(other._capacity);
+				this->_size = other._size;
+				for (size_t i = 0; i < other._size; i++)
+					this->_alloc.construct(this->_start + i, other._start[i]);
+				this->_end = this->_start + this->_size;
 				return *this;
 			};
 
@@ -153,13 +154,13 @@ namespace ft {
 			/************* ELEMENT ACCESS ***********/
 
 			reference at( size_type pos ) {
-				if (pos >= capacity()) {
+				if (pos >= this->_size) {
 					throw std::out_of_range("Index out of range");
 				}
 				return *(this->_start + pos);
 			};
 			const_reference at( size_type pos ) const {
-				if (pos >= capacity()) {
+				if (pos >= this->_size) {
 					throw std::out_of_range("Index out of range");
 				}
 				return *(this->_start + pos);
@@ -178,10 +179,10 @@ namespace ft {
 			front() const { return *(this->_start); }
 
 			reference
-			back() { return *(this->_end - 1); }
+			back() { return *(this->_start + this->_size - 1); }
 
 			const_reference
-			back() const { return *(this->_end - 1); }
+			back() const { return *(this->_start + this->_size - 1); }
 
 			T* data() { return this->_start; }
 			const T* data() const { return this->_start; }
@@ -231,15 +232,18 @@ namespace ft {
 				if (new_cap > this->max_size()) {
 					throw std::length_error("vector::reserve");
 				}
-				pointer prev_start = this->_start;
-				this->_start = this->_alloc.allocate(new_cap);
-				this->_capacity = new_cap;
-				this->_end = this->_start + this->_size;
-				for (size_type i = 0; i < this->_size; i++) {
-					this->_alloc.construct(this->_start + i, *(prev_start + i));
-					this->_alloc.destroy(prev_start + i);
+				if (new_cap > this->capacity()) {
+					pointer prev_start = this->_start;
+					this->_start = this->_alloc.allocate(new_cap);
+					this->_capacity = new_cap;
+					this->_end = this->_start + this->_size;
+					for (size_type i = 0; i < this->_size; i++) {
+						this->_alloc.construct(this->_start + i,
+											   *(prev_start + i));
+						this->_alloc.destroy(prev_start + i);
+					}
+					this->_alloc.deallocate(prev_start, this->_capacity);
 				}
-				this->_alloc.deallocate(prev_start, this->_capacity);
 			}
 
 			/************************ MODIFIERS ***********************/
@@ -277,18 +281,21 @@ namespace ft {
 			insert(iterator pos, size_type count, const T& value) {
 				size_type index = pos - this->begin();
 
-				if (this->size() + count > this->capacity()) {
-					reserve(this->size() + count);
+				if (count) {
+					if (this->size() + count > this->capacity()) {
+						reserve((this->size() + count) * 1.5);
+					}
+					for (size_type i = this->_size; i > index; i--) {
+						this->_alloc.construct(this->_start + i + count - 1,
+											   *(this->_start + i - 1));
+						this->_alloc.destroy(this->_start + i - 1);
+					}
+					for (size_type i = 0; i < count; i++) {
+						this->_alloc.construct(this->_start + index + i, value);
+						this->_size++;
+					}
+					this->_end = this->_start + this->_size;
 				}
-				for (size_type i = this->size(); i > index; i--) {
-					this->_alloc.construct(this->_start + i + count - 1, *(this->_start + i - 1));
-					this->_alloc.destroy(this->_start + i - 1);
-				}
-				for (size_type i = 0; i < count; i++) {
-					this->_alloc.construct(this->_start + index + i, value);
-					this->_size++;
-				}
-				this->_end = this->_start + this->_size;
 			}
 
 			template<class InputIt>
@@ -357,24 +364,31 @@ namespace ft {
 
 			void
 			resize(size_type count, T value = T()) {
-				if (count > this->_capacity) {
-					reserve(this->_capacity * 2);
-				}
-				while (count > this->_size) {
-					this->push_back(value);
-				}
-				while (count < this->_size) {
-					this->pop_back();
+//				if (this->_capacity == 0) {
+//					reserve(count);
+//				} else if (count > this->_capacity) {
+//					reserve(count * 1.5);
+//				}
+//				while (count > this->_size) {
+//					this->push_back(value);
+//				}
+//				while (count < this->_size) {
+//					this->pop_back();
+//				}
+				if (count < this->_size) {
+					this->erase(this->begin() + count, this->end());
+				} else {
+					this->insert(this->end(), count - this->_size, value);
 				}
 			}
 
 			void
 			swap(vector& other) {
-				std::swap(_start, other._start);
-				std::swap(_end, other._end);
-				std::swap(_size, other._size);
-				std::swap(_capacity, other._capacity);
-				std::swap(_alloc, other._alloc);
+				std::swap(this->_start, other._start);
+				std::swap(this->_end, other._end);
+				std::swap(this->_size, other._size);
+				std::swap(this->_capacity, other._capacity);
+				std::swap(this->_alloc, other._alloc);
 			}
 
 

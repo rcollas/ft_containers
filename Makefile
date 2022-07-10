@@ -73,7 +73,6 @@ DIFF			=	-@diff -sy --suppress-common-lines ft_test.log std_test.log
 
 $(NAME_TEST):	$(OBJS) $(STD_OBJS)
 				@$(CC) $(CFLAGS) $(STD_OBJS) -o $(NAME_TEST)
-				@ts=$(date +%s%N)
 				@./$(NAME_TEST) > std_test.log
 				@$(RM) $(STD_OBJS) $(TEST_DIR)
 				@$(CC) $(CFLAGS) $(OBJS) -o $(NAME)

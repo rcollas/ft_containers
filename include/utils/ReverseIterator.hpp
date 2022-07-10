@@ -40,10 +40,10 @@ namespace ft {
 			reverse_iterator& operator--() { ++current; return *this; };
 			reverse_iterator operator++(int) {reverse_iterator tmp = *this; ++*this; return tmp; };
 			reverse_iterator operator--(int) {reverse_iterator tmp = *this; --*this; return tmp; };
-			reverse_iterator& operator+(difference_type n) const { return reverse_iterator(base() - n); };
-			reverse_iterator& operator-(difference_type n) const { return reverse_iterator(base() + n); };
-			reverse_iterator& operator+=(difference_type n) { base() -= n; return *this; };
-			reverse_iterator& operator-=(difference_type n) { base() += n; return *this; };
+			reverse_iterator operator+(difference_type n) const { return reverse_iterator(base() - n); };
+			reverse_iterator operator-(difference_type n) const { return reverse_iterator(base() + n); };
+			reverse_iterator& operator+=(difference_type n) { current -= n; return *this; };
+			reverse_iterator& operator-=(difference_type n) { current += n; return *this; };
 
 
 		protected:
