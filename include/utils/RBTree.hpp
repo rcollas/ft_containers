@@ -23,71 +23,43 @@ enum RbTreeColor
 namespace ft
 {
 
-	struct RbTreeNodeBase {
-
-		typedef RbTreeNodeBase* basePtr;
-		typedef const RbTreeNodeBase* constBasePtr;
-
-		RbTreeColor		color;
-		basePtr			parent;
-		basePtr 		left;
-		basePtr			right;
-
-		static basePtr
-		minimum(basePtr x) {
-			while (x->left != 0) x = x->left;
-			return x;
-		}
-
-		static constBasePtr
-		minimum(constBasePtr x) {
-			while (x->left != 0) x = x->left;
-			return x;
-		}
-
-		static basePtr
-		maximum(basePtr x) {
-			while (x->right != 0) x = x->right;
-			return x;
-		}
-
-		static constBasePtr
-		maximum(constBasePtr x) {
-			while (x->right != 0) x = x->right;
-			return x;
-		}
-
-	};
-
 	template<typename Value>
-		struct RbTreeNode : public RbTreeNodeBase {
-			typedef RbTreeNode<Value>* linkType;
-			Value valueField;
+		struct RbTreeNode {
+			typedef RbTreeNode<Value>	Node;
+
+			Value			valueField;
+			RbTreeColor		color;
+			Node*			parent;
+			Node*			left;
+			Node*			right;
+
+			static Node*
+			minimum(Node* x) {
+				while (x->left != 0) x = x->left;
+				return x;
+			}
+
+			static const Node*
+			minimum(const Node* x) {
+				while (x->left != 0) x = x->left;
+				return x;
+			}
+
+			static Node*
+			maximum(Node* x) {
+				while (x->right != 0) x = x->right;
+				return x;
+			}
+
+			static const Node*
+			maximum(const Node* x) {
+				while (x->right != 0) x = x->right;
+				return x;
+			}
+
 		};
 
-	RbTreeNodeBase*
-	RbTreeDecrement(RbTreeNodeBase* x);
 
-	RbTreeNodeBase::constBasePtr
-	RbTreeDecrement(RbTreeNodeBase::constBasePtr x);
-
-	RbTreeNodeBase*
-	RbTreeIncrement(RbTreeNodeBase* x);
-
-	RbTreeNodeBase::constBasePtr
-	RbTreeIncrement(RbTreeNodeBase::constBasePtr x);
-
-	void
-	insertAndRebalance(const bool insertLeft,
-					   RbTreeNodeBase* x,
-					   RbTreeNodeBase* p,
-					   RbTreeNodeBase& header);
-
-	RbTreeNodeBase*
-	eraseAndRebalance(RbTreeNodeBase* const z,
-					  RbTreeNodeBase& header);
-
-	#include "RBTreeOP.hpp"
 
 	template<typename Key, typename Value, typename KeyOfValue, class Compare, class Allocator = std::allocator<Value> >
 	class RBTree {
@@ -95,9 +67,7 @@ namespace ft
 			typedef typename Allocator::template rebind<RbTreeNode<Value> >::other node_allocator;
 
 		protected:
-			typedef RbTreeNodeBase*			basePtr;
-			typedef const RbTreeNodeBase*	constBasePtr;
-			typedef RbTreeNode<Value>		RbTreeNode;
+			typedef RbTreeNode<Value>		Node;
 		public:
 			typedef Key						key_type;
 			typedef Value					value_type;
@@ -105,53 +75,50 @@ namespace ft
 			typedef const value_type*		const_pointer;
 			typedef value_type&				reference;
 			typedef	const value_type&		const_reference;
-			typedef RbTreeNode*				link_type;
-			typedef const RbTreeNode*		const_link_type;
 			typedef Compare					key_compare;
 			typedef size_t					size_type;
 			typedef std::ptrdiff_t 			difference_type;
 			typedef Allocator				allocator_type;
 
 
-			RbTreeNodeBase	header;
+		private:
+			node_allocator	allocator;
 			key_compare		compare;
+			Node			header;
 			size_type		count;
+
+		public:
 
 			allocator_type
 			getAllocator() const
 			{ return allocator_type(); }
 
-		protected:
-			RbTreeNode*
+		public:
+			Node*
 			getNode() {
-				return impl.node_allocator::allocate(1);
+				return allocator.allocate(1);
 			}
 
 			void
-			putNode(RbTreeNode* p) {
-				impl.node_allocator::deallocate(p, 1);
+			popNode(Node* p) {
+				allocator.deallocate(p, 1);
 			}
 
-			void
-			popNode(RbTreeNode*	 p) {
-				node_allocator::deallocate(p, 1);
-			}
-
-			link_type
+			Node*
 			createNode(const value_type& x) {
-				link_type tmp = getNode();
+				Node* tmp = getNode();
 				try {
 					getAllocator().construct(&tmp->valueField, x);
 				} catch (...) {
-					putNode(tmp);
+					popNode(tmp);
 					__throw_exception_again;
 				}
 				return tmp;
 			}
 
-			link_type
-			cloneNode(const_link_type x) {
-				link_type tmp = createNode(x->valueField);
+			Node*
+			cloneNode(const Node* x) {
+				Node* tmp = createNode(x->valueField);
 				tmp->color = x->color;
 				tmp->left = 0;
 				tmp->right = 0;
@@ -159,268 +126,82 @@ namespace ft
 			}
 
 			void
-			destroyNode(link_type p) {
+			destroyNode(Node* p) {
 				getAllocator().destroy(&p->valueField);
-				putNode(p);
+				popNode(p);
 			}
 
-			template<typename Key_Compare>
-				struct RbTreeImpl : public node_allocator {
-				Key_Compare		key_compare;
-				RbTreeNodeBase	header;
-				size_type		node_count;
 
-				RbTreeImpl(const node_allocator& a = node_allocator(),
-						   const Key_Compare& comp = Key_Compare())
-				:
-				node_allocator(a),
-				key_compare(comp),
-				header(),
-				node_count(0) {
-					this->header.color = red;
-					this->header.parent = 0;
-					this->header.left = &this->header;
-					this->header.right = &this->header;
-				}
-			};
+			#include "RBTreeOP.hpp"
 
-			RbTreeImpl<Compare> impl;
+			public:
 
-			protected:
-				basePtr&
-				root()
-				{ return this->impl.header.parent; }
-
-				constBasePtr
-				root() const
-				{ return this->impl.header.parent; }
-
-				basePtr&
+				Node*&
 				leftmost()
-				{ return this->impl.header.left; }
+				{ return this->header.left; }
 
-				constBasePtr
+				const Node*
 				leftmost() const
-				{ return this->impl.header.left; }
+				{ return this->header.left; }
 
-				basePtr&
+				Node*&
 				rightmost()
-				{ return this->impl.header.right; }
+				{ return this->header.right; }
 
-				constBasePtr
+				const Node*
 				rightmost() const
-				{ return this->impl.header.right; }
+				{ return this->header.right; }
 
-				link_type
-				_l_begin()
-				{ return static_cast<link_type>(this->impl.header.parent); }
+				Node*&
+				root()
+				{ return this->header.parent; }
 
-				const_link_type
-				_l_begin() const
-				{ return static_cast<const_link_type>(this->impl.header.parent); }
+				const Node*
+				root() const
+				{ return this->header.parent; }
 
-				link_type
-				_l_end()
-				{ return static_cast<link_type>(&this->impl.header); }
-
-				const_link_type
-				_l_end() const
-				{ return static_cast<const_link_type>(&this->impl.header); }
 
 				static const_reference
-				value(const_link_type x)
+				value(const Node* x)
 				{ return x->valueField; }
 
-				static const_reference
-				value(constBasePtr x) {
-					return static_cast<const_link_type>(x)->valueField;
-				}
-
 				static const Key&
-				key(const_link_type x)
+				key(const Node* x)
 				{ return KeyOfValue()(value(x)); }
 
-				static link_type
-				left(basePtr x)
-				{ return static_cast<link_type>(x->left); }
+				static Node*
+				left(Node* x)
+				{ return x->left; }
 
-				static const_link_type
-				left(constBasePtr x)
-				{ return static_cast<const_link_type>(x->left); }
+				static const Node*
+				left(const Node* x)
+				{ return x->left; }
 
-				static link_type
-				right(basePtr x)
-				{ return static_cast<link_type>(x->right); }
+				static Node*
+				right(Node* x)
+				{ return x->right; }
 
-				static const_link_type
-				right(constBasePtr x)
-				{ return static_cast<const_link_type>(x->right); }
+				static const Node*
+				right(const Node* x)
+				{ return x->right; }
 
-				static const Key&
-				key(constBasePtr x)
-				{ return KeyOfValue()(value(x)); }
+				static Node*
+				minimum(Node* x)
+				{ return x->minimum(x); }
 
-				static basePtr
-				minimum(basePtr x)
-				{ return RbTreeNodeBase::minimum(x); }
+				static const Node*
+				minimum(const Node* x)
+				{ return x->minimum(x); }
 
-				static constBasePtr
-				minimum(constBasePtr x)
-				{ return RbTreeNodeBase::minimum(x); }
+				static Node*
+				maximum(Node* x)
+				{ return x->maximum(x); }
 
-				static basePtr
-				maximum(basePtr x)
-				{ return RbTreeNodeBase::maximum(x); }
+				static const Node*
+				maximum(const Node* x)
+				{ return x->maximum(x); }
 
-				static constBasePtr
-				maximum(constBasePtr x)
-				{ return RbTreeNodeBase::maximum(x); }
-
-
-			template<typename Type>
-			struct RbTreeIterator {
-				typedef Type	value_type;
-				typedef Type&	reference;
-				typedef Type*	pointer;
-
-				typedef ft::bidirectional_iterator_tag	iterator_category;
-				typedef std::ptrdiff_t 				difference_type;
-
-				typedef RbTreeIterator<Type>		self;
-				typedef ft::RbTreeNodeBase::basePtr basePtr;
-				typedef ft::RbTreeNode<Type>*		linkType;
-
-				basePtr	node;
-
-				RbTreeIterator()
-				: node() {}
-
-				explicit
-				RbTreeIterator(linkType x)
-				: node(x) {}
-
-				reference
-				operator*() const
-				{ return static_cast<linkType>(this->node)->valueField; }
-
-				pointer
-				operator->() const
-				{ return &static_cast<linkType>(this->node)->valueField; }
-
-				self&
-				operator++() {
-					this->node = RbTreeIncrement(this->node);
-					return *this;
-				}
-
-				self
-				operator++(int) {
-					self tmp = *this;
-					this->node = RbTreeIncrement(this->node);
-					return tmp;
-				}
-
-				self&
-				operator--() {
-					this->node = RbTreeDecrement(this->node);
-					return *this;
-				}
-
-				self
-				operator--(int) {
-					self tmp = *this;
-					this->node = RbTreeDecrement(this->node);
-					return tmp;
-				}
-
-				bool
-				operator==(const self& rhs) const {
-					return this->node == rhs.node;
-				}
-
-				bool
-				operator!=(const self& rhs) const {
-					return this->node != rhs.node;
-				}
-
-			};
-
-			template<typename Type>
-			struct RbTreeConstIterator {
-				typedef Type		value_type;
-				typedef const Type&	reference;
-				typedef const Type*	pointer;
-
-				typedef RbTreeIterator<Type> iterator;
-
-				typedef ft::bidirectional_iterator_tag	iterator_category;
-				typedef std::ptrdiff_t 					difference_type;
-
-				typedef RbTreeConstIterator<Type>			self;
-				typedef ft::RbTreeNodeBase::constBasePtr	basePtr;
-				typedef const ft::RbTreeNode<Type>*			linkType;
-
-				basePtr	node;
-
-				RbTreeConstIterator()
-				: node() {}
-
-				explicit
-				RbTreeConstIterator(linkType x)
-				: node(x) {}
-
-				RbTreeConstIterator(const iterator& it)
-				: node(it.node) {}
-
-				reference
-				operator*() const
-				{
-					return static_cast<linkType>(this->node)->valueField; }
-
-				pointer
-				operator->() const
-				{
-					return &static_cast<linkType>(this->node)->valueField; }
-
-				self&
-				operator++() {
-					this->node = RbTreeIncrement(this->node);
-					return *this;
-				}
-
-				self
-				operator++(int) {
-					self tmp = *this;
-					this->node = RbTreeIncrement(this->node);
-					return tmp;
-				}
-
-				self&
-				operator--() {
-					this->node = RbTreeDecrement(this->node);
-					return *this;
-				}
-
-				self
-				operator--(int) {
-					self tmp = *this;
-					this->node = RbTreeDecrement(this->node);
-					return tmp;
-				}
-
-				bool
-				operator==(const self& rhs) const {
-					return this->node == rhs.node;
-				}
-
-				bool
-				operator!=(const self& rhs) const {
-					return this->node != rhs.node;
-				}
-
-			};
-
-
+#include "RbTreeIterator.hpp"
 
 		public:
 			typedef RbTreeIterator<value_type> iterator;
@@ -431,58 +212,106 @@ namespace ft
 			public:
 				RBTree() {};
 
-				RBTree(const Compare& comp)
-				: impl(allocator_type(), comp) {};
+				RBTree(const key_compare& comp = key_compare())
+						:
+						allocator(node_allocator()),
+						compare(comp),
+						header(),
+						count(0) {
+					this->header.color = red;
+					this->header.parent = 0;
+					this->header.left = &this->header;
+					this->header.right = &this->header;
+				}
 
-				RBTree(const Compare& comp, const allocator_type& a)
-				: impl(a, comp) {};
+				RBTree(const node_allocator& a = node_allocator(),
+					   const key_compare& comp = key_compare())
+						:
+						allocator(a),
+						compare(comp),
+						header(),
+						count(0) {
+					this->header.color = red;
+					this->header.parent = 0;
+					this->header.left = &this->header;
+					this->header.right = &this->header;
+				}
 
 				RBTree(const RBTree<Key, Value, KeyOfValue, Compare, Allocator>& src)
-				: impl(src.getAllocator(), src.impl.key_compare) {
+				:
+				allocator(src.getAllocator()),
+				compare(src.key_comp()) {
 					if (src.root() != 0) {
-						root() = copy(src.begin(), _l_end());
-						leftmost() = minimum(root());
-						rightmost() = maximum(root());
-						impl.node_count = src.impl.node_count;
+						this->insertUnique(src.begin(), src.end());
+						this->leftmost() = minimum(header.parent);
+						this->rightmost() = maximum(header.parent);
+						this->count = src.count;
 					}
 				};
 
-				~RBTree() { this->erase(this->begin(), this->end()); }
+				~RBTree() { erase(root()); }
 
-#include "printTree.hpp"
-
-				void
-				print() {
-					print_tree(impl.header.parent);
+				RBTree &operator=(const RBTree& rhs) {
+					if (this != &rhs) {
+						this->clear();
+						this->compare = rhs.key_comp();
+						if (rhs.root() != 0) {
+							this->insertUnique(rhs.begin(), rhs.end());
+							this->leftmost() = minimum(this->root());
+							this->rightmost() = maximum(this->root());
+							this->count = rhs.count;
+						}
+					}
+					return *this;
 				}
+
+				iterator
+				begin()
+				{ return iterator(this->header.left); }
+
+				const_iterator
+				begin() const
+				{ return const_iterator(this->header.left); }
+
+				iterator
+				end()
+				{ return iterator(&this->header); }
+
+				const_iterator
+				end() const
+				{ return const_iterator(&this->header); }
+
+				Node*
+				nodeBegin()
+				{ return this->header.left; }
+
+				const Node*
+				nodeBegin() const
+				{ return this->header.left; }
+
+				Node*
+				nodeEnd()
+				{ return &this->header; }
+
+				const Node*
+				nodeEnd() const
+				{ return &this->header; }
+
+
+//#include "printTree.hpp"
+//
+//				void
+//				print(basePtr node) {
+//					print_tree(node);
+//				}
 
 				size_type
 				size() const
-				{ return impl.node_count; }
+				{ return this->count; }
 
 				size_type
 				max_size() const
-				{ return node_allocator().max_size(); }
-
-				iterator
-				begin() {
-					return iterator(static_cast<link_type>(this->impl.header.left));
-				}
-
-				const_iterator
-				begin() const {
-					return const_iterator(static_cast<const_link_type>(this->impl.header.left));
-				}
-
-				iterator
-				end() {
-					return iterator(static_cast<link_type>(&this->impl.header));
-				}
-
-				const_iterator
-				end() const {
-					return const_iterator(static_cast<const_link_type>(&this->impl.header));
-				}
+				{ return this->allocator.max_size(); }
 
 				reverse_iterator
 				rbegin() { return reverse_iterator(end()); }
@@ -496,145 +325,178 @@ namespace ft
 				const_reverse_iterator
 				rend() const { return const_reverse_iterator(begin()); }
 
-			iterator
-			search(const Key& key) {
-
-				basePtr root = this->root();
-				while (root) {
-					if (impl.key_compare(KeyOfValue()((static_cast<link_type>(root))->valueField), key)) {
-						root = root->right;
-					} else if (impl.key_compare(key, KeyOfValue()(static_cast<link_type>(root)->valueField))) {
-						root = root->left;
-					} else {
-						return iterator(static_cast<link_type>(root));
-					}
-				}
-				throw std::out_of_range("");
-			}
-
-			bool
-			is_less(RbTreeNodeBase* x, const Key& key) const {
-				return impl.key_compare(KeyOfValue()((static_cast<link_type>(x))->valueField), key);
-			}
-
-			bool
-			is_more(RbTreeNodeBase* x, const Key& key) const {
-				return impl.key_compare(key, KeyOfValue()(static_cast<link_type>(x)->valueField));
-			}
-
-			bool
-			is_equal(RbTreeNodeBase* x, const Key& key) const {
-				return !is_less(x, key) && !is_more(x, key);
-			}
-
-				iterator
-				lower_bound(const Key& key) {
-					basePtr root = this->root();
-					while (root) {
-						if (is_equal(root, key)) {
-							return iterator(static_cast<link_type>(root));
-						} else if (is_less(root, key)) {
-							if (is_more(maximum(root), key)) {
-								root = root->right;
-							} else {
-								return this->end();
-							}
-						} else if (is_more(root, key)) {
-							if (!root->left || is_less(maximum(root->left), key)) {
-								return iterator(static_cast<link_type>(root));
-							} else {
-								root = root->left;
-							}
-						}
-					}
-					return this->end();
+				void
+				clear() {
+					erase(this->root());
+					this->leftmost() = nodeEnd();
+					this->header.parent = 0;
+					this->rightmost() = nodeEnd();
+					this->count = 0;
 				}
 
-
 			iterator
-			upper_bound(const Key& key) {
-				basePtr root = this->root();
-				while (root) {
-					if (is_less(root, key) || is_equal(root, key)) {
-						if (is_more(maximum(root), key)) {
-							root = root->right;
-						} else {
-							return this->end();
-						}
-					} else if (is_more(root, key)) {
-						if (!root->left || is_less(maximum(root->left), key) || is_equal(root->left, key)) {
-							return iterator(static_cast<link_type>(root));
-						} else {
-							root = root->left;
-						}
+			find(const Key& k) {
+
+				Node* x = this->root();
+				while (x != 0) {
+					if (compare(key(x), k)) {
+						x = right(x);
+					} else if (compare(k, key(x))) {
+						x = left(x);
+					}
+					else if (!compare(key(x), k)
+								&& !compare(k, key(x))) {
+						return iterator(x);
+					}
+				}
+				return iterator(this->end());
+			}
+
+			const_iterator
+			find(const Key& k) const {
+
+				const Node* x = this->root();
+				while (x != 0) {
+					if (compare(key(x), k)) {
+						x = right(x);
+					} else if (compare(k, key(x))) {
+						x = left(x);
+					}
+					else if (!compare(key(x), k)
+							 && !compare(k, key(x))) {
+						return const_iterator(x);
 					}
 				}
 				return this->end();
 			}
 
 			iterator
-			insert(basePtr x, basePtr p, const value_type& value) {
-					bool insertLeft = (x != 0 || p == _l_end()
-							|| impl.key_compare(KeyOfValue()(value),
+			lower_bound(const Key& k) {
+				Node* x = this->root();
+				Node* y = this->nodeEnd();
+				while (x != 0) {
+					if (!compare(key(x), k)) {
+						y = x, x = left(x);
+					} else {
+						x = right(x);
+					}
+				}
+				return iterator(y);
+			}
+
+			const_iterator
+			lower_bound(const Key& k) const {
+				Node* x = this->root();
+				Node* y = this->end();
+				while (x != 0) {
+					if (!compare(key(x), k)) {
+						y = x, x = left(x);
+					} else {
+						x = right(x);
+					}
+				}
+				return const_iterator(y);
+			}
+
+			iterator
+			upper_bound(const Key& k) {
+				Node* x = this->root();
+				Node* y = this->nodeEnd();
+				while (x != 0) {
+					if (compare(k, key(x))) {
+						y = x, x = left(x);
+					} else {
+						x = right(x);
+					}
+				}
+				return iterator(y);
+			}
+
+			const_iterator
+			upper_bound(const Key& k) const {
+				Node* x = this->root();
+				Node* y = this->end();
+				while (x != 0) {
+					if (compare(k, key(x))) {
+						y = x, x = left(x);
+					} else {
+						x = right(x);
+					}
+				}
+				return const_iterator(y);
+			}
+
+			iterator
+			insert(Node* x, Node* p, const value_type& value) {
+					bool insertLeft = (x != 0 || p == nodeEnd()
+							|| compare(KeyOfValue()(value),
 												key(p)));
 
-					link_type z = createNode(value);
-					insertAndRebalance(insertLeft, z,
-									   const_cast<basePtr>(p),
-									   this->impl.header);
-					++impl.node_count;
+					Node* z = createNode(value);
+					insertAndRebalance(insertLeft,
+									   z,
+									   p,
+									   this->header);
+					++this->count;
 					return iterator(z);
 				}
 
 				size_type
 				erase(const Key& key) {
-					try {
-						iterator i = this->search(key);
-						erase(i);
+					iterator ret = this->find(key);
+					if (ret != this->end()) {
+						erase(ret);
 						return 1;
-					} catch (...) {
+
+					} else {
 						return 0;
 					}
 				}
 
 				void
 				erase(iterator pos) {
-					link_type y =
-							static_cast<link_type>(eraseAndRebalance(pos.node, this->impl.header));
+					Node* y = eraseAndRebalance(pos.node, this->header);
 					destroyNode(y);
-					--this->impl.node_count;
+					--this->count;
 				}
 
 				void
 				erase(iterator first, iterator last) {
 					while (first != last) {
-						iterator tmp = first;
-						tmp++;
-						erase(first);
-						first = tmp;
+						erase(first++);
+					}
+				}
+
+				void
+				erase(Node* x) {
+					while (x != 0) {
+						erase(right(x));
+						Node* y = left(x);
+						destroyNode(x);
+						x = y;
 					}
 				}
 
 			pair<iterator, bool>
 				insertUnique(const value_type& value) {
-					link_type x =	this->_l_begin();
-					link_type y =	this->_l_end();
-					bool comp =		true;
+					Node* x =	this->root();
+					Node* y =	this->nodeEnd();
+					bool comp = true;
 
 					while (x != 0) {
 						y = x;
-						comp = impl.key_compare(KeyOfValue()(value), key(x));
+						comp = compare(KeyOfValue()(value), key(x));
 						x = comp ? left(x) : right(x);
 					}
 					iterator j = iterator(y);
 					if (comp) {
-						if (j == begin()) {
+						if (j == iterator(begin())) {
 							return pair<iterator, bool>(insert(x, y, value), true);
 						} else {
 							--j;
 						}
 					}
-					if (impl.key_compare(key(j.node), KeyOfValue()(value))) {
+					if (compare(key(j.node), KeyOfValue()(value))) {
 						return pair<iterator, bool>(insert(x, y, value), true);
 					}
 					return pair<iterator, bool>(j, false);
@@ -642,21 +504,21 @@ namespace ft
 
 				iterator
 				insertUnique(iterator hint, const value_type& value) {
-					if (hint.node == this->_l_end()) {
+					if (hint.node == this->nodeEnd()) {
 						if (this->size() > 0
-							&& impl.key_compare(key(rightmost()),
-												KeyOfValue()(value))) {
+							&& compare(key(this->rightmost()),
+										KeyOfValue()(value))) {
 							return insert(0, rightmost(), value);
 						} else {
 							return insertUnique(value).first;
 						}
-					} else if (impl.key_compare(KeyOfValue()(value),
-												key(hint.node))) {
+					} else if (compare(KeyOfValue()(value),
+										key(hint.node))) {
 						iterator before = hint;
-						if (hint.node == leftmost()) {
-							return insert(leftmost(), leftmost(), value);
-						} else if (impl.key_compare(key((--before).node),
-													KeyOfValue()(value))) {
+						if (hint.node == this->leftmost()) {
+							return insert(this->leftmost(), this->leftmost(), value);
+						} else if (compare(key((--before).node),
+												KeyOfValue()(value))) {
 							if (right(before.node) == 0) {
 								return insert(0, before.node, value);
 							} else {
@@ -665,13 +527,13 @@ namespace ft
 						} else {
 							return insertUnique(value).first;
 						}
-					} else if (impl.key_compare(key(hint.node),
-													KeyOfValue()(value))) {
+					} else if (compare(key(hint.node),
+											KeyOfValue()(value))) {
 							iterator after = hint;
-							if (hint.node == rightmost()) {
-								return insert(0, rightmost(), value);
-							} else if (impl.key_compare(KeyOfValue()(value),
-														key((++after).node))) {
+							if (hint.node == this->rightmost()) {
+								return insert(0, this->rightmost(), value);
+							} else if (compare(KeyOfValue()(value),
+												key((++after).node))) {
 								if (right(hint.node) == 0) {
 									return insert (0, hint.node, value);
 								} else {
@@ -693,64 +555,34 @@ namespace ft
 					}
 				}
 
-				Compare
+				key_compare
 				key_comp() const
-				{ return impl.key_compare; }
+				{ return compare; }
+
+				void
+				swap(RBTree& other) {
+					std::swap(this->root(), other.root());
+					std::swap(this->leftmost(), other.leftmost());
+					std::swap(this->rightmost(), other.rightmost());
+					if (this->root() != 0) {
+						this->root()->parent = this->nodeEnd();
+					} else {
+						this->header.left = &this->header;
+						this->header.right = &this->header;
+					}
+					if (other.root() != 0) {
+						other.root()->parent = other.nodeEnd();
+					} else {
+						this->header.left = &this->header;
+						this->header.right = &this->header;
+					}
+
+					std::swap(this->count, other.count);
+					std::swap(this->compare, other.compare);
+				}
 
 
 	};
-
-	template<typename Key, typename Value, typename KeyOfValue, typename Compare, typename Allocator>
-		inline bool
-		operator==(const RBTree<Key, Value, KeyOfValue, Compare, Allocator>& lhs,
-					const RBTree<Key, Value, KeyOfValue, Compare, Allocator>& rhs) {
-			return lhs.size() == rhs.size()
-				&& ft::equal(lhs.begin(), lhs.end(), rhs.begin());
-		}
-
-	template<typename Key, typename Value, typename KeyOfValue, typename Compare, typename Allocator>
-		inline bool
-		operator<(const RBTree<Key, Value, KeyOfValue, Compare, Allocator>& lhs,
-				   const RBTree<Key, Value, KeyOfValue, Compare, Allocator>& rhs) {
-			return ft::lexicographical_compare(lhs.begin(), lhs.end(),
-											   rhs.begin(), rhs.end());
-		}
-
-	template<typename Key, typename Value, typename KeyOfValue, typename Compare, typename Allocator>
-		inline bool
-		operator!=(const RBTree<Key, Value, KeyOfValue, Compare, Allocator>& lhs,
-				   const RBTree<Key, Value, KeyOfValue, Compare, Allocator>& rhs) {
-			return !(lhs == rhs);
-		}
-
-	template<typename Key, typename Value, typename KeyOfValue, typename Compare, typename Allocator>
-		inline bool
-		operator>(const RBTree<Key, Value, KeyOfValue, Compare, Allocator>& lhs,
-				   const RBTree<Key, Value, KeyOfValue, Compare, Allocator>& rhs) {
-			return rhs < lhs;
-		}
-
-	template<typename Key, typename Value, typename KeyOfValue, typename Compare, typename Allocator>
-		inline bool
-		operator<=(const RBTree<Key, Value, KeyOfValue, Compare, Allocator>& lhs,
-				   const RBTree<Key, Value, KeyOfValue, Compare, Allocator>& rhs) {
-			return !(rhs < lhs);
-		}
-
-	template<typename Key, typename Value, typename KeyOfValue, typename Compare, typename Allocator>
-		inline bool
-		operator>=(const RBTree<Key, Value, KeyOfValue, Compare, Allocator>& lhs,
-				   const RBTree<Key, Value, KeyOfValue, Compare, Allocator>& rhs) {
-			return !(lhs < rhs);
-		}
-
-	template<typename Key, typename Value, typename KeyOfValue, typename Compare, typename Allocator>
-		inline void
-		swap(const RBTree<Key, Value, KeyOfValue, Compare, Allocator>& lhs,
-				   const RBTree<Key, Value, KeyOfValue, Compare, Allocator>& rhs) {
-			lhs.swap(rhs);
-		}
-
 }
 
 

@@ -21,6 +21,7 @@ INC_FILES	=	Stack.hpp \
 				utils/Iterator.hpp \
 				utils/RandomAccessIterator.hpp \
 				utils/RBTree.hpp \
+				utils/RBTreeOP.hpp \
 
 OBJS		=	$(addprefix $(OBJS_DIR)/, $(SRC_FILES:.cpp=.o))
 
@@ -72,6 +73,7 @@ DIFF			=	-@diff -sy --suppress-common-lines ft_test.log std_test.log
 
 $(NAME_TEST):	$(OBJS) $(STD_OBJS)
 				@$(CC) $(CFLAGS) $(STD_OBJS) -o $(NAME_TEST)
+				@ts=$(date +%s%N)
 				@./$(NAME_TEST) > std_test.log
 				@$(RM) $(STD_OBJS) $(TEST_DIR)
 				@$(CC) $(CFLAGS) $(OBJS) -o $(NAME)

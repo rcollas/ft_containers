@@ -9,7 +9,7 @@ namespace ft {
 								 InputIt2 first2, InputIt2 last2) {
 
 		for (; (first1 != last1) &&
-			   (first2 != last2); ++first1, (void) ++first2) {
+			   (first2 != last2); ++first1, ++first2) {
 			if (*first1 < *first2) return true;
 			if (*first2 < *first1) return false;
 		}
@@ -22,7 +22,7 @@ namespace ft {
 								 Compare comp) {
 
 		for (; (first1 != last1) &&
-			   (first2 != last2); ++first1, (void) ++first2) {
+			   (first2 != last2); ++first1, ++first2) {
 			if (comp(*first1, *first2)) return true;
 			if (comp(*first2, *first1)) return false;
 		}

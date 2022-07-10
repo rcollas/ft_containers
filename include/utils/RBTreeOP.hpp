@@ -4,100 +4,11 @@
 #include "RBTree.hpp"
 
 
-	RbTreeNodeBase*
-	RbTreeDecrement(RbTreeNodeBase *x) {
-
-		if (x->color == red
-			&& x->parent->parent == x) {
-			x = x->right;
-		} else if (x->left != 0) {
-			RbTreeNodeBase *y = x->left;
-			while (y->right != 0) {
-				y = y->right;
-			}
-			x = y;
-		} else {
-			RbTreeNodeBase *y = x->parent;
-			while (x == y->left) {
-				x = y;
-				y = y->parent;
-			}
-			x = y;
-		}
-		return x;
-	}
-
-	RbTreeNodeBase::constBasePtr
-	RbTreeDecrement(RbTreeNodeBase::constBasePtr x) {
-
-		if (x->color == red
-			&& x->parent->parent == x)
-			x = x->right;
-		else if (x->left != 0)
-		{
-			RbTreeNodeBase* y = x->left;
-			while (y->right != 0)
-				y = y->right;
-			x = y;
-		}
-		else
-		{
-			RbTreeNodeBase* y = x->parent;
-			while (x == y->left) {
-				x = y;
-				y = y->parent;
-			}
-			x = y;
-		}
-		return x;
-	}
-
-	RbTreeNodeBase*
-	RbTreeIncrement(RbTreeNodeBase *x) {
-
-		if (x->right != 0) {
-			x = x->right;
-			while (x->left != 0) {
-				x = x->left;
-			}
-		} else {
-			RbTreeNodeBase *y = x->parent;
-			while (x == y->right) {
-				x = y;
-				y = y->parent;
-			}
-			if (x->right != y) {
-				x = y;
-			}
-		}
-		return x;
-	}
-
-	RbTreeNodeBase::constBasePtr
-	RbTreeIncrement(RbTreeNodeBase::constBasePtr x) {
-
-		if (x->right != 0) {
-			x = x->right;
-			while (x->left != 0) {
-				x = x->left;
-			}
-		} else {
-			RbTreeNodeBase *y = x->parent;
-			while (x == y->right) {
-				x = y;
-				y = y->parent;
-			}
-			if (x->right != y) {
-				x = y;
-			}
-		}
-		return x;
-	}
 
 	static void
-	leftRotate(RbTreeNodeBase *&root, RbTreeNodeBase *const node) {
+	leftRotate(Node*& root, Node* const node) {
 
-		RbTreeNodeBase *const y = node->right;
+		Node* const y = node->right;
 
 		node->right = y->left;
 		if (y->left != 0) {
@@ -117,9 +28,9 @@
 	}
 
 	static void
-	rightRotate(RbTreeNodeBase *&root, RbTreeNodeBase *const node) {
+	rightRotate(Node*& root, Node* const node) {
 
-		RbTreeNodeBase *const y = node->left;
+		Node* const y = node->left;
 
 		node->left = y->right;
 		if (y->right != 0) {
@@ -139,15 +50,15 @@
 	}
 
 	void
-	rebalance(RbTreeNodeBase*& root, RbTreeNodeBase*& x) {
+	rebalance(Node*& root, Node*& x) {
 
 		while (x != root && x->parent->color == red) {
 
-			RbTreeNodeBase* const grandParent = x->_grandParent;
+			Node* const grandParent = x->_grandParent;
 
 			if (x->parent == grandParent->left) {
 
-				RbTreeNodeBase *const uncle = grandParent->right;
+				Node* const uncle = grandParent->right;
 
 				if (uncle && uncle->color == red) {
 
@@ -167,7 +78,7 @@
 					rightRotate(root, grandParent);
 				}
 			} else {
-				RbTreeNodeBase *const uncle = grandParent->left;
+				Node* const uncle = grandParent->left;
 				if (uncle && uncle->color == red) {
 
 					x->parent->color = black;
@@ -206,11 +117,11 @@
 
 	void
 	insertAndRebalance(const bool insertLeft,
-					   RbTreeNodeBase *x,
-					   RbTreeNodeBase *p,
-					   RbTreeNodeBase &header) {
+					   Node* x,
+					   Node* p,
+					   Node& header) {
 
-		RbTreeNodeBase *&root = header.parent;
+		Node*& root = header.parent;
 		x->parent = p;
 		x->left = 0;
 		x->right = 0;
@@ -246,16 +157,16 @@
 	 * then finally we rebalance the tree
 	 */
 
-	RbTreeNodeBase *
-	eraseAndRebalance(RbTreeNodeBase *const z,
-					  RbTreeNodeBase &header) {
+	Node*
+	eraseAndRebalance(Node* const z,
+					  Node& header) {
 
-		RbTreeNodeBase*& root = header.parent;
-		RbTreeNodeBase*& leftmost = header.left;
-		RbTreeNodeBase*& rightmost = header.right;
-		RbTreeNodeBase* y = z;
-		RbTreeNodeBase* x = 0;
-		RbTreeNodeBase* x_parent = 0;
+		Node*& root = header.parent;
+		Node*& leftmost = header.left;
+		Node*& rightmost = header.right;
+		Node* y = z;
+		Node* x = 0;
+		Node* x_parent = 0;
 
 		if (y->left == 0) {
 			x = y->right;
@@ -313,14 +224,14 @@
 				if (z->right == 0) {
 					leftmost = z->parent;
 				} else {
-					leftmost = RbTreeNodeBase::minimum(x);
+					leftmost = Node::minimum(x);
 				}
 			}
 			if (rightmost == z) {
 				if (z->left == 0) {
 					rightmost = z->parent;
 				} else {
-					rightmost = RbTreeNodeBase::maximum(x);
+					rightmost = Node::maximum(x);
 				}
 			}
 		}
@@ -328,7 +239,7 @@
 		if (y->color != red) {
 			while (x != root && (x == 0 || x->color == black)) {
 				if (x == x_parent->left) {
-					RbTreeNodeBase* w = x_parent->right;
+					Node* w = x_parent->right;
 					if (w->color == red) {
 						w->color = black;
 						x_parent->color = red;
@@ -359,7 +270,7 @@
 						break;
 					}
 				} else {
-					RbTreeNodeBase* w = x_parent->left;
+					Node* w = x_parent->left;
 					if (w->color == red) {
 						w->color = black;
 						x_parent->color = red;
