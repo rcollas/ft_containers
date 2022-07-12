@@ -42,7 +42,7 @@ namespace ft {
 			typedef typename RBTree::const_reverse_iterator	const_reverse_iterator;
 
 		private:
-			key_compare	_compare;
+//			key_compare	_compare;
 			RBTree		_tree;
 
 		public:
@@ -68,7 +68,8 @@ namespace ft {
 			/************* CONSTRUCTOR ******************/
 
 			map()
-			: _tree(RBTree(_compare)) {};
+			:
+			_tree(RBTree(key_comp(), allocator_type())) {};
 
 			explicit map(const Compare& comp,
 						  const Allocator& alloc = Allocator())
@@ -81,13 +82,18 @@ namespace ft {
 					 : _tree(RBTree(comp, alloc))
 					 { _tree.insertUnique(first, last); };
 
+			map(const map& other)
+			:
+			_tree(RBTree(other.key_comp(), other.get_allocator())) {
+				_tree.insertUnique(other.begin(), other.end());
+			}
+
 			~map() {}
 
 
 			map& operator=( const map& other ) {
 				if (this != &other) {
 					this->_tree = other._tree;
-					this->_compare = other._compare;
 				}
 				return *this;
 			}
@@ -220,15 +226,15 @@ namespace ft {
 			const_iterator
 			upper_bound(const Key& key) const { return this->_tree.upper_bound(key); }
 
-			ft::pair<iterator,iterator>
+			ft::pair<iterator, iterator>
 			equal_range( const Key& key ) {
 				return ft::pair<iterator, iterator>(lower_bound(key),
 													upper_bound(key));
 			}
 
-			ft::pair<const_iterator,const_iterator>
+			ft::pair<const_iterator, const_iterator>
 			equal_range( const Key& key ) const {
-				return ft::pair<iterator, iterator>(lower_bound(key),
+				return ft::pair<const_iterator, const_iterator>(lower_bound(key),
 													upper_bound(key));
 			}
 

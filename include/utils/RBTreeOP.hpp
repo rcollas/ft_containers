@@ -49,6 +49,7 @@
 		node->parent = y;
 	}
 
+
 	void
 	rebalance(Node*& root, Node*& x) {
 
@@ -145,6 +146,8 @@
 		rebalance(root, x);
 	}
 
+
+
 	/**
 	 * @brief delete a node in the tree and rebalanced it
 	 * @param z the node to delete
@@ -224,14 +227,14 @@
 				if (z->right == 0) {
 					leftmost = z->parent;
 				} else {
-					leftmost = Node::minimum(x);
+					leftmost = minimum(x);
 				}
 			}
 			if (rightmost == z) {
 				if (z->left == 0) {
 					rightmost = z->parent;
 				} else {
-					rightmost = Node::maximum(x);
+					rightmost = maximum(x);
 				}
 			}
 		}
@@ -300,9 +303,9 @@
 						break;
 					}
 				}
-				if (x) {
-					x->color = black;
-				}
+			}
+			if (x) {
+				x->color = black;
 			}
 		}
 		return y;

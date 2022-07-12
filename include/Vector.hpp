@@ -50,25 +50,25 @@ namespace ft {
 			/********** CONSTRUCTOR ********/
 
 			vector()
-			:
-			_alloc(Allocator()),
-			_capacity(0),
-			_start(0),
-			_size(0),
-			_end(0) {}
+					:
+					_alloc(Allocator()),
+					_capacity(0),
+					_start(0),
+					_size(0),
+					_end(0) {}
 
 			explicit vector( const Allocator& alloc )
-			:
-			_alloc(alloc),
-			_capacity(0),
-			_start(0),
-			_size(0),
-			_end(0) {}
+					:
+					_alloc(alloc),
+					_capacity(0),
+					_start(0),
+					_size(0),
+					_end(0) {}
 
 			explicit
 			vector(size_type count,
-					const T& value = T(),
-					const Allocator& alloc = Allocator())
+				   const T& value = T(),
+				   const Allocator& alloc = Allocator())
 					:
 					_alloc(alloc),
 					_capacity(count * 2),
@@ -82,22 +82,22 @@ namespace ft {
 
 			template <class InputIt>
 			vector(InputIt first, InputIt last,
-					const Allocator& alloc = Allocator(),
-					typename ft::enable_if<!ft::is_same<InputIt, int>::value>::type* = 0)
-			:
-			_alloc(alloc),
-			_capacity(0),
-			_start(0),
-			_size(0),
-			_end(0) { assign(first, last); };
+				   const Allocator& alloc = Allocator(),
+				   typename ft::enable_if<!ft::is_same<InputIt, int>::value>::type* = 0)
+					:
+					_alloc(alloc),
+					_capacity(0),
+					_start(0),
+					_size(0),
+					_end(0) { assign(first, last); };
 
 			vector(const vector& other)
-			:
-			_alloc(Allocator()),
-			_capacity(0),
-			_start(0),
-			_size(0),
-			_end(0) { *this = other; };
+					:
+					_alloc(Allocator()),
+					_capacity(0),
+					_start(0),
+					_size(0),
+					_end(0) { *this = other; };
 
 			/********** DESTRUCTOR **********/
 
@@ -126,7 +126,7 @@ namespace ft {
 				this->clear();
 				if (count > this->_capacity) {
 					this->_capacity == 0 ? reserve(count) :
-											reserve(this->_capacity * 2);
+					reserve(this->_capacity * 2);
 				}
 				while (this->_size < count) {
 					this->push_back(value);
@@ -140,7 +140,7 @@ namespace ft {
 				this->clear();
 				if (count > this->_capacity) {
 					this->_capacity == 0 ? reserve(count) :
-											reserve(this->_capacity * 2);
+					reserve(this->_capacity * 2);
 				}
 				while (this->_size < count) {
 					this->push_back(*first++);
@@ -258,20 +258,7 @@ namespace ft {
 			insert(iterator pos, const T& value) {
 
 				size_type index = pos - this->begin();
-				if (this->size() == 0) {
-					this->push_back(value);
-				} else {
-					if (this->size() == this->capacity()) {
-						reserve(this->capacity() * 2);
-					}
-					for (size_type i = this->size(); i > index; i--) {
-						this->_alloc.construct(this->_start + i, *(this->_start + i - 1));
-						this->_alloc.destroy(this->_start + i - 1);
-					}
-					this->_alloc.construct(this->_start + index, value);
-					this->_size++;
-					this->_end = this->_start + this->_size;
-				}
+				this->insert(pos, 1, value);
 				return iterator(this->_start + index);
 			}
 
@@ -280,8 +267,17 @@ namespace ft {
 				size_type index = pos - this->begin();
 
 				if (count) {
-					if (this->size() + count > this->capacity()) {
-						reserve((this->size() + count) * 1.5);
+					if (_size + count > _capacity)
+					{
+						if (_size + count > _capacity * 2)
+							this->reserve(_size + count);
+						else if (_size >= 0){
+							if (_size == 0)
+								reserve(count);
+							this->reserve(_size * 2);
+						}
+						else
+							this->reserve(1);
 					}
 					for (size_type i = this->_size; i > index; i--) {
 						this->_alloc.construct(this->_start + i + count - 1,
@@ -299,7 +295,7 @@ namespace ft {
 			template<class InputIt>
 			void
 			insert(iterator pos, InputIt first, InputIt last,
-						typename ft::enable_if<!ft::is_same<InputIt, int>::value>::type* = 0) {
+				   typename ft::enable_if<!ft::is_same<InputIt, int>::value>::type* = 0) {
 
 				size_type count = iterator_distance(first, last);
 				ft::vector<value_type> tmp(first, last);
@@ -406,23 +402,23 @@ namespace ft {
 
 	template<class T, class Alloc>
 	bool operator!=(const ft::vector<T,Alloc>& lhs,
-					 const ft::vector<T,Alloc>& rhs) { return !(lhs == rhs); };
+					const ft::vector<T,Alloc>& rhs) { return !(lhs == rhs); };
 
 	template<class T, class Alloc>
 	bool operator<(const ft::vector<T,Alloc>& lhs,
-					const ft::vector<T,Alloc>& rhs) {
+				   const ft::vector<T,Alloc>& rhs) {
 		return ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end());
 	};
 
 	template<class T, class Alloc>
 	bool operator<=(const ft::vector<T,Alloc>& lhs,
-					 const ft::vector<T,Alloc>& rhs) {
+					const ft::vector<T,Alloc>& rhs) {
 		return !(rhs < lhs);
 	};
 
 	template<class T, class Alloc>
 	bool operator>(const ft::vector<T,Alloc>& lhs,
-					const ft::vector<T,Alloc>& rhs) {
+				   const ft::vector<T,Alloc>& rhs) {
 		return rhs < lhs;
 	};
 
@@ -434,7 +430,7 @@ namespace ft {
 
 	template<class T, class Alloc>
 	void swap(ft::vector<T,Alloc>& lhs,
-			   ft::vector<T,Alloc>& rhs) { lhs.swap(rhs); };
+			  ft::vector<T,Alloc>& rhs) { lhs.swap(rhs); };
 }
 
 #endif

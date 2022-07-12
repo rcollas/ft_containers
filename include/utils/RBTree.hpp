@@ -28,10 +28,10 @@ namespace ft
 			typedef RbTreeNode<Value>	Node;
 
 			Value			valueField;
-			RbTreeColor		color;
 			Node*			parent;
 			Node*			left;
 			Node*			right;
+			RbTreeColor		color;
 
 			static Node*
 			minimum(Node* x) {
@@ -209,8 +209,18 @@ namespace ft
 			typedef ft::reverse_iterator<iterator> reverse_iterator;
 			typedef ft::reverse_iterator<const_iterator> const_reverse_iterator;
 
+			 /*************************************************/
+			/**************** CONSTRUCTORS *******************/
+		   /*************************************************/
+
 			public:
-				RBTree() {};
+
+				RBTree()
+				:
+				allocator(node_allocator()),
+				compare(key_compare()),
+				header(),
+				count(0) {}
 
 				RBTree(const key_compare& comp = key_compare())
 						:
@@ -224,8 +234,8 @@ namespace ft
 					this->header.right = &this->header;
 				}
 
-				RBTree(const node_allocator& a = node_allocator(),
-					   const key_compare& comp = key_compare())
+				RBTree(const key_compare& comp = key_compare(),
+						const node_allocator& a = node_allocator())
 						:
 						allocator(a),
 						compare(comp),
@@ -237,17 +247,24 @@ namespace ft
 					this->header.right = &this->header;
 				}
 
-				RBTree(const RBTree<Key, Value, KeyOfValue, Compare, Allocator>& src)
-				:
-				allocator(src.getAllocator()),
-				compare(src.key_comp()) {
-					if (src.root() != 0) {
-						this->insertUnique(src.begin(), src.end());
-						this->leftmost() = minimum(header.parent);
-						this->rightmost() = maximum(header.parent);
-						this->count = src.count;
-					}
-				};
+//				RBTree(const RBTree<Key, Value, KeyOfValue, Compare, Allocator>& src)
+//				:
+//				allocator(src.getAllocator()),
+//				compare(src.key_comp()),
+//				header(),
+//				count(0) {
+//					if (src.root() != 0) {
+////						this->insertUnique(src.begin(), src.end());
+//						for (const_iterator it = src.begin(); it != src.end(); it++) {
+//							this->insertUnique(value_type(it->first, it->second));
+//						}
+////						this->root() = copy(src.nodeBegin(), this->nodeEnd());
+////						copy(src);
+//						this->leftmost() = minimum(this->root());
+//						this->rightmost() = maximum(this->root());
+//						this->count = src.count;
+//					}
+//				};
 
 				~RBTree() { erase(root()); }
 
@@ -264,6 +281,37 @@ namespace ft
 					}
 					return *this;
 				}
+
+//				void
+//				copy(Node*)
+
+
+//				Node*
+//				copy(const Node* x, Node* p) {
+//					Node* top = cloneNode(x);
+//					top->parent = p;
+//
+//					try {
+//						if (x->right)
+//							top->right = copy(x->right, top);
+//						p = top;
+//						x = x->left;
+//
+//						while (x != 0) {
+//							Node* y = cloneNode(x);
+//							p->left= y;
+//							y->parent = p;
+//							if (x->right)
+//								y->right = copy(x->right, y);
+//							p = y;
+//							x = x->left;
+//						}
+//					} catch(...) {
+//						erase(top);
+//						__throw_exception_again;
+//					}
+//					return top;
+//				}
 
 				iterator
 				begin()
@@ -386,8 +434,8 @@ namespace ft
 
 			const_iterator
 			lower_bound(const Key& k) const {
-				Node* x = this->root();
-				Node* y = this->end();
+				const Node* x = this->root();
+				const Node* y = this->nodeEnd();
 				while (x != 0) {
 					if (!compare(key(x), k)) {
 						y = x, x = left(x);
@@ -414,8 +462,8 @@ namespace ft
 
 			const_iterator
 			upper_bound(const Key& k) const {
-				Node* x = this->root();
-				Node* y = this->end();
+				const Node* x = this->root();
+				const Node* y = this->nodeEnd();
 				while (x != 0) {
 					if (compare(k, key(x))) {
 						y = x, x = left(x);
@@ -462,8 +510,12 @@ namespace ft
 
 				void
 				erase(iterator first, iterator last) {
-					while (first != last) {
-						erase(first++);
+					if (first == this->begin() && last == this->end()) {
+						this->clear();
+					} else {
+						while (first != last) {
+							erase(first++);
+						}
 					}
 				}
 
@@ -505,7 +557,7 @@ namespace ft
 				iterator
 				insertUnique(iterator hint, const value_type& value) {
 					if (hint.node == this->nodeEnd()) {
-						if (this->size() > 0
+						if (this->count > 0
 							&& compare(key(this->rightmost()),
 										KeyOfValue()(value))) {
 							return insert(0, rightmost(), value);
