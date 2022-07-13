@@ -258,7 +258,20 @@ namespace ft {
 			insert(iterator pos, const T& value) {
 
 				size_type index = pos - this->begin();
-				this->insert(pos, 1, value);
+				if (this->size() == 0) {
+					this->push_back(value);
+				} else {
+					if (this->size() == this->capacity()) {
+						reserve(this->capacity() * 2);
+					}
+					for (size_type i = this->size(); i > index; i--) {
+						this->_alloc.construct(this->_start + i, *(this->_start + i - 1));
+						this->_alloc.destroy(this->_start + i - 1);
+					}
+					this->_alloc.construct(this->_start + index, value);
+					this->_size++;
+					this->_end = this->_start + this->_size;
+				}
 				return iterator(this->_start + index);
 			}
 
@@ -267,17 +280,8 @@ namespace ft {
 				size_type index = pos - this->begin();
 
 				if (count) {
-					if (_size + count > _capacity)
-					{
-						if (_size + count > _capacity * 2)
-							this->reserve(_size + count);
-						else if (_size >= 0){
-							if (_size == 0)
-								reserve(count);
-							this->reserve(_size * 2);
-						}
-						else
-							this->reserve(1);
+					if (this->size() + count > this->capacity()) {
+						reserve((this->size() + count) * 1.5);
 					}
 					for (size_type i = this->_size; i > index; i--) {
 						this->_alloc.construct(this->_start + i + count - 1,
@@ -378,6 +382,7 @@ namespace ft {
 				std::swap(this->_capacity, other._capacity);
 				std::swap(this->_alloc, other._alloc);
 			}
+
 
 		protected:
 

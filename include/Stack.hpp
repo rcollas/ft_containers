@@ -17,7 +17,7 @@ namespace ft {
 			stack( const stack& other ) { this->c = other.c; };
 			~stack() {};
 
-			stack& operator=( const stack& other ) { this->c = other.c; };
+			stack& operator=( const stack& other ) { this->c = other.c; return *this; };
 
 			bool empty() const { return this->c.empty(); };
 			size_type size() const { return this->c.size(); };
