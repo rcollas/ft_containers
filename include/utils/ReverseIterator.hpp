@@ -24,10 +24,6 @@ namespace ft {
 			template<class U>
 			reverse_iterator(const reverse_iterator<U> &other) : current(other.base()) {}
 
-//			template<class U>
-//			reverse_iterator
-//			&operator=(const reverse_iterator<U> &other) { this->current = other.current; };
-
 			iterator_type
 			base() const { return current; };
 

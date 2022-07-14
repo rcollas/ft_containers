@@ -238,16 +238,4 @@ struct RbTreeConstIterator {
 
 };
 
-//template<typename Type>
-//bool operator==(const RbTreeIterator<Type>& lhs,
-//			const RbTreeConstIterator<Type>& rhs) {
-//	return lhs.node == rhs.node;
-//}
-//
-//template<typename Type>
-//bool operator!=(const RbTreeIterator<Type>& lhs,
-//			const RbTreeConstIterator<Type>& rhs) {
-//	return lhs.node != rhs.node;
-//}
-
 #endif

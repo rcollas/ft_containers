@@ -9,7 +9,6 @@
 #include "ReverseIterator.hpp"
 #include <memory>
 #include <iostream>
-#include <vector>
 
 #define _grandParent parent->parent
 
@@ -247,25 +246,6 @@ namespace ft
 					this->header.right = &this->header;
 				}
 
-//				RBTree(const RBTree<Key, Value, KeyOfValue, Compare, Allocator>& src)
-//				:
-//				allocator(src.getAllocator()),
-//				compare(src.key_comp()),
-//				header(),
-//				count(0) {
-//					if (src.root() != 0) {
-////						this->insertUnique(src.begin(), src.end());
-//						for (const_iterator it = src.begin(); it != src.end(); it++) {
-//							this->insertUnique(value_type(it->first, it->second));
-//						}
-////						this->root() = copy(src.nodeBegin(), this->nodeEnd());
-////						copy(src);
-//						this->leftmost() = minimum(this->root());
-//						this->rightmost() = maximum(this->root());
-//						this->count = src.count;
-//					}
-//				};
-
 				~RBTree() { erase(root()); }
 
 				RBTree &operator=(const RBTree& rhs) {
@@ -281,37 +261,6 @@ namespace ft
 					}
 					return *this;
 				}
-
-//				void
-//				copy(Node*)
-
-
-//				Node*
-//				copy(const Node* x, Node* p) {
-//					Node* top = cloneNode(x);
-//					top->parent = p;
-//
-//					try {
-//						if (x->right)
-//							top->right = copy(x->right, top);
-//						p = top;
-//						x = x->left;
-//
-//						while (x != 0) {
-//							Node* y = cloneNode(x);
-//							p->left= y;
-//							y->parent = p;
-//							if (x->right)
-//								y->right = copy(x->right, y);
-//							p = y;
-//							x = x->left;
-//						}
-//					} catch(...) {
-//						erase(top);
-//						__throw_exception_again;
-//					}
-//					return top;
-//				}
 
 				iterator
 				begin()
@@ -344,14 +293,6 @@ namespace ft
 				const Node*
 				nodeEnd() const
 				{ return &this->header; }
-
-
-//#include "printTree.hpp"
-//
-//				void
-//				print(basePtr node) {
-//					print_tree(node);
-//				}
 
 				size_type
 				size() const

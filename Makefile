@@ -16,12 +16,18 @@ INC_DIR		=	./include/
 INC_FILES	=	Stack.hpp \
 				Vector.hpp \
 				Map.hpp \
-				utils/IteratorsTraits.hpp \
-				utils/ReverseIterator.hpp \
+				utils/enable_if.hpp \
+				utils/equal.hpp \
+				utils/is_integral.hpp \
 				utils/Iterator.hpp \
+				utils/IteratorsTraits.hpp \
+				utils/lexicographical_compare.hpp \
+				utils/pair.hpp \
 				utils/RandomAccessIterator.hpp \
 				utils/RBTree.hpp \
+				utils/RbTreeIterator.hpp \
 				utils/RBTreeOP.hpp \
+				utils/ReverseIterator.hpp \
 
 OBJS		=	$(addprefix $(OBJS_DIR)/, $(SRC_FILES:.cpp=.o))
 

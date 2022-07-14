@@ -7,7 +7,7 @@
 #include "utils/Iterator.hpp"
 #include "utils/RandomAccessIterator.hpp"
 #include "utils/enable_if.hpp"
-#include "utils/is_same.hpp"
+#include "utils/is_integral.hpp"
 #include "utils/equal.hpp"
 #include "utils/lexicographical_compare.hpp"
 #include <stdexcept>
@@ -83,7 +83,7 @@ namespace ft {
 			template <class InputIt>
 			vector(InputIt first, InputIt last,
 				   const Allocator& alloc = Allocator(),
-				   typename ft::enable_if<!ft::is_same<InputIt, int>::value>::type* = 0)
+				   typename ft::enable_if<!ft::is_integral<InputIt>::value>::type* = 0)
 					:
 					_alloc(alloc),
 					_capacity(0),
@@ -135,7 +135,7 @@ namespace ft {
 
 			template< class InputIt >
 			void assign(InputIt first, InputIt last,
-						typename ft::enable_if<!ft::is_same<InputIt, int>::value>::type* = 0) {
+						typename ft::enable_if<!ft::is_integral<InputIt>::value>::type* = 0) {
 				size_type count = iterator_distance(first, last);
 				this->clear();
 				if (count > this->_capacity) {
@@ -218,12 +218,8 @@ namespace ft {
 			size_type
 			size() const { return this->_size; }
 
-
 			size_type
 			max_size() const { return this->_alloc.max_size(); }
-
-			size_type
-			capacity() const { return this->_capacity; }
 
 			void
 			reserve(size_type new_cap) {
@@ -243,6 +239,9 @@ namespace ft {
 					this->_alloc.deallocate(prev_start, this->_capacity);
 				}
 			}
+
+			size_type
+			capacity() const { return this->_capacity; }
 
 			/************************ MODIFIERS ***********************/
 
@@ -299,7 +298,7 @@ namespace ft {
 			template<class InputIt>
 			void
 			insert(iterator pos, InputIt first, InputIt last,
-				   typename ft::enable_if<!ft::is_same<InputIt, int>::value>::type* = 0) {
+				   typename ft::enable_if<!ft::is_integral<InputIt>::value>::type* = 0) {
 
 				size_type count = iterator_distance(first, last);
 				ft::vector<value_type> tmp(first, last);

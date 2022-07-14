@@ -7,6 +7,8 @@
 #include "utils/RandomAccessIterator.hpp"
 #include "utils/pair.hpp"
 #include "utils/RBTree.hpp"
+#include "utils/enable_if.hpp"
+#include "utils/is_integral.hpp"
 #include <vector>
 
 namespace ft {
@@ -25,8 +27,8 @@ namespace ft {
 			typedef Compare								key_compare;
 			typedef Allocator							allocator_type;
 
-
-		typedef RBTree<key_type, value_type, std::_Select1st<value_type>, key_compare, allocator_type> RBTree;
+		private:
+			typedef RBTree<key_type, value_type, std::_Select1st<value_type>, key_compare, allocator_type> RBTree;
 
 		public:
 			typedef Type 									mapped_type;
@@ -42,7 +44,6 @@ namespace ft {
 			typedef typename RBTree::const_reverse_iterator	const_reverse_iterator;
 
 		private:
-//			key_compare	_compare;
 			RBTree		_tree;
 
 		public:
@@ -65,7 +66,7 @@ namespace ft {
 
 		public:
 
-			/************* CONSTRUCTOR ******************/
+			/************* CONSTRUCTORS ******************/
 
 			map()
 			:
@@ -78,7 +79,8 @@ namespace ft {
 			template< class InputIt >
 				map(InputIt first, InputIt last,
 					 const Compare& comp = Compare(),
-					 const Allocator& alloc = Allocator())
+					 const Allocator& alloc = Allocator(),
+					 typename ft::enable_if<!ft::is_integral<InputIt>::value>::type* = 0)
 					 : _tree(RBTree(comp, alloc))
 					 { _tree.insertUnique(first, last); };
 
@@ -88,8 +90,11 @@ namespace ft {
 				_tree.insertUnique(other.begin(), other.end());
 			}
 
+			/************* DESTRUCTOR ***************/
+
 			~map() {}
 
+			/*********** OPERATOR = *****************/
 
 			map& operator=( const map& other ) {
 				if (this != &other) {
@@ -98,17 +103,11 @@ namespace ft {
 				return *this;
 			}
 
+			/*********** GET_ALLOCATOR ***************/
+
 			allocator_type
 			get_allocator() const {
 				return this->_tree.getAllocator();
-			}
-
-
-
-			void
-			print() {
-				this->_tree.print();
-				std::cout << std::endl;
 			}
 
 
@@ -162,6 +161,8 @@ namespace ft {
 			const_reverse_iterator
 			rend() const { return this->_tree.rend(); }
 
+			/***************** CAPACITY ******************/
+
 			bool
 			empty() const { return this->begin() == this->end(); }
 
@@ -170,6 +171,8 @@ namespace ft {
 
 			size_type
 			max_size() const { return this->_tree.max_size(); }
+
+			/***************** MODIFIERS *****************/
 
 			void
 			clear() { this->_tree.clear(); }
@@ -186,21 +189,24 @@ namespace ft {
 
 			template< class InputIt >
 			void
-			insert( InputIt first, InputIt last ) {
+			insert( InputIt first, InputIt last,
+					typename ft::enable_if<!ft::is_integral<InputIt>::value>::type* = 0) {
 				this->_tree.insertUnique(first, last);
 			}
 
 			void
 			erase(iterator pos) { this->_tree.erase(pos) ; }
 
+			void
+			erase(iterator first, iterator last) { this->_tree.erase(first, last); }
+
 			size_type
 			erase(const Key& key) { return this->_tree.erase(key); }
 
 			void
-			erase(iterator first, iterator last) { this->_tree.erase(first, last); }
-
-			void
 			swap(map& other) { this->_tree.swap(other._tree); }
+
+			/**************** LOOKUP *********************/
 
 			size_type
 			count( const Key& key ) const {
@@ -214,6 +220,18 @@ namespace ft {
 			const_iterator
 			find(const Key &key) const { return this->_tree.find(key); }
 
+			ft::pair<iterator, iterator>
+			equal_range( const Key& key ) {
+				return ft::pair<iterator, iterator>(lower_bound(key),
+													upper_bound(key));
+			}
+
+			ft::pair<const_iterator, const_iterator>
+			equal_range( const Key& key ) const {
+				return ft::pair<const_iterator, const_iterator>(lower_bound(key),
+																upper_bound(key));
+			}
+
 			iterator
 			lower_bound(const Key& key) { return this->_tree.lower_bound(key); }
 
@@ -226,17 +244,7 @@ namespace ft {
 			const_iterator
 			upper_bound(const Key& key) const { return this->_tree.upper_bound(key); }
 
-			ft::pair<iterator, iterator>
-			equal_range( const Key& key ) {
-				return ft::pair<iterator, iterator>(lower_bound(key),
-													upper_bound(key));
-			}
-
-			ft::pair<const_iterator, const_iterator>
-			equal_range( const Key& key ) const {
-				return ft::pair<const_iterator, const_iterator>(lower_bound(key),
-													upper_bound(key));
-			}
+			/******************** OBSERVERS ********************/
 
 			key_compare
 			key_comp() const { return this->_tree.key_comp(); }
