@@ -3,7 +3,6 @@ NAME		=	ft_containers
 NAME_TEST	=	ft_containers_test
 
 SRC_FILES 	=	main.cpp \
-				RBTree.cpp \
 
 OBJS_DIR	=	objs
 
