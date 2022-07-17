@@ -14,6 +14,7 @@
 #include <cstdio>
 #include <cstdlib>
 #include <sstream>
+#include <limits>
 
 namespace ft {
 
@@ -213,10 +214,12 @@ namespace ft {
 
 			/****************** CAPACITY ********************/
 
-			bool empty() const { return this->begin() == this->end(); }
+			bool empty() const
+			{ return this->begin() == this->end(); }
 
 			size_type
-			size() const { return this->_size; }
+			size() const
+			{ return this->_size; }
 
 			size_type
 			max_size() const { return this->_alloc.max_size(); }

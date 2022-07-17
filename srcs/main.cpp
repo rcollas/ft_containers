@@ -21,23 +21,10 @@
 #include <list>
 
 #ifndef STD
-# define NS std
+# define NS ft
 #else
 # define NS std
 #endif
-
-# define _END			"\x1b[0m"
-# define _YELLOW		"\x1b[33m"
-# define _PURPLE		"\x1b[35m"
-# define _WHITE			"\x1b[37m"
-
-
-//static int iter = 0;
-
-//void	is_empty(NS::vector<int> const &vct)
-//{
-//	std::cout << "is_empty: " << vct.empty() << std::endl;
-//}
 
 long	get_time(void)
 {
@@ -52,9 +39,17 @@ long	get_time(void)
 template <class Key, class T>
 void	printMap(NS::map<Key, T>& lst)
 {
-	std::cout << "printing a map : \n";
+	std::cout << "printing a map: \n";
 	for (typename NS::map<Key, T>::iterator it = lst.begin(); it != lst.end(); it++)
 		std::cout << it->first << " => " << it->second << '\n';
+}
+
+template <class T>
+void	printVec(NS::vector<T>& vec) {
+	std::cout << "printing vector: \n";
+	for (typename NS::vector<T>::iterator it = vec.begin(); it != vec.end(); it++) {
+		std::cout << *it << std::endl;
+	}
 }
 
 
@@ -78,12 +73,20 @@ void printCapacity(NS::vector<T> v) {
 	std::cout << "max_size = " << v.max_size() << std::endl;
 }
 
+struct foo {
+	foo(int num) : a(num) {}
+	long operator++() { return a++; }
+	long operator++(int) { int tmp = a; a++; return tmp; }
+	int a;
+};
+
 int main() {
 
 
 	std::cout << std::endl;
 	long timer = get_time();
 	{
+//		NS::vector<foo> test(foo(10), foo(20));
 		NS::vector<int> myvector;
 		for (int i=1; i<=5; i++) myvector.push_back(i);
 		std::cout << "myvector contains:";
@@ -201,15 +204,19 @@ int main() {
 		printTest("SELF ASSIGNED VECTOR");
 
 		NS::vector<int> test(3, 3);
+		std::cout << "printCap 214" << std::endl;
+		printCapacity(test);
 		NS::vector<int> test2(10, 3);
 		NS::vector<NS::vector<int> > foo;
 		NS::vector<NS::vector<int> > bar;
+		std::cout << "bar.assign() 217" << std::endl;
 		bar.assign(4, test2);
 		printCapacity(foo);
 		NS::vector<NS::vector<int> > *ptr = &foo;
 		NS::vector<NS::vector<int> > *ptr2 = &foo;
 		std::cout << ptr->size() << std::endl;
-		foo.assign(4, test);
+		std::cout << "foo.assign() 223" << std::endl;
+		foo.assign(4, test); printCapacity(foo);
 		std::cout << ptr2->size() << std::endl;
 		*ptr = *ptr2;
 		std::cout << (*ptr == *ptr2) << std::endl;
@@ -219,12 +226,15 @@ int main() {
 		foo.swap(bar);
 		std::cout << "after swap foo > bar " << (foo > bar) << std::endl;
 		foo.clear();
+		std::cout << "printCap 233" << std::endl;
 		printCapacity(foo);
 		std::cout << "foo.reserve(1000)" << std::endl;
 		foo.reserve(1000);
+		std::cout << "printCap 238" << std::endl;
 		printCapacity(foo);
 		std::cout << "foo.reserve(10)" << std::endl;
 		foo.reserve(10);
+		std::cout << "printCap 242" << std::endl;
 		printCapacity(foo);
 	}
 
@@ -466,7 +476,6 @@ int main() {
 		foo.upper_bound(10);
 		foo.lower_bound(20);
 	}
-
 
 	std::cout << "performance: " << get_time() - timer << "ms" << std::endl;
 

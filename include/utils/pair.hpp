@@ -8,11 +8,13 @@ namespace ft {
 		typedef T1 first_type;
 		typedef T2 second_type;
 
-		pair() : first(first_type()), second(second_type()) {};
+		pair() : first(), second() {};
 		pair(const T1& x, const T2& y) : first(x), second(y) {};
 
 		template< class U1, class U2 >
 		pair(const pair<U1, U2>& p) : first(p.first), second(p.second) {};
+
+		pair(const pair& src) : first(src.first), second(src.second) {}
 
 		pair& operator=(const pair& other) {
 			this->first = other.first;

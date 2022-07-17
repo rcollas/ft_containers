@@ -74,7 +74,7 @@ fclean:	clean
 
 test:	$(NAME_TEST)
 
-DIFF			=	-@diff -sy --suppress-common-lines ft_test.log std_test.log
+DIFF			=	-@diff -sc --suppress-common-lines ft_test.log std_test.log
 
 $(NAME_TEST):	$(OBJS) $(STD_OBJS)
 				@$(CC) $(CFLAGS) $(STD_OBJS) -o $(NAME_TEST)

@@ -28,7 +28,8 @@ namespace ft {
 			typedef Allocator							allocator_type;
 
 		private:
-			typedef RBTree<key_type, value_type, std::_Select1st<value_type>, key_compare, allocator_type> RBTree;
+			typedef typename allocator_type::template rebind<value_type>::other pair_alloc_type;
+			typedef RBTree<key_type, value_type, std::_Select1st<value_type>, key_compare, pair_alloc_type> RBTree;
 
 		public:
 			typedef Type 									mapped_type;
